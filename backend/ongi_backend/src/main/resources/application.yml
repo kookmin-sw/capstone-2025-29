@@ -12,3 +12,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+Authorization:
+  header: "Authorization"
+
+secret: ${SECRET}
