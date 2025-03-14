@@ -29,4 +29,21 @@ public abstract class BaseUser {
 	private String profileImage;
 	private String phoneCode;
 
+	protected BaseUser(String username, String password, String name, int age,
+					   Gender gender, String phone, Address address,
+					   String profileImage, String phoneCode) {
+		this.username = username;
+		this.password = password;
+		this.name = name;
+		this.age = age;
+		this.gender = gender;
+		this.phone = phone;
+		this.address = address;
+		this.profileImage = profileImage;
+		this.phoneCode = phoneCode;
+	}
+
+	public BaseUser() {
+
+	}
 }
