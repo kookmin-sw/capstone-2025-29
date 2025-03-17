@@ -28,4 +28,15 @@ public class VolunteerActivityService {
 				.build();
 		}).collect(Collectors.toList());
 	}
+
+	public List<?> findRegisteredActivities(String username) {
+		List<VolunteerActivity> completeList = volunteerActivityRepository.findRegisteredActivitiesByUserName(username);
+		return completeList.stream().map(va -> {
+			return ResponseVolunteerActivities.builder()
+				.id(va.getId())
+				.type(va.getType())
+				.time(va.getStartTime())
+				.build();
+		}).collect(Collectors.toList());
+	}
 }

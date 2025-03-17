@@ -40,9 +40,13 @@ public class VolunteerActivityController {
 		return null;
 	}
 
-	@GetMapping("/registered")
+	@GetMapping("/registration")
 	public ResponseEntity<?> getRegisteredVolunteerActivityList() {
-		return null;
+		return ResponseEntity.ok(volunteerActivityService.findRegisteredActivities(
+			"username"
+			//TODO : 로그인 구현 후 코드 수정
+			// principal.getName()
+		));
 	}
 
 	@GetMapping("{volunteerActivityId}")
