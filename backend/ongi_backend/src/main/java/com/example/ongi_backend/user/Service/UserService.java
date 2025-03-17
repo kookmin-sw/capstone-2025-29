@@ -6,6 +6,7 @@ import com.example.ongi_backend.user.Repository.VolunteerRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final ElderlyRepository elderlyRepository;
     private final VolunteerRepository volunteerRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void saveUser(UserRegisterDto userRegisterDto) {
         if ("elderly".equalsIgnoreCase(userRegisterDto.getUserType())) {
@@ -27,7 +29,7 @@ public class UserService {
                     .profileImage(userRegisterDto.getProfileImage())
                     .phoneCode(userRegisterDto.getPhoneCode())
                     .username(userRegisterDto.getUsername())
-                    .password(userRegisterDto.getPassword())
+                    .password(passwordEncoder.encode(userRegisterDto.getPassword()))
                     .build();
             elderlyRepository.save(elderly);
 
@@ -43,7 +45,7 @@ public class UserService {
                     .profileImage(userRegisterDto.getProfileImage())
                     .phoneCode(userRegisterDto.getPhoneCode())
                     .username(userRegisterDto.getUsername())
-                    .password(userRegisterDto.getPassword())
+                    .password(passwordEncoder.encode(userRegisterDto.getPassword()))
                     .build();
             volunteerRepository.save(volunteer);
         } else {
