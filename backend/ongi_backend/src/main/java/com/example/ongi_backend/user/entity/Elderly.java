@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.ongi_backend.chatBot.entity.ChatBot;
+import com.example.ongi_backend.global.entity.Address;
+import com.example.ongi_backend.global.entity.Gender;
 import com.example.ongi_backend.sentimentAnalysis.entity.SentimentAnalysis;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 
@@ -13,10 +15,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import lombok.Getter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.stereotype.Service;
 
 @Entity
 @Getter
+@SuperBuilder
 public class Elderly extends BaseUser{
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "chat_bot_id")
@@ -26,4 +31,8 @@ public class Elderly extends BaseUser{
 	private List<SentimentAnalysis> sentimentAnalysis = new ArrayList<>();
 	@OneToMany(mappedBy = "elderly")
 	private List<VolunteerActivity> volunteerActivities = new ArrayList<>();
+
+	public Elderly() {
+		super();
+	}
 }
