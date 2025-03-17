@@ -16,10 +16,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.stereotype.Service;
 
 @Entity
 @Getter
+@SuperBuilder
 public class Elderly extends BaseUser{
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "chat_bot_id")
@@ -29,10 +31,6 @@ public class Elderly extends BaseUser{
 	private List<SentimentAnalysis> sentimentAnalysis = new ArrayList<>();
 	@OneToMany(mappedBy = "elderly")
 	private List<VolunteerActivity> volunteerActivities = new ArrayList<>();
-
-	public Elderly(String username, String password, String name, int age, Gender gender, String phone, Address address, String profileImage, String phoneCode) {
-		super(username, password, name, age, gender, phone, address, profileImage, phoneCode);
-	}
 
 	public Elderly() {
 		super();

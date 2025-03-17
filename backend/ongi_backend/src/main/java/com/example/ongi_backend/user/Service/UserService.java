@@ -18,33 +18,33 @@ public class UserService {
         if ("elderly".equalsIgnoreCase(userRegisterDto.getUserType())) {
             if (elderlyRepository.existsByUsername(userRegisterDto.getUsername()))
                 throw new RuntimeException();
-            Elderly elderly = new Elderly(
-                    userRegisterDto.getUsername(),
-                    userRegisterDto.getPassword(),
-                    userRegisterDto.getName(),
-                    userRegisterDto.getAge(),
-                    userRegisterDto.getGender(),
-                    userRegisterDto.getPhone(),
-                    userRegisterDto.getAddress(),
-                    userRegisterDto.getProfileImage(),
-                    userRegisterDto.getPhoneCode()
-            );
+            Elderly elderly = Elderly.builder()
+                    .name(userRegisterDto.getName())
+                    .phone(userRegisterDto.getPhone())
+                    .address(userRegisterDto.getAddress())
+                    .age(userRegisterDto.getAge())
+                    .gender(userRegisterDto.getGender())
+                    .profileImage(userRegisterDto.getProfileImage())
+                    .phoneCode(userRegisterDto.getPhoneCode())
+                    .username(userRegisterDto.getUsername())
+                    .password(userRegisterDto.getPassword())
+                    .build();
             elderlyRepository.save(elderly);
 
         } else if ("volunteer".equalsIgnoreCase(userRegisterDto.getUserType())) {
             if (volunteerRepository.existsByUsername(userRegisterDto.getUsername()))
                 throw new RuntimeException();
-            Volunteer volunteer = new Volunteer(
-                    userRegisterDto.getUsername(),
-                    userRegisterDto.getPassword(),
-                    userRegisterDto.getName(),
-                    userRegisterDto.getAge(),
-                    userRegisterDto.getGender(),
-                    userRegisterDto.getPhone(),
-                    userRegisterDto.getAddress(),
-                    userRegisterDto.getProfileImage(),
-                    userRegisterDto.getPhoneCode()
-            );
+            Volunteer volunteer = Volunteer.builder()
+                    .name(userRegisterDto.getName())
+                    .phone(userRegisterDto.getPhone())
+                    .address(userRegisterDto.getAddress())
+                    .age(userRegisterDto.getAge())
+                    .gender(userRegisterDto.getGender())
+                    .profileImage(userRegisterDto.getProfileImage())
+                    .phoneCode(userRegisterDto.getPhoneCode())
+                    .username(userRegisterDto.getUsername())
+                    .password(userRegisterDto.getPassword())
+                    .build();
             volunteerRepository.save(volunteer);
         } else {
             throw new RuntimeException();
