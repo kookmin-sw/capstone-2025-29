@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseVolunteerActivities;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 
@@ -50,8 +51,8 @@ public class VolunteerActivityController {
 	}
 
 	@GetMapping("{volunteerActivityId}")
-	public ResponseEntity<?> getVolunteerActivityDetail(@PathVariable String volunteerActivityId) {
-		return null;
+	public ResponseEntity<ResponseActivityDetail> getVolunteerActivityDetail(@PathVariable Long volunteerActivityId) {
+		return ResponseEntity.ok(volunteerActivityService.findActivityDetail(volunteerActivityId));
 	}
 
 }
