@@ -11,8 +11,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+@Getter
 @SuperBuilder
 @MappedSuperclass
 public abstract class BaseUser {
