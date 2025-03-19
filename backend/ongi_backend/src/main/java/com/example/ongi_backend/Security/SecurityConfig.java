@@ -1,5 +1,6 @@
 package com.example.ongi_backend.Security;
 
+import com.example.ongi_backend.Security.Jwt.CustomAuthenticationEntryPoint;
 import com.example.ongi_backend.Security.Jwt.JwtFilter;
 import com.example.ongi_backend.Security.Jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -57,6 +59,10 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .anyRequest().permitAll()
+
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
 
                 .and()
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
