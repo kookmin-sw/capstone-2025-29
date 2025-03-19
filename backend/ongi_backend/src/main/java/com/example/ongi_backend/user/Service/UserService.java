@@ -1,5 +1,7 @@
 package com.example.ongi_backend.user.Service;
 
+import com.example.ongi_backend.global.exception.CustomException;
+import com.example.ongi_backend.global.exception.ErrorCode;
 import com.example.ongi_backend.user.Dto.UserRegisterDto;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
@@ -25,7 +27,7 @@ public class UserService implements UserDetailsService {
     public void saveUser(UserRegisterDto userRegisterDto) {
         if ("elderly".equalsIgnoreCase(userRegisterDto.getUserType())) {
             if (elderlyRepository.existsByUsername(userRegisterDto.getUsername()))
-                throw new RuntimeException();
+                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
             Elderly elderly = Elderly.builder()
                     .name(userRegisterDto.getName())
                     .phone(userRegisterDto.getPhone())
@@ -41,7 +43,7 @@ public class UserService implements UserDetailsService {
 
         } else if ("volunteer".equalsIgnoreCase(userRegisterDto.getUserType())) {
             if (volunteerRepository.existsByUsername(userRegisterDto.getUsername()))
-                throw new RuntimeException();
+                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
             Volunteer volunteer = Volunteer.builder()
                     .name(userRegisterDto.getName())
                     .phone(userRegisterDto.getPhone())
@@ -55,7 +57,7 @@ public class UserService implements UserDetailsService {
                     .build();
             volunteerRepository.save(volunteer);
         } else {
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
         }
     }
 

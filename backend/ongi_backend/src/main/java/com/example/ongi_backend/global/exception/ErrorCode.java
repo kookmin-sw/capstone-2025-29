@@ -44,6 +44,7 @@ public enum ErrorCode {
 	ACCESS_DENIED_ERROR(403, "AUTH-005", "접근 권한이 없습니다."),
 	ALREADY_LOGOUT_ERROR(400, "AUTH-006", "이미 로그아웃 되었습니다."),
 	PRINCIPAL_NOT_FOUND_ERROR(404, "AUTH-007", "principal을 찾을 수 없습니다."),
+	INVALID_USER_TYPE_ERROR(400, "AUTH-008", "잘못된 userType 입니다."),
 	// USERNAME_NOT_FOUND_ERROR(404, "AUTH-002", "사용자 이름을 찾을 수 엄습니다.");
 	// AUTHENTICATION_ERROR(401, "AUTH-003", "인증에 실패했습니다. 인증 수단이 유효한지 확인하세요."),
 	// AUTHORIZATION_ERROR(403, "AUTH-004", "권한이 존재하지 않습니다."),
