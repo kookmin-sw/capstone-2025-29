@@ -19,4 +19,7 @@ public interface VolunteerActivityRepository extends JpaRepository<VolunteerActi
 	@Query("SELECT va FROM VolunteerActivity va JOIN FETCH va.elderly JOIN FETCH va.volunteer WHERE va.id = :id")
 	Optional<VolunteerActivity> findActivityAndElderlyById(Long id);
 
+	@Query("SELECT va FROM VolunteerActivity va JOIN FETCH va.elderly JOIN FETCH va.volunteer WHERE va.volunteer.username = :username")
+	List<VolunteerActivity> findMatchingByUserName(String username);
+
 }
