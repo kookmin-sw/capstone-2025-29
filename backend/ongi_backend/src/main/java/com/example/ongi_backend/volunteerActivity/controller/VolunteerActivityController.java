@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivities;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseMatchingDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseRegisteredActivities;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 
@@ -54,6 +55,11 @@ public class VolunteerActivityController {
 	@GetMapping("{volunteerActivityId}")
 	public ResponseEntity<ResponseActivityDetail> getVolunteerActivityDetail(@PathVariable Long volunteerActivityId) {
 		return ResponseEntity.ok(volunteerActivityService.findActivityDetail(volunteerActivityId));
+	}
+
+	@GetMapping("/matching/{volunteerActivityId}")
+	public ResponseEntity<ResponseMatchingDetail> getActivityMatchingDetail(@PathVariable Long volunteerActivityId) {
+		return ResponseEntity.ok(volunteerActivityService.findActivityMatchingDetail(volunteerActivityId));
 	}
 
 }
