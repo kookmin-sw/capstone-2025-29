@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class ResponseCompletedActivities {
+public class ResponseCompletedActivity {
 	private Long id;
 	private String elderlyName;
 	private VolunteerType type;

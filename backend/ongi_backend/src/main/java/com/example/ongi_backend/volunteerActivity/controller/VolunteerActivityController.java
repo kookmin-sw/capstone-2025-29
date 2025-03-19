@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
-import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivities;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivity;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseMatching;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseMatchingDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseRegisteredActivities;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
@@ -30,7 +31,7 @@ public class VolunteerActivityController {
 	}
 
 	@GetMapping("/complete")
-	public ResponseEntity<List<ResponseCompletedActivities>> getCompleteVolunteerActivities(Principal principal) {
+	public ResponseEntity<List<ResponseCompletedActivity>> getCompleteVolunteerActivities(Principal principal) {
 		return ResponseEntity.ok(volunteerActivityService.findCompleteVolunteerActivities(
 			"username"
 			//TODO : 로그인 구현 후 코드 수정
@@ -38,6 +39,7 @@ public class VolunteerActivityController {
 		));
 	}
 
+	//TODO : 추후 Redis를 통해 조회
 	@GetMapping("/incomplete")
 	public ResponseEntity<?> getIncompleteVolunteerActivityList() {
 		return null;
@@ -52,9 +54,18 @@ public class VolunteerActivityController {
 		));
 	}
 
-	@GetMapping("{volunteerActivityId}")
+	@GetMapping("/registration/{volunteerActivityId}")
 	public ResponseEntity<ResponseActivityDetail> getVolunteerActivityDetail(@PathVariable Long volunteerActivityId) {
 		return ResponseEntity.ok(volunteerActivityService.findActivityDetail(volunteerActivityId));
+	}
+
+	@GetMapping("/matching")
+	public ResponseEntity<List<ResponseMatching>> getMatchingVolunteerActivityList(Principal principal) {
+		return ResponseEntity.ok(volunteerActivityService.findActivityMatches(
+			// TODO : 로그인 구현 후 코드 수정
+			// principal
+			"username"
+		));
 	}
 
 	@GetMapping("/matching/{volunteerActivityId}")

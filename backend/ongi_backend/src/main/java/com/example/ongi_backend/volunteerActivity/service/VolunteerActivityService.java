@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
-import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivities;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivity;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseMatching;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseMatchingDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseRegisteredActivities;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
@@ -25,10 +26,10 @@ import lombok.RequiredArgsConstructor;
 public class VolunteerActivityService {
 	private final VolunteerActivityRepository volunteerActivityRepository;
 
-	public List<ResponseCompletedActivities> findCompleteVolunteerActivities(String username) {
+	public List<ResponseCompletedActivity> findCompleteVolunteerActivities(String username) {
 		List<VolunteerActivity> completeList = volunteerActivityRepository.findCompleteActivitiesByUserName(username);
 		return completeList.stream().map(va -> {
-			return ResponseCompletedActivities.builder()
+			return ResponseCompletedActivity.builder()
 				.id(va.getId())
 				.type(va.getType())
 				.time(va.getStartTime())
@@ -81,5 +82,17 @@ public class VolunteerActivityService {
 					.build();
 			})
 			.orElseThrow(() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR));
+	}
+
+	public List<ResponseMatching> findActivityMatches(String userName) {
+		return volunteerActivityRepository.findMatchingByUserName(userName).stream().map(va -> {
+			return ResponseMatching.builder()
+				.id(va.getId())
+				.elderlyName(va.getElderly().getName())
+				.type(va.getType())
+				.districtType(va.getAddress().getDistrict())
+				.startTime(va.getStartTime())
+				.build();
+		}).collect(Collectors.toList());
 	}
 }
