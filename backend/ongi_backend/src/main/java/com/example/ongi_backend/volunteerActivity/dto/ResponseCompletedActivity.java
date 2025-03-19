@@ -4,6 +4,7 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 
+import com.example.ongi_backend.global.entity.DistrictType;
 import com.example.ongi_backend.global.entity.VolunteerType;
 
 import lombok.AllArgsConstructor;
@@ -20,4 +21,5 @@ public class ResponseCompletedActivity {
 	private String elderlyName;
 	private VolunteerType type;
 	private LocalDateTime time;
+	private DistrictType districtType;
 }
