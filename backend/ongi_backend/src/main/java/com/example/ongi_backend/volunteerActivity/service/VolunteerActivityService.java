@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
-import com.example.ongi_backend.volunteerActivity.dto.ResponseVolunteerActivities;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivities;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseRegisteredActivities;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.repository.VolunteerActivityRepository;
 
@@ -23,21 +24,22 @@ import lombok.RequiredArgsConstructor;
 public class VolunteerActivityService {
 	private final VolunteerActivityRepository volunteerActivityRepository;
 
-	public List<ResponseVolunteerActivities> findCompleteVolunteerActivities(String username) {
+	public List<ResponseCompletedActivities> findCompleteVolunteerActivities(String username) {
 		List<VolunteerActivity> completeList = volunteerActivityRepository.findCompleteActivitiesByUserName(username);
 		return completeList.stream().map(va -> {
-			return ResponseVolunteerActivities.builder()
+			return ResponseCompletedActivities.builder()
 				.id(va.getId())
 				.type(va.getType())
 				.time(va.getStartTime())
+				.elderlyName(va.getElderly().getName())
 				.build();
 		}).collect(Collectors.toList());
 	}
 
-	public List<ResponseVolunteerActivities> findRegisteredActivities(String username) {
+	public List<ResponseRegisteredActivities> findRegisteredActivities(String username) {
 		List<VolunteerActivity> completeList = volunteerActivityRepository.findRegisteredActivitiesByUserName(username);
 		return completeList.stream().map(va -> {
-			return ResponseVolunteerActivities.builder()
+			return ResponseRegisteredActivities.builder()
 				.id(va.getId())
 				.type(va.getType())
 				.time(va.getStartTime())
