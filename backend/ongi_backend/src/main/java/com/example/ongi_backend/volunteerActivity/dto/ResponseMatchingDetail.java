@@ -17,10 +17,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class ResponseActivityDetail {
+public class ResponseMatchingDetail {
 	private Long id;
 	private VolunteerType type;
 	private LocalDateTime startTime;
 	private AnimalType animalType;
 	private String addDescription;
+	private Address address;
+	private String elderlyName;
+
 }

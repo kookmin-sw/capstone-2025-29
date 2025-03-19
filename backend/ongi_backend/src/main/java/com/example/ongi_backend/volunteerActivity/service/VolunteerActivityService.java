@@ -12,6 +12,7 @@ import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivities;
+import com.example.ongi_backend.volunteerActivity.dto.ResponseMatchingDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseRegisteredActivities;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.repository.VolunteerActivityRepository;
@@ -56,6 +57,21 @@ public class VolunteerActivityService {
 					.startTime(va.getStartTime())
 					.animalType(va.getAnimalType())
 					.addDescription(va.getAddDescription())
+					.build();
+			})
+			.orElseThrow(() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR));
+	}
+
+	public ResponseMatchingDetail findActivityMatchingDetail(Long volunteerActivityId) {
+		return volunteerActivityRepository.findActivityAndElderlyById(volunteerActivityId)
+			.map(va -> {
+				return ResponseMatchingDetail.builder()
+					.id(va.getId())
+					.type(va.getType())
+					.startTime(va.getStartTime())
+					.animalType(va.getAnimalType())
+					.addDescription(va.getAddDescription())
+					.elderlyName(va.getElderly().getName())
 					.address(
 						Address.builder()
 							.detail(va.getAddress().getDetail())
