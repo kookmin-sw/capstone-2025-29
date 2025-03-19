@@ -34,6 +34,7 @@ public class VolunteerActivityService {
 				.type(va.getType())
 				.time(va.getStartTime())
 				.elderlyName(va.getElderly().getName())
+				.districtType(va.getAddress().getDistrict())
 				.build();
 		}).collect(Collectors.toList());
 	}
