@@ -7,9 +7,9 @@ import static jakarta.persistence.GenerationType.*;
 import java.time.LocalDateTime;
 
 import com.example.ongi_backend.global.entity.Address;
+import com.example.ongi_backend.global.entity.AnimalType;
 import com.example.ongi_backend.global.entity.BaseEntity;
 import com.example.ongi_backend.global.entity.VolunteerType;
-import com.example.ongi_backend.review.entity.ElderlyReview;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
 
@@ -20,7 +20,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 
 @Entity
@@ -39,7 +38,8 @@ public class VolunteerActivity extends BaseEntity {
 	private VolunteerType type;
 	private String addDescription;
 	private LocalDateTime startTime;
-	private boolean haveAnimal;
+	@Enumerated(STRING)
+	private AnimalType animalType;
 	private boolean isRecruit;
 	private boolean isDone;
 	@Embedded
