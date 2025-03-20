@@ -2,12 +2,18 @@ package com.example.ongi_backend.user.Service;
 
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.exception.ErrorCode;
+import com.example.ongi_backend.user.Dto.RequestModify;
+import com.example.ongi_backend.user.Dto.ResponseUserInfo;
+import com.example.ongi_backend.global.exception.CustomException;
+import com.example.ongi_backend.global.exception.ErrorCode;
 import com.example.ongi_backend.user.Dto.UserRegisterDto;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
+import com.example.ongi_backend.user.entity.BaseUser;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.PrincipleDetails;
 import com.example.ongi_backend.user.entity.Volunteer;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +67,48 @@ public class UserService implements UserDetailsService {
         } else {
             throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
         }
+    }
+
+    @Transactional
+    public void modifyUser(RequestModify requestModify, String username) {
+        BaseUser baseUser;
+        if (requestModify.getUserType().equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (requestModify.getUserType().equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+        Optional.ofNullable(requestModify.getName()).ifPresent(baseUser::setName);
+        if (requestModify.getAge() > 0) baseUser.setAge(requestModify.getAge());
+        Optional.ofNullable(requestModify.getGender()).ifPresent(baseUser::setGender);
+        Optional.ofNullable(requestModify.getPhone()).ifPresent(baseUser::setPhone);
+        Optional.ofNullable(requestModify.getAddress()).ifPresent(baseUser::setAddress);
+        Optional.ofNullable(requestModify.getPassword()).ifPresent(baseUser::setPassword);
+        Optional.ofNullable(requestModify.getProfileImage()).ifPresent(baseUser::setProfileImage);
+    }
+
+    public ResponseUserInfo getUser(String username, String userType) {
+        BaseUser baseUser;
+        if (userType.equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (userType.equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+        return ResponseUserInfo.builder()
+                .name(baseUser.getName())
+                .phone(baseUser.getPhone())
+                .age(baseUser.getAge())
+                .profileImage(baseUser.getProfileImage())
+                .gender(baseUser.getGender())
+                .address(baseUser.getAddress())
+                .build();
     }
 
     @Override
