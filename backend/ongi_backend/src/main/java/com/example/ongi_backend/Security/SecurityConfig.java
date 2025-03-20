@@ -6,6 +6,7 @@ import com.example.ongi_backend.Security.Jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,7 +59,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .anyRequest().permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+                .requestMatchers(HttpMethod.GET, "/login").permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .exceptionHandling()
