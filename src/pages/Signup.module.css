@@ -1,0 +1,132 @@
+/* ✅ 화면 전체 적용 */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh; /* 내용이 많아지면 자동 확장 */
+    overflow-y: auto; /* 화면 전체 스크롤 가능 */
+    background-color: #f8f8f8;
+}
+
+/* ✅ 전체 컨테이너 */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    padding: 2vh 5vw; /* 반응형 패딩 */
+    box-sizing: border-box;
+}
+
+/* ✅ 제목 */
+.title {
+    text-align: center;
+    font-size: clamp(1.5rem, 3vw, 2rem); /* 반응형 폰트 */
+    font-weight: bold;
+    margin-bottom: 2vh;
+}
+
+/* ✅ 입력 그룹 */
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-bottom: 2vh;
+}
+
+/* ✅ 입력 필드 */
+.inputGroup input {
+    width: 100%;
+    padding: 1.5vh 2vw; /* 반응형 패딩 */
+    border: 1px solid #ccc;
+    border-radius: 1vw; /* 둥근 정도 반응형 */
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+}
+
+/* ✅ 버튼 포함 입력 */
+.inputWithButton {
+    display: flex;
+    gap: 2vw;
+}
+
+.inputWithButton input {
+    flex: 1;
+}
+
+.checkBtn {
+    padding: 1.5vh 2vw; /* 반응형 패딩 */
+    background-color: #6A0DAD;
+    color: white;
+    border: none;
+    border-radius: 1vw;
+    cursor: pointer;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+}
+
+/* ✅ 라디오 버튼 스타일 */
+.radioGroup {
+    display: flex;
+    gap: 2vw;
+}
+
+.radioBtn {
+    flex: 1;
+    padding: 1.5vh 2vw;
+    border: 0.2vw solid #6A0DAD;
+    background: white;
+    color: #6A0DAD;
+    border-radius: 1vw;
+    cursor: pointer;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+}
+
+.radioBtn:hover {
+    background: #6A0DAD;
+    color: white;
+}
+
+/* ✅ 생년월일 선택 */
+.dateSelect {
+    display: flex;
+    gap: 2vw;
+}
+
+.dateSelect select {
+    flex: 1;
+    padding: 1.5vh 2vw;
+    border: 1px solid #ccc;
+    border-radius: 1vw;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+/* ✅ 약관 동의 */
+.agreement {
+    margin-top: 2vh;
+    width: 90%;
+    max-width: 50vw;
+}
+
+.termsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+/* ✅ 가입 버튼 */
+.submitBtn {
+    width: 90%;
+    max-width: 50vw;
+    padding: 2vh 0;
+    background-color: #6A0DAD;
+    color: white;
+    border: none;
+    border-radius: 1vw;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    cursor: pointer;
+    margin-top: 2vh;
+}
+
+.submitBtn:hover {
+    background: #580b99;
+}

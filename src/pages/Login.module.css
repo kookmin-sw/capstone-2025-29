@@ -1,0 +1,135 @@
+/* 전체 화면*/
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+
+
+}
+
+/* 상단 절반 공간 (비어있는 공간 유지) */
+.topHalf {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 화면 로고 */
+.logo{
+    width: 40%;
+    margin-top: 10vh;
+}
+
+/* 하단 로그인 폼 영역 */
+.bottomHalf {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 입력 필드 */
+.inputField {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1vh 3vw;
+    background-color: #D9D9D9;
+    margin-bottom: 2vh;
+}
+
+/* 아이콘 */
+.icon {
+    width: 5vw;
+    max-width: 20px;
+    height: auto;
+    margin: 0 20px 0 10px;
+}
+
+/* 입력란 */
+.inputField input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    font-size: clamp(14px, 4vw, 18px);
+    outline: none;
+}
+
+/* 로그인 버튼 */
+.loginBtn {
+    background-color: #6A0DAD;
+    color: white;
+    font-size: clamp(14px, 4vw, 18px);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+}
+
+/* 이메일 로그인, 회원가입 버튼 컨테이너 */
+.authButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 이메일 로그인 버튼 */
+.emailLoginBtn {
+    background: none;
+    border: none;
+    font-size: clamp(12px, 1.5vw, 16px);
+    color: gray;
+    padding-right: 5px;
+    outline: none;
+}
+
+/* 가운데 '/' 구분선 */
+.separator {
+    font-size: clamp(12px, 1.5vw, 16px);
+    color: gray;
+    margin: 0 0.5vw;
+    cursor: default; /* 클릭되지 않도록 설정 */
+}
+
+/* 회원가입 버튼 */
+.signupBtn {
+    background: none;
+    border: none;
+    font-size: clamp(12px, 1.5vw, 16px);
+    color: gray;
+    padding-left: 5px;
+    outline: none;
+}
+
+/* 카카오 로그인 버튼 */
+.kakaoBtn {
+    background-color: #FFCC00;
+    color: black;
+    font-size: clamp(14px, 4vw, 18px);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3vh;
+}
+
+.kakaoBtn .icon {
+    margin-right: 10px;
+}
+
+/* 박스 사이즈 */
+.inputField, .loginBtn, .kakaoBtn{
+    width: 80%;
+    max-width: 300px;
+    height: 6vh;
+}
