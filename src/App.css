@@ -6,3 +6,19 @@ body {
 div {
     box-sizing: border-box;
 }
+
+
+/* 오버 스크롤 방지 */
+html,
+body {
+    overscroll-behavior: none;
+}
+
+
+/* 강조 테두리 제거F */
+input:focus,
+select:focus,
+button:focus {
+    outline: none;
+    box-shadow: none;
+}

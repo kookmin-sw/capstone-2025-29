@@ -8,3 +8,4 @@ __pycache__/
 # Jupyter 노트북 체크포인트 무시
 .ipynb_checkpoints/
 
+node_modules/
