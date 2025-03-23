@@ -1,92 +1,92 @@
-/* ✅ 화면 전체 적용 */
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh; /* 내용이 많아지면 자동 확장 */
-    overflow-y: auto; /* 화면 전체 스크롤 가능 */
-    background-color: #f8f8f8;
-}
-
-/* ✅ 전체 컨테이너 */
+/* 전체 컨테이너 */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100vw;
     min-height: 100vh;
-    padding: 2vh 5vw; /* 반응형 패딩 */
+    padding: 2vh 5vw;
     box-sizing: border-box;
+    background-color: #f8f8f8;
 }
 
-/* ✅ 제목 */
-.title {
-    text-align: center;
-    font-size: clamp(1.5rem, 3vw, 2rem); /* 반응형 폰트 */
-    font-weight: bold;
-    margin-bottom: 2vh;
-}
-
-/* ✅ 입력 그룹 */
+/* 입력 그룹 전체 */
 .inputGroup {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    margin-bottom: 2vh;
-}
-
-/* ✅ 입력 필드 */
-.inputGroup input {
     width: 100%;
-    padding: 1.5vh 2vw; /* 반응형 패딩 */
-    border: 1px solid #ccc;
-    border-radius: 1vw; /* 둥근 정도 반응형 */
-    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    max-width: 400px;
+    margin-bottom: 3vh;
 }
 
-/* ✅ 버튼 포함 입력 */
+/* 라벨 */
+.inputGroup label {
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 600;
+    
+}
+
+/* 입력 필드 */
+.inputGroup input {
+    padding: 1.5vh 3vw;
+    border: none;
+    background-color: #EEEEEE;
+    border-radius: 0.8vw;
+    font-size: clamp(0, 2.5vw, 1rem);
+    margin-top: 1vh;
+}
+
+.inputGroup input::placeholder {
+    color: #999;
+}
+
+/* 버튼 포함된 입력 필드 */
 .inputWithButton {
     display: flex;
     gap: 2vw;
 }
 
 .inputWithButton input {
-    flex: 1;
+    flex: 7;
 }
 
 .checkBtn {
-    padding: 1.5vh 2vw; /* 반응형 패딩 */
-    background-color: #6A0DAD;
+    padding: 1.2vh 2vw;
+    background-color: #6D57DE;
     color: white;
     border: none;
     border-radius: 1vw;
-    cursor: pointer;
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    flex: 3;
+    margin-top: 1vh;
 }
 
-/* ✅ 라디오 버튼 스타일 */
+/* 라디오 그룹 */
 .radioGroup {
     display: flex;
-    gap: 2vw;
+    gap: 3vw;
+    margin-top: 1vh;
 }
 
 .radioBtn {
     flex: 1;
-    padding: 1.5vh 2vw;
-    border: 0.2vw solid #6A0DAD;
-    background: white;
-    color: #6A0DAD;
-    border-radius: 1vw;
+    padding: 1.4vh 0;
+    background-color: #f3f3f3;
+    border: none;
+    border-radius: 0.8vw;
+    color: #333;
+    font-weight: 500;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     cursor: pointer;
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    text-align: center;
 }
 
-.radioBtn:hover {
-    background: #6A0DAD;
+.radioBtn.active {
+    background-color: #6A0DAD;
     color: white;
 }
 
-/* ✅ 생년월일 선택 */
+/* 생년월일 드롭다운 */
 .dateSelect {
     display: flex;
     gap: 2vw;
@@ -94,39 +94,42 @@ html, body {
 
 .dateSelect select {
     flex: 1;
-    padding: 1.5vh 2vw;
-    border: 1px solid #ccc;
-    border-radius: 1vw;
-    font-size: clamp(0.9rem, 2vw, 1rem);
+    padding: 1.4vh 2vw;
+    border: none;
+    background-color: #f3f3f3;
+    border-radius: 0.8vw;
+    font-size: clamp(0.95rem, 2vw, 1rem);
+    color: #333;
 }
 
-/* ✅ 약관 동의 */
+/* 약관 동의 */
 .agreement {
-    margin-top: 2vh;
-    width: 90%;
-    max-width: 50vw;
+    margin-top: 3vh;
+    width:100%;
+    max-width: 400px;
 }
 
 .termsList {
     display: flex;
     flex-direction: column;
     gap: 1vh;
+    margin-top: 1vh;
 }
 
-/* ✅ 가입 버튼 */
+.termsList label {
+    font-size: clamp(0.95rem, 2vw, 1rem);
+}
+
+/* 가입 버튼 */
 .submitBtn {
-    width: 90%;
-    max-width: 50vw;
-    padding: 2vh 0;
-    background-color: #6A0DAD;
-    color: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 1.8vh 0;
+    background-color: #DFDFDF;
+    color: #999;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: bold;
     border: none;
     border-radius: 1vw;
-    font-size: clamp(1rem, 3vw, 1.2rem);
-    cursor: pointer;
-    margin-top: 2vh;
-}
-
-.submitBtn:hover {
-    background: #580b99;
+    margin: 3vh 0 3vh 0 ;
 }

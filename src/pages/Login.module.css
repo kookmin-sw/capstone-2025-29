@@ -80,23 +80,7 @@
     justify-content: center;
 }
 
-/* 이메일 로그인 버튼 */
-.emailLoginBtn {
-    background: none;
-    border: none;
-    font-size: clamp(12px, 1.5vw, 16px);
-    color: gray;
-    padding-right: 5px;
-    outline: none;
-}
 
-/* 가운데 '/' 구분선 */
-.separator {
-    font-size: clamp(12px, 1.5vw, 16px);
-    color: gray;
-    margin: 0 0.5vw;
-    cursor: default; /* 클릭되지 않도록 설정 */
-}
 
 /* 회원가입 버튼 */
 .signupBtn {
@@ -104,7 +88,6 @@
     border: none;
     font-size: clamp(12px, 1.5vw, 16px);
     color: gray;
-    padding-left: 5px;
     outline: none;
 }
 
