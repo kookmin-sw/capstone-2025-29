@@ -3,6 +3,7 @@ package com.example.ongi_backend.user.Service;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.exception.ErrorCode;
 import com.example.ongi_backend.user.Dto.RequestModify;
+import com.example.ongi_backend.user.Dto.RequestModifyPassword;
 import com.example.ongi_backend.user.Dto.ResponseUserInfo;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.exception.ErrorCode;
@@ -122,6 +123,38 @@ public class UserService implements UserDetailsService {
         } else {
             throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
         }
+    }
+
+    public void passwordCheck(String username, String userType, String password) {
+        BaseUser baseUser;
+        if (userType.equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (userType.equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+
+        if (!passwordEncoder.matches(password, baseUser.getPassword()))
+            throw new CustomException(ErrorCode.CREDENTIALS_NOT_MATCHED_ERROR);
+    }
+
+    @Transactional
+    public void modifyPassword(String username, RequestModifyPassword requestModifyPassword) {
+        BaseUser baseUser;
+        if (requestModifyPassword.getUserType().equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (requestModifyPassword.getUserType().equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+
+        baseUser.setPassword(passwordEncoder.encode(requestModifyPassword.getPassword()));
     }
 
     @Override
