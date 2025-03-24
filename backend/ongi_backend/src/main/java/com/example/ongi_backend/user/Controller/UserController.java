@@ -1,6 +1,7 @@
 package com.example.ongi_backend.user.Controller;
 
 import com.example.ongi_backend.user.Dto.RequestModify;
+import com.example.ongi_backend.user.Dto.RequestModifyPassword;
 import com.example.ongi_backend.user.Dto.ResponseUserInfo;
 import com.example.ongi_backend.user.Dto.UserRegisterDto;
 import com.example.ongi_backend.user.Service.UserService;
@@ -30,7 +31,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping
+    @PutMapping
     public ResponseEntity<?> modifyUser(@RequestBody RequestModify requestModify, Principal principal) {
         userService.modifyUser(requestModify, principal.getName());
         return ResponseEntity.ok().build();
@@ -39,6 +40,18 @@ public class UserController {
     @GetMapping("/username")
     public ResponseEntity<?> duplicateCheck(@RequestParam String username, @RequestParam String userType) {
         userService.duplicateCheck(username, userType);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/password")
+    public ResponseEntity<?> passwordCheck(Principal principal, @RequestParam String password, @RequestParam String userType) {
+        userService.passwordCheck(principal.getName(), userType, password);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<?> modifyPassword(Principal principal, @RequestBody RequestModifyPassword requestModifyPassword) {
+        userService.modifyPassword(principal.getName(), requestModifyPassword);
         return ResponseEntity.ok().build();
     }
 }
