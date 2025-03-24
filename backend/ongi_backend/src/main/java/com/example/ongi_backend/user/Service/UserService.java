@@ -15,6 +15,7 @@ import com.example.ongi_backend.user.entity.PrincipleDetails;
 import com.example.ongi_backend.user.entity.Volunteer;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -109,6 +110,18 @@ public class UserService implements UserDetailsService {
                 .gender(baseUser.getGender())
                 .address(baseUser.getAddress())
                 .build();
+    }
+
+    public void duplicateCheck(String username, String userType) {
+        if (userType.equalsIgnoreCase("volunteer")) {
+            if (volunteerRepository.existsByUsername(username))
+                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
+        } else if (userType.equalsIgnoreCase("elderly")) {
+            if (elderlyRepository.existsByUsername(username))
+                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
     }
 
     @Override

@@ -35,4 +35,10 @@ public class UserController {
         userService.modifyUser(requestModify, principal.getName());
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/username")
+    public ResponseEntity<?> duplicateCheck(@RequestParam String username, @RequestParam String userType) {
+        userService.duplicateCheck(username, userType);
+        return ResponseEntity.ok().build();
+    }
 }
