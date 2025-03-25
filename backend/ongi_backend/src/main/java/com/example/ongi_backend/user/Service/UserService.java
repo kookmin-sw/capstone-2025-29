@@ -2,13 +2,21 @@ package com.example.ongi_backend.user.Service;
 
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.exception.ErrorCode;
+import com.example.ongi_backend.user.Dto.RequestModify;
+import com.example.ongi_backend.user.Dto.RequestModifyPassword;
+import com.example.ongi_backend.user.Dto.ResponseUserInfo;
+import com.example.ongi_backend.global.exception.CustomException;
+import com.example.ongi_backend.global.exception.ErrorCode;
 import com.example.ongi_backend.user.Dto.UserRegisterDto;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
+import com.example.ongi_backend.user.entity.BaseUser;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.PrincipleDetails;
 import com.example.ongi_backend.user.entity.Volunteer;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +69,93 @@ public class UserService implements UserDetailsService {
         } else {
             throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
         }
+    }
+
+    @Transactional
+    public void modifyUser(RequestModify requestModify, String username) {
+        BaseUser baseUser;
+        if (requestModify.getUserType().equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (requestModify.getUserType().equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+
+        baseUser.updateInfo(requestModify.getName(),
+                requestModify.getAge(),
+                requestModify.getGender(),
+                requestModify.getPhone(),
+                requestModify.getAddress(),
+                requestModify.getPassword(),
+                requestModify.getProfileImage());
+    }
+
+    public ResponseUserInfo getUser(String username, String userType) {
+        BaseUser baseUser;
+        if (userType.equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (userType.equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+        return ResponseUserInfo.builder()
+                .name(baseUser.getName())
+                .phone(baseUser.getPhone())
+                .age(baseUser.getAge())
+                .profileImage(baseUser.getProfileImage())
+                .gender(baseUser.getGender())
+                .address(baseUser.getAddress())
+                .build();
+    }
+
+    public void duplicateCheck(String username, String userType) {
+        if (userType.equalsIgnoreCase("volunteer")) {
+            if (volunteerRepository.existsByUsername(username))
+                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
+        } else if (userType.equalsIgnoreCase("elderly")) {
+            if (elderlyRepository.existsByUsername(username))
+                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+    }
+
+    public void passwordCheck(String username, String userType, String password) {
+        BaseUser baseUser;
+        if (userType.equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (userType.equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+
+        if (!passwordEncoder.matches(password, baseUser.getPassword()))
+            throw new CustomException(ErrorCode.CREDENTIALS_NOT_MATCHED_ERROR);
+    }
+
+    @Transactional
+    public void modifyPassword(String username, RequestModifyPassword requestModifyPassword) {
+        BaseUser baseUser;
+        if (requestModifyPassword.getUserType().equalsIgnoreCase("volunteer")) {
+            baseUser = volunteerRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else if (requestModifyPassword.getUserType().equalsIgnoreCase("elderly")) {
+            baseUser = elderlyRepository.findByUsername(username)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        } else {
+            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
+        }
+
+        baseUser.updatePassword(passwordEncoder.encode(requestModifyPassword.getPassword()));
     }
 
     @Override

@@ -14,6 +14,8 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Optional;
+
 @Getter
 @SuperBuilder
 @MappedSuperclass
@@ -35,5 +37,20 @@ public abstract class BaseUser {
 
 	public BaseUser() {
 
+	}
+
+	public void updateInfo(String name, int age, Gender gender, String phone,
+						   Address address, String password, String profileImage) {
+		Optional.ofNullable(name).ifPresent(updatedName -> this.name = updatedName);
+		if (age > 0) this.age = age;
+		Optional.ofNullable(gender).ifPresent(updatedGender -> this.gender = updatedGender);
+		Optional.ofNullable(phone).ifPresent(updatedPhone -> this.phone = updatedPhone);
+		Optional.ofNullable(address).ifPresent(updatedAddress -> this.address = updatedAddress);
+		Optional.ofNullable(password).ifPresent(updatedPassword -> this.password = updatedPassword);
+		Optional.ofNullable(profileImage).ifPresent(updatedProfile -> this.profileImage = updatedProfile);
+	}
+
+	public void updatePassword(String password) {
+		Optional.ofNullable(password).ifPresent(updatedPassword -> this.password = updatedPassword);
 	}
 }
