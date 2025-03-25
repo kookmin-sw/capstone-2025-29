@@ -1,8 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 import styles from "./Login.module.css";
-import ongi from '../assets/ongi.svg';
+import ongi_login from '../assets/ongi_login.svg';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -11,7 +10,7 @@ export default function Login() {
         <div className={styles.container}>
             {/* 상단 여백 */}
             <div className={styles.topHalf}>
-                <img src={ongi} alt="" className={styles.logo} />
+                <img src={ongi_login} alt="" className={styles.logo} />
             </div>
 
             {/* 하단 로그인 폼 */}

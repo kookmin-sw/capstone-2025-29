@@ -15,10 +15,12 @@ body {
 }
 
 
-/* 강조 테두리 제거F */
+/* 강조 테두리 제거 */
 input:focus,
 select:focus,
 button:focus {
     outline: none;
     box-shadow: none;
 }
+
+
