@@ -83,13 +83,14 @@ public class UserService implements UserDetailsService {
         } else {
             throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
         }
-        Optional.ofNullable(requestModify.getName()).ifPresent(baseUser::setName);
-        if (requestModify.getAge() > 0) baseUser.setAge(requestModify.getAge());
-        Optional.ofNullable(requestModify.getGender()).ifPresent(baseUser::setGender);
-        Optional.ofNullable(requestModify.getPhone()).ifPresent(baseUser::setPhone);
-        Optional.ofNullable(requestModify.getAddress()).ifPresent(baseUser::setAddress);
-        Optional.ofNullable(requestModify.getPassword()).ifPresent(baseUser::setPassword);
-        Optional.ofNullable(requestModify.getProfileImage()).ifPresent(baseUser::setProfileImage);
+
+        baseUser.updateInfo(requestModify.getName(),
+                requestModify.getAge(),
+                requestModify.getGender(),
+                requestModify.getPhone(),
+                requestModify.getAddress(),
+                requestModify.getPassword(),
+                requestModify.getProfileImage());
     }
 
     public ResponseUserInfo getUser(String username, String userType) {
@@ -154,7 +155,7 @@ public class UserService implements UserDetailsService {
             throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
         }
 
-        baseUser.setPassword(passwordEncoder.encode(requestModifyPassword.getPassword()));
+        baseUser.updatePassword(passwordEncoder.encode(requestModifyPassword.getPassword()));
     }
 
     @Override
