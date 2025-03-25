@@ -7,7 +7,15 @@
     min-height: 100vh;
     padding: 2vh 5vw;
     box-sizing: border-box;
-    background-color: #f8f8f8;
+}
+
+.LogoImageWrapper {
+    position: relative;
+    margin-bottom: 5vh;
+}
+
+/* 프로필 이미지 스타일 */
+.LogoImage {
 }
 
 /* 입력 그룹 전체 */
@@ -23,7 +31,7 @@
 .inputGroup label {
     font-size: clamp(1rem, 2.5vw, 1.1rem);
     font-weight: 600;
-    
+
 }
 
 /* 입력 필드 */
@@ -31,7 +39,7 @@
     padding: 1.5vh 3vw;
     border: none;
     background-color: #EEEEEE;
-    border-radius: 0.8vw;
+    border-radius: 5px;
     font-size: clamp(0, 2.5vw, 1rem);
     margin-top: 1vh;
 }
@@ -55,7 +63,7 @@
     background-color: #6D57DE;
     color: white;
     border: none;
-    border-radius: 1vw;
+    border-radius: 5px;
     font-size: clamp(0.85rem, 2vw, 0.95rem);
     flex: 3;
     margin-top: 1vh;
@@ -73,7 +81,7 @@
     padding: 1.4vh 0;
     background-color: #f3f3f3;
     border: none;
-    border-radius: 0.8vw;
+    border-radius: 5px;
     color: #333;
     font-weight: 500;
     font-size: clamp(0.9rem, 2vw, 1rem);
@@ -97,7 +105,7 @@
     padding: 1.4vh 2vw;
     border: none;
     background-color: #f3f3f3;
-    border-radius: 0.8vw;
+    border-radius: 5px;
     font-size: clamp(0.95rem, 2vw, 1rem);
     color: #333;
 }
@@ -105,7 +113,7 @@
 /* 약관 동의 */
 .agreement {
     margin-top: 3vh;
-    width:100%;
+    width: 100%;
     max-width: 400px;
 }
 
@@ -130,6 +138,6 @@
     font-size: clamp(1rem, 2.5vw, 1.2rem);
     font-weight: bold;
     border: none;
-    border-radius: 1vw;
-    margin: 3vh 0 3vh 0 ;
+    border-radius: 5px;
+    margin: 3vh 0 3vh 0;
 }

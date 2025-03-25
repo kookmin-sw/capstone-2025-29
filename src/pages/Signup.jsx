@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Signup.module.css";
 import Topbar from "../components/Topbar";
+import ongi from '../assets/ongi.svg';
 
 export default function Signup() {
     // form 상태 저장
@@ -123,7 +124,12 @@ export default function Signup() {
 
     return (
         <form className={styles.container} onSubmit={handleSubmit}>
-            <Topbar title="회원가입" />
+            <Topbar title="" />
+
+            {/* 프로필 이미지 */}
+            <div className={styles.LogoImageWrapper}>
+                <img className={styles.LogoImage} src={ongi} alt="" />
+            </div>
 
             {/* 아이디 입력 */}
             <div className={styles.inputGroup}>
