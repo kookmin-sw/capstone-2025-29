@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.entity.AnimalType;
 import com.example.ongi_backend.global.entity.BaseEntity;
+import com.example.ongi_backend.global.entity.VolunteerStatus;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
@@ -40,8 +41,8 @@ public class VolunteerActivity extends BaseEntity {
 	private LocalDateTime startTime;
 	@Enumerated(STRING)
 	private AnimalType animalType;
-	private boolean isRecruit;
-	private boolean isDone;
+	@Enumerated(STRING)
+	private VolunteerStatus status;
 	@Embedded
 	private Address address;
 }
