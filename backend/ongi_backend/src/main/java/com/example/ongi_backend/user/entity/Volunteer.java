@@ -3,10 +3,10 @@ package com.example.ongi_backend.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.ongi_backend.global.entity.Address;
-import com.example.ongi_backend.global.entity.Gender;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
+import com.example.ongi_backend.weeklyAvailableTime.entity.WeeklyAvailableTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
@@ -18,7 +18,12 @@ import lombok.experimental.SuperBuilder;
 public class Volunteer extends BaseUser {
 	@OneToMany(mappedBy = "volunteer")
 	private List<VolunteerActivity> volunteerActivities = new ArrayList<>();
-
+	@OneToMany(mappedBy = "volunteer", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private List<WeeklyAvailableTime> weeklyAvailableTimes = new ArrayList<>();
+	public void addWeeklyAvailableTime(List<WeeklyAvailableTime> weeklyAvailableTime) {
+		weeklyAvailableTimes.clear();
+		weeklyAvailableTimes.addAll(weeklyAvailableTime);
+	}
 	protected Volunteer() {
 		super();
 	}
