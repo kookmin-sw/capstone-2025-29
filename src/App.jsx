@@ -6,6 +6,7 @@ import Login from './pages/login';
 import Signup from './pages/Signup';
 import Edit from './pages/edit';
 import PasswordEdit from './pages/PasswordEdit';
+import VolunteerMain from './pages/VolunterMain';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
 
           <Route path="/edit" element={<Edit />} />
           <Route path='/passwordedit' element={<PasswordEdit />} />
+
+          <Route path='/volunteermain' element={<VolunteerMain />} />
           <Route path="*" element={<div>not found</div>} /> {/* 404 페이지 */}
         </Routes>
       </Router>
