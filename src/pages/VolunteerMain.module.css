@@ -1,0 +1,212 @@
+.container {
+    padding: 5vh 8vw;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+/* 상단바 */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 10vh;
+}
+
+.logo {
+    height: 40px;
+    margin-left: 3vw;
+}
+
+.topRightButtons {
+    display: flex;
+    gap: 3vw;
+}
+
+.iconBtn,
+.logo {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* 프로필 카드 */
+.profileCard {
+    background-color: #efefef;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 2vh;
+    margin: 4vh 0;
+}
+
+.profileImage {
+    width: 50%;
+    height: 80px;
+    border-radius: 50%;
+
+}
+
+.profileInfo {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vh;
+}
+
+.name {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.hours {
+    font-size: 0.95rem;
+}
+
+.phone {
+    font-size: 0.95rem;
+}
+
+/* 구분선 */
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+
+/* 봉사 가능 시간 */
+.sectionTitle {
+    font-weight: bold;
+    font-size: 1.05rem;
+    margin-bottom: 5px;
+}
+
+.dayTimeBox {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.dayItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dayCircle {
+    width: 38px;
+    height: 38px;
+    border-radius: 40%;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.active {
+    background-color: #ede9fe;
+    color: #6D57DE;
+}
+
+.inactive {
+    background-color: #dcdcdc;
+    color: #333;
+}
+
+.timeList {
+    font-size: 0.8rem;
+}
+
+/* 매칭 카드 */
+.matchCard {
+    border: 2px solid #6D57DE;
+    border-radius: 12px;
+    padding: 2vh 3vw;
+    text-align: center;
+    margin: 5vh 0;
+}
+
+.matchName {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.matchCard strong {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+/* 매칭 날짜 및 시간 */
+.matchTime {
+    color: #666;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* 후기작성/요청서확인/매칭내역 버튼 */
+.reviewBtn {
+    background-color: #6D57DE;
+    color: white;
+    border: none;
+    padding: 1vh 3vw;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 1.5vh 0;
+    width: 30vw;
+}
+
+/* 버튼 아래 설명 */
+.reviewInfo {
+    font-size: 0.7rem;
+    color: #333;
+    margin: 0;
+}
+
+
+/* 하단 버튼 네비 */
+.bottomNav {
+    display: flex;
+    justify-content: space-between;
+    margin: 3vh 0;
+    padding: 0 5vw;
+    gap: 2vw;
+}
+
+.navBox {
+    flex: 1;
+    max-width: 100px;
+    aspect-ratio: 1 / 1;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 1vw;
+    text-align: center;
+}
+
+.navBox img {
+    width: 40px;
+    height: 40px;
+}
+
+.navBox span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.navBox.active {
+    background-color: #E6E6FA;
+}
+
+.navBox.active span {
+    color: #6D57DE;
+}
