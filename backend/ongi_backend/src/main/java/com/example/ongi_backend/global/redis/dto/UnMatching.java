@@ -12,7 +12,6 @@ import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.entity.AnimalType;
 import com.example.ongi_backend.global.entity.VolunteerType;
 
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +27,7 @@ import lombok.ToString;
 @Getter
 public class UnMatching {
 	@Id
-	@GeneratedValue(strategy = UUID)
-	private String id;
+	private Long id;
 	private Long elderlyId;
 	private VolunteerType volunteerType;
 	private String addDescription;

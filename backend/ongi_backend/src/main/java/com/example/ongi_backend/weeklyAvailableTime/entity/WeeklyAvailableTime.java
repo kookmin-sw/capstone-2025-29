@@ -4,7 +4,6 @@ import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
-import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
@@ -18,12 +17,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
+@ToString
 public class WeeklyAvailableTime {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
