@@ -1,5 +1,6 @@
 package com.example.ongi_backend.volunteerActivity.service;
 
+import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.exception.CustomException;
+import com.example.ongi_backend.user.entity.Elderly;
+import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivity;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseMatching;
@@ -95,5 +98,21 @@ public class VolunteerActivityService {
 				.startTime(va.getStartTime())
 				.build();
 		}).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public VolunteerActivity addVolunteerActivity(RequestMatching request, Elderly elderly) {
+		VolunteerActivity volunteerActivity = VolunteerActivity.builder()
+			.elderly(elderly)
+			.volunteer(null)
+			.type(request.getVolunteerType())
+			.addDescription(request.getAddDescription())
+			.startTime(request.getStartTime())
+			.animalType(request.getAnimalType())
+			.status(MATCHING)
+			.address(request.getAddress())
+			.build();
+		VolunteerActivity save = volunteerActivityRepository.save(volunteerActivity);
+		return save;
 	}
 }
