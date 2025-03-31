@@ -84,7 +84,7 @@ public class ElderlyService {
 		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
 			() -> new CustomException(NOT_FOUND_USER_ERROR)
 		);
-		if(findVolunteerActivity.getElderly() != elderly) {
+		if(!findVolunteerActivity.getElderly().equals(elderly)) {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
 		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
