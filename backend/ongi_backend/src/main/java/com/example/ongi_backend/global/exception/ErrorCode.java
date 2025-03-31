@@ -16,6 +16,7 @@ public enum ErrorCode {
 	// REQUEST_PARAMETER_TYPE_NOT_MATCH_ERROR(400, "GLOBAL-005", "입력 파라미터의 타입이 올바르지 않습니다."),
 	//volunteerActivity
 	NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR(404, "VOLUNTEER-001", "봉사활동을 찾을 수 없습니다."),
+	UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR(400, "VOLUNTEER-002", "봉사활동 취소가 불가능합니다."),
 	//item
 	// CHAT_ROOM_JOIN_ERROR(400,"CHATROOM-001", "?"),
 	ITEM_NOT_FOUND_ERROR(404,"ITEM-001", "해당 상품이 존재하지 않습니다"),
