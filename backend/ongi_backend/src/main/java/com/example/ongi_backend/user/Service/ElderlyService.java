@@ -35,7 +35,7 @@ public class ElderlyService {
 	private final VolunteerActivityService volunteerActivityService;
 	private final UnMatchingRepository unMatchingRepository;
 
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional
 	public void matching(RequestMatching request, String name) {
 
 		if(Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds() < 0L) {
@@ -54,11 +54,17 @@ public class ElderlyService {
 		LocalDate date = request.getStartTime().toLocalDate();
 		Integer category = VolunteerType.getCategory(request.getVolunteerType());
 
-		Volunteer volunteer = volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category)
-			.orElseGet(() -> {
+		volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category, request.getAddress()
+			.getDistrict()).ifPresentOrElse(
+			volunteer -> {
+				// TODO : 매칭 알림 추가
+				volunteerActivity.updateStatus(PROGRESS);
+				volunteerActivity.updateVolunteer(volunteer);
+			},
+			() -> {
 				// TODO : 매칭 안됨 알림 기능 추가
 				unMatchingRepository.save(UnMatching.builder()
-						.id(volunteerActivity.getId())
+					.id(volunteerActivity.getId())
 					.elderlyId(elderly.getId())
 					.volunteerType(request.getVolunteerType())
 					.startTime(request.getStartTime())
@@ -69,13 +75,6 @@ public class ElderlyService {
 						Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds()
 					)
 					.build());
-				// TODO : return null 말고 다른 방법이 있는지?
-				return null;
 			});
-		if(volunteer != null) {
-			// TODO : 매칭 완료 알림 기능 추가
-			volunteerActivity.updateStatus(PROGRESS);
-			volunteerActivity.updateVolunteer(volunteer);
-		}
 	}
 }

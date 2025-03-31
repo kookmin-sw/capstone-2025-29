@@ -1,5 +1,6 @@
 package com.example.ongi_backend.volunteerActivity.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 
 @Repository
@@ -22,4 +24,5 @@ public interface VolunteerActivityRepository extends JpaRepository<VolunteerActi
 	@Query("SELECT va FROM VolunteerActivity va JOIN FETCH va.elderly JOIN FETCH va.volunteer WHERE va.volunteer.username = :username")
 	List<VolunteerActivity> findMatchingByUserName(String username);
 
+	Optional<VolunteerActivity> findByStartTimeAndVolunteer(LocalDateTime startTime, Volunteer volunteer);
 }
