@@ -115,4 +115,13 @@ public class VolunteerActivityService {
 		VolunteerActivity save = volunteerActivityRepository.save(volunteerActivity);
 		return save;
 	}
+
+	public VolunteerActivity findById(Long id) {
+		return volunteerActivityRepository.findById(id)
+			.orElseThrow(() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR));
+	}
+	@Transactional
+	public void deleteActivity(Long id) {
+		volunteerActivityRepository.deleteById(id);
+	}
 }

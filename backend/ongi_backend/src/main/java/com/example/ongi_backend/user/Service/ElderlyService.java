@@ -19,7 +19,6 @@ import com.example.ongi_backend.global.redis.repository.UnMatchingRepository;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
 import com.example.ongi_backend.user.entity.Elderly;
-import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
@@ -76,5 +75,26 @@ public class ElderlyService {
 					)
 					.build());
 			});
+	}
+
+	@Transactional
+	public void cancelMatching(Long id, String username) {
+		// TODO : 중복되는 기능은 따로 메소드로 분리
+		VolunteerActivity findVolunteerActivity = volunteerActivityService.findById(id);
+		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
+			() -> new CustomException(NOT_FOUND_USER_ERROR)
+		);
+		if(findVolunteerActivity.getElderly() != elderly) {
+			throw new CustomException(ACCESS_DENIED_ERROR);
+		}
+		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
+			volunteerActivityService.deleteActivity(id);
+		} else if (findVolunteerActivity.getStatus().equals(MATCHING)) {
+			// TODO : 봉사자에게 취소 알림 전송
+			volunteerActivityService.deleteActivity(id);
+			unMatchingRepository.deleteById(id);
+		}else{
+			throw new CustomException(UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR);
+		}
 	}
 }
