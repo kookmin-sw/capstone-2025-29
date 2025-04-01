@@ -3,8 +3,9 @@ package com.example.ongi_backend.user.Service;
 import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
-import com.example.ongi_backend.global.redis.dto.UnMatching;
-import com.example.ongi_backend.global.redis.repository.UnMatchingRepository;
+import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.ScheduleRequest;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
+import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
+import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
-import com.example.ongi_backend.volunteerActivity.repository.VolunteerActivityRepository;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 import com.example.ongi_backend.weeklyAvailableTime.entity.WeeklyAvailableTime;
 
@@ -31,8 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class VolunteerService {
 	private final VolunteerRepository volunteerRepository;
 	private final VolunteerActivityService volunteerActivityService;
-	private final UnMatchingRepository unMatchingRepository;
-	private final VolunteerActivityRepository volunteerActivityRepository;
+	private final UnMatchingService unMatchingService;
 
 	@Transactional
 	public void updateSchedule(List<ScheduleRequest.Schedules> schedules, String username) {
@@ -53,27 +53,13 @@ public class VolunteerService {
 
 	@Transactional
 	public void scanUnMatching(List<WeeklyAvailableTime> weeklyAvailableTimes, Volunteer volunteer) {
-		unMatchingRepository.findAll().forEach(unMatching -> {
+		unMatchingService.findAllUnMatching().forEach(unMatching -> {
 			weeklyAvailableTimes.forEach(weeklyAvailableTime -> {
 				if(unMatching.getStartTime().getDayOfWeek().equals(weeklyAvailableTime.getDayOfWeek())
 					&& unMatching.getStartTime().toLocalTime().equals(weeklyAvailableTime.getAvailableStartTime())
 					&& (VolunteerType.getCategory(unMatching.getVolunteerType()) & weeklyAvailableTime.getVolunteer().getVolunteerCategory()) != 0
 					&& unMatching.getAddress().getDistrict().equals(weeklyAvailableTime.getVolunteer().getAddress().getDistrict())) {
-					volunteerActivityRepository.findByStartTimeAndVolunteer(unMatching.getStartTime(), volunteer).ifPresentOrElse(
-						activity -> {
-							// 이미 해당 날짜에 매칭된 경우
-						},
-						() -> {
-							// TODO : 매칭 알림 전송
-							unMatchingRepository.delete(unMatching);
-							VolunteerActivity volunteerActivity = volunteerActivityRepository.findById(
-								unMatching.getId()).orElseThrow(
-								() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR)
-							);
-							volunteerActivity.updateStatus(PROGRESS);
-							volunteerActivity.updateVolunteer(volunteer);
-						}
-					);
+						volunteerActivityService.matchingIfNotAlreadyMatched(unMatching, volunteer);
 				}
 			});
 		});
@@ -81,8 +67,8 @@ public class VolunteerService {
 
 	@Transactional
 	public void deleteMatching(Long id, String username) {
-		// TODO : 중복되는 기능은 따로 메소드로 분리
 		VolunteerActivity findVolunteerActivity = volunteerActivityService.findById(id);
+		// TODO : 현재 로그인된 봉사자의 정보를 가져오는 방법이 따로 있으면 수정
 		Volunteer volunteer = volunteerRepository.findByUsername(username).orElseThrow(
 			() -> new CustomException(NOT_FOUND_USER_ERROR)
 		);
@@ -93,25 +79,45 @@ public class VolunteerService {
 			// TODO : 노인에게 봉사 취소 알림 전송
 			findVolunteerActivity.updateVolunteer(null);
 			findVolunteerActivity.updateStatus(MATCHING);
-			// TODO : unMatchingService로 분리
-			unMatchingRepository.save(
-				UnMatching.builder()
-					.id(findVolunteerActivity.getId())
-					.elderlyId(findVolunteerActivity.getElderly().getId())
-					.volunteerType(findVolunteerActivity.getType())
-					.startTime(findVolunteerActivity.getStartTime())
-					.animalType(findVolunteerActivity.getAnimalType())
-					.address(findVolunteerActivity.getAddress())
-					.addDescription(findVolunteerActivity.getAddDescription())
-					.ttl(
-						Duration.between(LocalDateTime.now(), findVolunteerActivity.getStartTime()).getSeconds())
-					.build()
+
+			unMatchingService.saveUnMatching(
+				findVolunteerActivity.getId(),
+				findVolunteerActivity.getElderly().getId(),
+				findVolunteerActivity.getType(),
+				findVolunteerActivity.getStartTime(),
+				findVolunteerActivity.getAnimalType(),
+				findVolunteerActivity.getAddress(),
+				findVolunteerActivity.getAddDescription()
 			);
 		}else {
 			throw new CustomException(UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR);
 		}
+	}
 
-
-		return ;
+	@Transactional
+	public void matchingIfDayOfWeekTimeMatched (RequestMatching request, Elderly elderly){
+		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
+		LocalTime startTime = request.getStartTime().toLocalTime();
+		LocalDate date = request.getStartTime().toLocalDate();
+		Integer category = VolunteerType.getCategory(request.getVolunteerType());
+		VolunteerActivity volunteerActivity = volunteerActivityService.addVolunteerActivity(request, elderly);
+		volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category, request.getAddress()
+			.getDistrict()).ifPresentOrElse(
+			volunteer -> {
+				// TODO : 매칭 알림 추가
+				volunteerActivity.updateStatus(PROGRESS);
+				volunteerActivity.updateVolunteer(volunteer);
+			},
+			() -> {
+				// TODO : 매칭 안됨 알림 기능 추가
+				unMatchingService.saveUnMatching(
+					volunteerActivity.getId(),
+					elderly.getId(),
+					request.getVolunteerType(),
+					request.getStartTime(),
+					request.getAnimalType(),
+					request.getAddress(),
+					request.getAddDescription());
+			});
 	}
 }
