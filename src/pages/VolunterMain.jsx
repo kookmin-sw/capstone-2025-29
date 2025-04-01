@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./VolunteerMain.module.css";
+import { useNavigate } from "react-router-dom";
 import ongi from '../assets/ongi.svg';
 
 export default function VolunteerMain() {
+    const navigate = useNavigate();
 
-    const volunteerStatus = "none"; // matched, done, none
+    const volunteerStatus = "done"; // matched, done, none
     const matchName = "홍길동";
     const matchDate = "2025년 10월 11일";
     const matchTime = "14:30";
@@ -85,7 +87,7 @@ export default function VolunteerMain() {
                     <>
                         <p className={styles.matchName}><strong>{matchName}</strong> 님과의 매칭</p>
                         <p className={styles.matchTime}>{matchDate}  |  {matchTime}</p>
-                        <button className={styles.reviewBtn}>후기 작성</button>
+                        <button className={styles.reviewBtn} onClick={() => { navigate("/writereview") }}>후기 작성</button>
                         <p className={styles.reviewInfo}>후기를 완료 후 1시간 내에 작성해야 봉사시간이 인정됩니다.</p>
                     </>
                 )}
