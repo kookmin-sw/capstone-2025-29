@@ -25,6 +25,9 @@ public class Volunteer extends BaseUser {
 		weeklyAvailableTimes.clear();
 		weeklyAvailableTimes.addAll(weeklyAvailableTime);
 	}
+	public void updateCategory(Integer category) {
+		this.volunteerCategory = category;
+	}
 	protected Volunteer() {
 		super();
 	}
