@@ -35,7 +35,7 @@ public class VolunteerService {
 	private final UnMatchingService unMatchingService;
 
 	@Transactional
-	public void updateSchedule(List<ScheduleRequest.Schedules> schedules, String username) {
+	public void updateSchedule(List<ScheduleRequest.Schedules> schedules, int category, String username) {
 		Volunteer volunteer = volunteerRepository.findByUsername(username).orElseThrow(
 			() -> new CustomException(NOT_FOUND_USER_ERROR)
 		);
@@ -47,6 +47,7 @@ public class VolunteerService {
 				.volunteer(volunteer)
 				.build();
 		}).collect(Collectors.toList());
+		volunteer.updateCategory(category);
 		volunteer.addWeeklyAvailableTime(collect);
 		scanUnMatching(collect, volunteer);
 	}
