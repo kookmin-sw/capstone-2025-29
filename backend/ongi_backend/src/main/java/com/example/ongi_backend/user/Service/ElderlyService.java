@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
@@ -27,6 +28,7 @@ public class ElderlyService {
 	private final VolunteerActivityService volunteerActivityService;
 	private final UnMatchingService unMatchingService;
 	private final VolunteerService volunteerService;
+	private final AwsSqsNotificationSender awsSqsNotificationSender;
 
 	@Transactional
 	public void matching(RequestMatching request, String name) {
@@ -55,6 +57,10 @@ public class ElderlyService {
 		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
 			volunteerActivityService.deleteActivity(id);
 		} else if (findVolunteerActivity.getStatus().equals(MATCHING)) {
+			awsSqsNotificationSender.cancelNotification(
+				findVolunteerActivity.getVolunteer().getUsername(),
+				findVolunteerActivity.getElderly().getName()
+			);
 			// TODO : 봉사자에게 취소 알림 전송
 			volunteerActivityService.deleteActivity(id);
 			unMatchingService.deleteUnMatchingById(id);
