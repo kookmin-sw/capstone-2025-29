@@ -150,6 +150,14 @@ public class VolunteerActivityService {
 					volunteer.getFcmToken(),
 					elderly.getName()
 				);
+				awsSqsNotificationSender.scheduleNotification(
+					volunteer.getFcmToken(),
+					elderly.getName()
+				);
+				awsSqsNotificationSender.scheduleNotification(
+					elderly.getFcmToken(),
+					volunteer.getName()
+				);
 			}
 		);
 	}
