@@ -118,6 +118,14 @@ public class VolunteerService {
 					elderly.getFcmToken(),
 					volunteer.getName()
 				);
+				awsSqsNotificationSender.scheduleNotification(
+					volunteer.getFcmToken(),
+					elderly.getName()
+				);
+				awsSqsNotificationSender.scheduleNotification(
+					elderly.getFcmToken(),
+					volunteer.getName()
+				);
 				volunteerActivity.updateStatus(PROGRESS);
 				volunteerActivity.updateVolunteer(volunteer);
 			},
