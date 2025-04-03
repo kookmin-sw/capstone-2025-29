@@ -22,3 +22,14 @@ Authorization:
   header: "Authorization"
 
 secret: ${SECRET}
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    sqs:
+      queue:
+        name: ${AWS_SQS_QUEUE_NAME}
