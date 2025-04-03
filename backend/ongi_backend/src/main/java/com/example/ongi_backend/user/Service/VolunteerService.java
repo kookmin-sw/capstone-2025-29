@@ -118,11 +118,13 @@ public class VolunteerService {
 					elderly.getFcmToken(),
 					volunteer.getName()
 				);
-				awsSqsNotificationSender.scheduleNotification(
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
+					volunteerActivity.getStartTime(),
 					volunteer.getFcmToken(),
 					elderly.getName()
 				);
-				awsSqsNotificationSender.scheduleNotification(
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
+					volunteerActivity.getStartTime(),
 					elderly.getFcmToken(),
 					volunteer.getName()
 				);
