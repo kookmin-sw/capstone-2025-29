@@ -61,11 +61,19 @@ public class ElderlyService {
 				findVolunteerActivity.getVolunteer().getUsername(),
 				findVolunteerActivity.getElderly().getName()
 			);
-			// TODO : 봉사자에게 취소 알림 전송
+			awsSqsNotificationSender.cancelNotification(
+				findVolunteerActivity.getVolunteer().getFcmToken(),
+				findVolunteerActivity.getVolunteer().getName()
+			);
 			volunteerActivityService.deleteActivity(id);
 			unMatchingService.deleteUnMatchingById(id);
 		}else{
 			throw new CustomException(UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR);
 		}
+	}
+
+	public Elderly findElderlyById(Long id) {
+		return elderlyRepository.findById(id)
+			.orElseThrow(() -> new CustomException(NOT_FOUND_USER_ERROR));
 	}
 }

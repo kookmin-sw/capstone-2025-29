@@ -48,8 +48,11 @@ public class AwsSqsNotificationSender implements NotificationSender {
 	public void scheduleNotification(String fcmToken, String otherUserName){
 		sendNotification(makeNotification(fcmToken, "봉사 시작까지 얼마남지 않았아요!", otherUserName + "님과의 봉사 한 시간 전입니다"));
 	}
+	public void unMatchingNotification(String fcmToken) {
+		sendNotification(makeNotification(fcmToken, "봉사자 매칭 중", "봉사자가 매칭되면 알림을 보내드리겠습니다!"));
+	}
 
-	public SqsMessage makeNotification(String fcmToken, String title, String body){
+	private SqsMessage makeNotification(String fcmToken, String title, String body){
 		return SqsMessage.builder()
 			.messageBody("{ \"message\": \"푸시 알람 요청\" }")
 			.messageAttributes(SqsMessage.MessageAttributes.builder()
@@ -71,4 +74,5 @@ public class AwsSqsNotificationSender implements NotificationSender {
 			matchingNotification("fcmToken", "otherUserName");
 		}, executionTime);
 	}
+
 }
