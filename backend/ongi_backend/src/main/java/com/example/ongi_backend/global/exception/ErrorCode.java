@@ -10,11 +10,13 @@ public enum ErrorCode {
 	// INTERNAL_SERVER_ERROR(500, "GLOBAL-001", "서버에 오류가 발생하였습니다."),
 	INPUT_INVALID_VALUE_ERROR(400, "GLOBAL-002", "잘못된 입력 값입니다."),
 	EMPTY_INPUT_ERROR(400, "GLOBAL-003", "입력 값이 비어있습니다."),
+	POST_TIME_ERROR(400, "GLOBAL-004", "시간이 지났습니다."),
 	// INPUT_INVALID_TYPE_ERROR(400, "GLOBAL-003", "잘못된 입력 타입입니다."),
 	// REQUEST_PARAMETER_NOT_FOUND_ERROR(400, "GLOBAL-004", "입력 파라미터가 존재하지 않습니다."),
 	// REQUEST_PARAMETER_TYPE_NOT_MATCH_ERROR(400, "GLOBAL-005", "입력 파라미터의 타입이 올바르지 않습니다."),
 	//volunteerActivity
 	NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR(404, "VOLUNTEER-001", "봉사활동을 찾을 수 없습니다."),
+	UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR(400, "VOLUNTEER-002", "봉사활동 취소가 불가능합니다."),
 	//item
 	// CHAT_ROOM_JOIN_ERROR(400,"CHATROOM-001", "?"),
 	ITEM_NOT_FOUND_ERROR(404,"ITEM-001", "해당 상품이 존재하지 않습니다"),
