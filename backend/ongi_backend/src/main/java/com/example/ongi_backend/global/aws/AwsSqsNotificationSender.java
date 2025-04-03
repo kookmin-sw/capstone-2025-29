@@ -1,6 +1,11 @@
 package com.example.ongi_backend.global.aws;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
 import com.example.ongi_backend.global.aws.dto.SqsMessage;
@@ -19,6 +24,7 @@ public class AwsSqsNotificationSender implements NotificationSender {
 	@Value("${cloud.aws.sqs.queue.name}")
 	private String queueName;
 	private final ObjectMapper objectMapper;
+	private final TaskScheduler taskScheduler;
 	@Override
 	public void sendNotification(SqsMessage SqsMessage) {
 		try{
@@ -40,7 +46,7 @@ public class AwsSqsNotificationSender implements NotificationSender {
 		sendNotification(makeNotification(fcmToken, "이번 봉사는 어떠셨나요?", otherUserName + "님과의 봉사 리뷰를 작성해주세요"));
 	}
 	public void scheduleNotification(String fcmToken, String otherUserName){
-		sendNotification(makeNotification(fcmToken, "봉사 한시간 전입니다!", otherUserName + "님과의 봉사 한 시간 전입니다"));
+		sendNotification(makeNotification(fcmToken, "봉사 시작까지 얼마남지 않았아요!", otherUserName + "님과의 봉사 한 시간 전입니다"));
 	}
 
 	public SqsMessage makeNotification(String fcmToken, String title, String body){
@@ -57,5 +63,12 @@ public class AwsSqsNotificationSender implements NotificationSender {
 			).build();
 	}
 
+	public void testTaskScheduler(LocalDateTime time){
+		Date executionTime = Date.from(time.minusMinutes(1).atZone(ZoneId.systemDefault()).toInstant());
 
+		taskScheduler.schedule(() -> {
+			System.out.println("test task");
+			matchingNotification("fcmToken", "otherUserName");
+		}, executionTime);
+	}
 }
