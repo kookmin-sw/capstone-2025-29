@@ -14,7 +14,7 @@ import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.dto.UnMatching;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
-import com.example.ongi_backend.user.Service.ElderlyService;
+import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
@@ -35,7 +35,7 @@ public class VolunteerActivityService {
 	private final VolunteerActivityRepository volunteerActivityRepository;
 	private final AwsSqsNotificationSender awsSqsNotificationSender;
 	private final UnMatchingService unMatchingService;
-	private final ElderlyService elderlyService;
+	private final ElderlyRepository elderlyRepository;
 
 	public List<ResponseCompletedActivity> findCompleteVolunteerActivities(String username) {
 		List<VolunteerActivity> completeList = volunteerActivityRepository.findCompleteActivitiesByUserName(username);
@@ -140,7 +140,9 @@ public class VolunteerActivityService {
 				VolunteerActivity volunteerActivity = findById(unMatching.getId());
 				volunteerActivity.updateStatus(PROGRESS);
 				volunteerActivity.updateVolunteer(volunteer);
-				Elderly elderly = elderlyService.findElderlyById(unMatching.getElderlyId());
+				Elderly elderly = elderlyRepository.findById(unMatching.getElderlyId()).orElseThrow(
+					() -> new CustomException(NOT_FOUND_USER_ERROR)
+				);
 
 				awsSqsNotificationSender.matchingNotification(
 					elderly.getFcmToken(),
@@ -150,11 +152,13 @@ public class VolunteerActivityService {
 					volunteer.getFcmToken(),
 					elderly.getName()
 				);
-				awsSqsNotificationSender.scheduleNotification(
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
+					volunteerActivity.getStartTime(),
 					volunteer.getFcmToken(),
 					elderly.getName()
 				);
-				awsSqsNotificationSender.scheduleNotification(
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
+					volunteerActivity.getStartTime(),
 					elderly.getFcmToken(),
 					volunteer.getName()
 				);

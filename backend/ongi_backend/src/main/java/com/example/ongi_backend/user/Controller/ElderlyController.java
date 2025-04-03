@@ -29,6 +29,15 @@ public class ElderlyController {
 		);
 	}
 
+	@PostMapping("/matching/{matchingId}")
+	public void acceptMatching(@PathVariable Long matchingId, Principal principal) {
+		elderlyService.completeVolunteerActivity(matchingId,
+			//TODO : 로그인 구현 후 수정
+			// principal.getName()
+			"username"
+		);
+	}
+
 	@DeleteMapping("/matching/{matchingId}")
 	public void cancelMatching(@PathVariable Long matchingId ,Principal principal) {
 		elderlyService.cancelMatching(matchingId,
@@ -37,5 +46,4 @@ public class ElderlyController {
 			"username"
 		);
 	}
-
 }

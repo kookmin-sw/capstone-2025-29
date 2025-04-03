@@ -72,6 +72,16 @@ public class ElderlyService {
 		}
 	}
 
+	@Transactional
+	public void completeVolunteerActivity(Long matchingId, String username){
+		VolunteerActivity volunteerActivity = volunteerActivityService.findById(matchingId);
+		volunteerActivity.updateStatus(REVIEWING);
+		awsSqsNotificationSender.reviewNotification(
+			volunteerActivity.getVolunteer().getUsername(),
+			username
+		);
+	}
+
 	public Elderly findElderlyById(Long id) {
 		return elderlyRepository.findById(id)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_USER_ERROR));
