@@ -2,6 +2,8 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 chat_history = [{"role": "system", "content": "너는 독거노인과 따뜻하게 대화하는 친구야."}]

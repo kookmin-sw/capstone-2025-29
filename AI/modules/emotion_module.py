@@ -1,7 +1,11 @@
 from openai import OpenAI
 import re
+from dotenv import load_dotenv
+import os
 
-client = OpenAI(api_key="sMA")
+load_dotenv()
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def analyze_emotion(chat_history, labels) -> str:
     messages = chat_history + [{
