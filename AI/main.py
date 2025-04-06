@@ -13,18 +13,32 @@ app = FastAPI()
 # 음성 입력 채팅
 @app.post("/chat/audio/")
 async def chat_with_audio(file: UploadFile = File(...)):
-
     temp_path = f"temp_{uuid.uuid4().hex}.wav"
     try:
         with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
+        # STT: 음성을 텍스트로 변환
         text = transcribe(temp_path)
-        add_user_message(text)
-        response = get_chat_response()
-        add_assistant_message(response)
+        
+        # TTR: GPT 응답 생성
+        add_user_message(text)  # 채팅 기록에 사용자 메시지 추가
+        gpt_response = get_chat_response()  # GPT 응답 생성
+        add_assistant_message(gpt_response)  # 채팅 기록에 AI 응답 추가
 
-        return {"user_input": text, "assistant_response": response}
+        return {
+            "status": "success",
+            "data": {
+                "input": {
+                    "type": "audio",
+                    "text": text
+                },
+                "response": {
+                    "text": gpt_response,
+                    "audio_path": None  # TTS 구현 시 추가
+                }
+            }
+        }
     finally:
         # Clean up temporary files
         if os.path.exists(temp_path):
@@ -33,14 +47,23 @@ async def chat_with_audio(file: UploadFile = File(...)):
 # 텍스트 입력 채팅
 @app.post("/chat/text/")
 async def chat_with_text(text: str):
-   
-    add_user_message(text)
-    response = get_chat_response()
-    add_assistant_message(response)
+    # TTR: GPT 응답 생성
+    add_user_message(text)  # 채팅 기록에 사용자 메시지 추가
+    gpt_response = get_chat_response()  # GPT 응답 생성
+    add_assistant_message(gpt_response)  # 채팅 기록에 AI 응답 추가
     
     return {
-        "user_input": text,
-        "assistant_response": response
+        "status": "success",
+        "data": {
+            "input": {
+                "type": "text",
+                "text": text
+            },
+            "response": {
+                "text": gpt_response,
+                "audio_path": None  # TTS 구현 시 추가
+            }
+        }
     }
 
 # TTS음성 파일 변환
@@ -54,10 +77,10 @@ async def get_audio(filename: str):
 # 감정분석
 @app.post("/end-chat/")
 async def end_chat(backend_url: str):
-    # Analyze emotion from chat history
+    # 감정 분석
     emotion = analyze_emotion(get_chat_history(), ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
     
-    # Send emotion analysis to backend without waiting for response
+    # 백엔드로 데이터 전송
     async with httpx.AsyncClient() as client:
         await client.post(
             backend_url,
@@ -67,4 +90,9 @@ async def end_chat(backend_url: str):
             }
         )
     
-    return {"status": "success", "emotion": emotion}
+    return {
+        "status": "success",
+        "data": {
+            "emotion": emotion
+        }
+    }
