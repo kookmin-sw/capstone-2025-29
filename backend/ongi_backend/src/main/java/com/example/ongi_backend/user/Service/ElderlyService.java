@@ -14,6 +14,7 @@ import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
+import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
@@ -57,13 +58,13 @@ public class ElderlyService {
 		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
 			volunteerActivityService.deleteActivity(id);
 		} else if (findVolunteerActivity.getStatus().equals(MATCHING)) {
+			Volunteer volunteer = findVolunteerActivity.getVolunteer();
+
 			awsSqsNotificationSender.cancelNotification(
-				findVolunteerActivity.getVolunteer().getUsername(),
-				findVolunteerActivity.getElderly().getName()
-			);
-			awsSqsNotificationSender.cancelNotification(
-				findVolunteerActivity.getVolunteer().getFcmToken(),
-				findVolunteerActivity.getVolunteer().getName()
+				volunteer.getFcmToken(),
+				elderly.getName(),
+				volunteer.getId(),
+				"volunteer"
 			);
 			volunteerActivityService.deleteActivity(id);
 			unMatchingService.deleteUnMatchingById(id);
@@ -76,9 +77,11 @@ public class ElderlyService {
 	public void completeVolunteerActivity(Long matchingId, String username){
 		VolunteerActivity volunteerActivity = volunteerActivityService.findById(matchingId);
 		volunteerActivity.updateStatus(REVIEWING);
+		Volunteer volunteer = volunteerActivity.getVolunteer();
 		awsSqsNotificationSender.reviewNotification(
-			volunteerActivity.getVolunteer().getUsername(),
-			username
+			volunteer.getUsername(),
+			username,
+			volunteer.getId()
 		);
 	}
 

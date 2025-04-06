@@ -146,21 +146,29 @@ public class VolunteerActivityService {
 
 				awsSqsNotificationSender.matchingNotification(
 					elderly.getFcmToken(),
-					volunteer.getName()
+					volunteer.getName(),
+					elderly.getId(),
+					"elderly"
 				);
 				awsSqsNotificationSender.matchingNotification(
 					volunteer.getFcmToken(),
-					elderly.getName()
+					elderly.getName(),
+					volunteer.getId(),
+					"volunteer"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
 					volunteerActivity.getStartTime(),
 					volunteer.getFcmToken(),
-					elderly.getName()
+					elderly.getName(),
+					volunteer.getId(),
+					"volunteer"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
 					volunteerActivity.getStartTime(),
 					elderly.getFcmToken(),
-					volunteer.getName()
+					volunteer.getName(),
+					elderly.getId(),
+					"elderly"
 				);
 			}
 		);
