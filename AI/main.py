@@ -4,12 +4,13 @@ import os
 from modules.stt_module import transcribe
 from modules.ttr_module import add_user_message, add_assistant_message, get_chat_response, get_chat_history
 from modules.emotion_module import analyze_emotion
+import uuid
 
 app = FastAPI()
 
 @app.post("/chat/")
 async def chat_with_audio(file: UploadFile = File(...)):
-    temp_path = f"temp_{file.filename}"
+    temp_path = f"temp_{uuid.uuid4().hex}.wav"
     with open(temp_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
