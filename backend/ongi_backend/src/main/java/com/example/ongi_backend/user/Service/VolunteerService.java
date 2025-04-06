@@ -79,9 +79,12 @@ public class VolunteerService {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
 		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
+			Elderly elderly = findVolunteerActivity.getElderly();
 			awsSqsNotificationSender.cancelNotification(
-				findVolunteerActivity.getElderly().getFcmToken(),
-				findVolunteerActivity.getElderly().getName()
+				elderly.getFcmToken(),
+				volunteer.getName(),
+				elderly.getId(),
+				"elderly"
 			);
 			findVolunteerActivity.updateVolunteer(null);
 			findVolunteerActivity.updateStatus(MATCHING);
@@ -112,28 +115,37 @@ public class VolunteerService {
 			volunteer -> {
 				awsSqsNotificationSender.matchingNotification(
 					volunteer.getFcmToken(),
-					elderly.getName()
+					elderly.getName(),
+					volunteer.getId(),
+					"volunteer"
 				);
 				awsSqsNotificationSender.matchingNotification(
 					elderly.getFcmToken(),
-					volunteer.getName()
+					volunteer.getName(),
+					elderly.getId(),
+					"elderly"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
 					volunteerActivity.getStartTime(),
 					volunteer.getFcmToken(),
-					elderly.getName()
+					elderly.getName(),
+					volunteer.getId(),
+					"volunteer"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
 					volunteerActivity.getStartTime(),
 					elderly.getFcmToken(),
-					volunteer.getName()
+					volunteer.getName(),
+					elderly.getId(),
+					"elderly"
 				);
 				volunteerActivity.updateStatus(PROGRESS);
 				volunteerActivity.updateVolunteer(volunteer);
 			},
 			() -> {
 				awsSqsNotificationSender.unMatchingNotification(
-					elderly.getFcmToken()
+					elderly.getFcmToken(),
+					elderly.getId()
 				);
 				unMatchingService.saveUnMatching(
 					volunteerActivity.getId(),

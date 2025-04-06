@@ -1,5 +1,7 @@
 package com.example.ongi_backend.user.Controller;
 
+import com.example.ongi_backend.global.redis.dto.RedisNotificationTemplate;
+import com.example.ongi_backend.global.redis.service.NotificationRedisService;
 import com.example.ongi_backend.user.Dto.RequestModify;
 import com.example.ongi_backend.user.Dto.RequestModifyPassword;
 import com.example.ongi_backend.user.Dto.ResponseUserInfo;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -18,11 +21,18 @@ import java.security.Principal;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
+    private final NotificationRedisService notificationRedisService;
 
     @GetMapping
     public ResponseEntity<ResponseUserInfo> getUser(Principal principal, @RequestParam String userType) {
         ResponseUserInfo responseUserInfo = userService.getUser(principal.getName(), userType);
         return ResponseEntity.ok().body(responseUserInfo);
+    }
+
+    @GetMapping("/notification")
+    public ResponseEntity<List<RedisNotificationTemplate>> getNotification(@RequestParam String userType, @RequestParam String userId) {
+        List<RedisNotificationTemplate> notifications = notificationRedisService.findNotification(userId, userType);
+        return ResponseEntity.ok().body(notifications);
     }
 
     @PostMapping
