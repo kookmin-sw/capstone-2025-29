@@ -10,9 +10,7 @@ app = FastAPI()
 
 @app.post("/chat/audio/")
 async def chat_with_audio(file: UploadFile = File(...)):
-    """
-    Endpoint for handling audio input, converting to text, and generating response
-    """
+
     temp_path = f"temp_{uuid.uuid4().hex}.wav"
     try:
         with open(temp_path, "wb") as buffer:
@@ -28,6 +26,18 @@ async def chat_with_audio(file: UploadFile = File(...)):
         # Clean up temporary files
         if os.path.exists(temp_path):
             os.remove(temp_path)
+
+@app.post("/chat/text/")
+async def chat_with_text(text: str):
+   
+    add_user_message(text)
+    response = get_chat_response()
+    add_assistant_message(response)
+    
+    return {
+        "user_input": text,
+        "assistant_response": response
+    }
 
 @app.get("/emotion/")
 async def get_emotion():
