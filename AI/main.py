@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.responses import FileResponse
 import shutil
 import os
 from modules.stt_module import transcribe
@@ -38,6 +39,13 @@ async def chat_with_text(text: str):
         "user_input": text,
         "assistant_response": response
     }
+
+@app.get("/audio/{filename}")
+async def get_audio(filename: str):
+   
+    if not os.path.exists(filename):
+        raise HTTPException(status_code=404, detail="Audio file not found")
+    return FileResponse(filename)
 
 @app.get("/emotion/")
 async def get_emotion():
