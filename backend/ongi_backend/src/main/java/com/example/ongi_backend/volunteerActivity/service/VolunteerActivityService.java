@@ -178,4 +178,11 @@ public class VolunteerActivityService {
 	public void deleteActivity(Long id) {
 		volunteerActivityRepository.deleteById(id);
 	}
+	@Transactional
+	public void expireActivity(Long id) {
+		VolunteerActivity activity = findById(id);
+		Elderly elderly = activity.getElderly();
+		deleteActivity(id);
+		awsSqsNotificationSender.expireNotification(elderly.getFcmToken(), elderly.getId());
+	}
 }

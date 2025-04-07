@@ -48,6 +48,11 @@ public class NotificationRedisService {
 		RedisNotificationTemplate notification = makeNotification(userId, "봉사자 매칭 중", "봉사자가 매칭되면 알림을 보내드리겠습니다!");
 		saveNotificationInRedis(userId, notification, userType);
 	}
+	public void ExpireNotificationInRedis(Long userId) {
+		RedisNotificationTemplate notification = makeNotification(userId, "봉사 일정이 만료되었습니다!", "봉사자가 매칭되지 않았습니다");
+		saveNotificationInRedis(userId, notification, "elderly");
+
+	}
 
 	@Transactional
 	public void saveNotificationInRedis(Long userId, RedisNotificationTemplate notification, String userType) {
