@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Edit.module.css";
-import Topbar from "../components/Topbar";
+import Topbar from "../../components/Topbar";
 
 export default function Edit() {
     const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Signup.module.css";
-import Topbar from "../components/Topbar";
-import ongi from '../assets/ongi.svg';
+import Topbar from "../../components/Topbar";
+import ongi from '../../assets/ongi.svg';
 
 export default function Signup() {
     // form 상태 저장

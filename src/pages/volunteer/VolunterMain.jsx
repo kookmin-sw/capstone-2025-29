@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./VolunteerMain.module.css";
 import { useNavigate } from "react-router-dom";
-import ongi from '../assets/ongi.svg';
+import ongi from '../../assets/ongi.svg';
 
 export default function VolunteerMain() {
     const navigate = useNavigate();

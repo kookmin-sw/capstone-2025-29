@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
-import ongi_login from '../assets/ongi_login.svg';
+import ongi_login from '../../assets/ongi_login.svg';
 
 export default function Login() {
     const navigate = useNavigate();
