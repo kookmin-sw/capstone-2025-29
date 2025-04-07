@@ -55,9 +55,9 @@ public class ElderlyService {
 		if(!findVolunteerActivity.getElderly().equals(elderly)) {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
-		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
+		if(findVolunteerActivity.getStatus().equals(MATCHING)) {
 			volunteerActivityService.deleteActivity(id);
-		} else if (findVolunteerActivity.getStatus().equals(MATCHING)) {
+		} else if (findVolunteerActivity.getStatus().equals(PROGRESS)) {
 			Volunteer volunteer = findVolunteerActivity.getVolunteer();
 
 			awsSqsNotificationSender.cancelNotification(
@@ -76,13 +76,17 @@ public class ElderlyService {
 	@Transactional
 	public void completeVolunteerActivity(Long matchingId, String username){
 		VolunteerActivity volunteerActivity = volunteerActivityService.findById(matchingId);
-		volunteerActivity.updateStatus(REVIEWING);
-		Volunteer volunteer = volunteerActivity.getVolunteer();
-		awsSqsNotificationSender.reviewNotification(
-			volunteer.getUsername(),
-			username,
-			volunteer.getId()
-		);
+		if(volunteerActivity.getStatus().equals(PROGRESS)){
+			volunteerActivity.updateStatus(REVIEWING);
+			Volunteer volunteer = volunteerActivity.getVolunteer();
+			awsSqsNotificationSender.reviewNotification(
+				volunteer.getUsername(),
+				username,
+				volunteer.getId()
+			);
+		}else{
+			throw new CustomException(UNAVAILABLE_COMPLETE_VOLUNTEER_ACTIVITY_ERROR);
+		}
 	}
 
 	public Elderly findElderlyById(Long id) {
