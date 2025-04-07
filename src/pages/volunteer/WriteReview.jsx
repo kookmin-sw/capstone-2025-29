@@ -14,6 +14,15 @@ export default function WriteReview() {
         setShowModal(false);
     };
 
+
+    const reviewData = {
+        images: [
+            "../../../public/imgex.png",
+            "../../../public/imgex.png",
+            "../../../public/imgex.png"
+        ]
+    }
+
     return (
         <div className={styles.container}>
             <Topbar title="후기작성" />
@@ -36,10 +45,16 @@ export default function WriteReview() {
 
             {/* 사진/동영상 첨부 */}
             <button className={styles.attachBtn} onClick={handleAttachClick}>
-                <img src="/icon-gallery.svg" />
                 사진/동영상 첨부하기
             </button>
 
+
+            {/* 이미지 미리보기 */}
+            <div className={styles.imageScroll}>
+                {reviewData.images.map((src, idx) => (
+                    <img key={idx} src={src} className={styles.previewImage} alt={`preview-${idx}`} />
+                ))}
+            </div>
 
             {/* 모달 */}
             {showModal && (
@@ -52,6 +67,10 @@ export default function WriteReview() {
                     </div>
                 </div>
             )}
+
+
+
+
 
             {/* 후기 작성 */}
             <div className={styles.reviewSection}>
