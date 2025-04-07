@@ -30,7 +30,7 @@ public class ElderlyController {
 	}
 
 	@PostMapping("/matching/{matchingId}")
-	public void acceptMatching(@PathVariable Long matchingId, Principal principal) {
+	public void completeMatching(@PathVariable Long matchingId, Principal principal) {
 		elderlyService.completeVolunteerActivity(matchingId,
 			//TODO : 로그인 구현 후 수정
 			// principal.getName()
