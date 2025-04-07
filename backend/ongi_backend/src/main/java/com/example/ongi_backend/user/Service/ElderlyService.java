@@ -80,7 +80,7 @@ public class ElderlyService {
 			volunteerActivity.updateStatus(REVIEWING);
 			Volunteer volunteer = volunteerActivity.getVolunteer();
 			awsSqsNotificationSender.reviewNotification(
-				volunteer.getUsername(),
+				volunteer.getFcmToken(),
 				username,
 				volunteer.getId()
 			);

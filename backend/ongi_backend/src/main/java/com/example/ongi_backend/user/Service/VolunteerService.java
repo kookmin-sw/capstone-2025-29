@@ -4,7 +4,9 @@ import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,6 +90,14 @@ public class VolunteerService {
 			);
 			findVolunteerActivity.updateVolunteer(null);
 			findVolunteerActivity.updateStatus(MATCHING);
+			if(Duration.between(LocalDateTime.now(),findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
+				awsSqsNotificationSender.expireNotification(
+					elderly.getFcmToken(),
+					elderly.getId()
+				);
+				volunteerActivityService.deleteActivity(id);
+				return ;
+			}
 
 			unMatchingService.saveUnMatching(
 				findVolunteerActivity.getId(),

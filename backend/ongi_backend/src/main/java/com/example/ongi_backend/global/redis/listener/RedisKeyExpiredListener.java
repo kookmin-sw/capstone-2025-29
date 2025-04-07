@@ -5,7 +5,6 @@ import org.springframework.data.redis.listener.KeyExpirationEventMessageListener
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 
-import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +18,10 @@ public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
 	 * @param listenerContainer must not be {@literal null}.
 	 */
 	private final VolunteerActivityService volunteerActivityService;
-	private final AwsSqsNotificationSender awsSqsNotificationSender;
 	public RedisKeyExpiredListener(RedisMessageListenerContainer listenerContainer,
-		VolunteerActivityService volunteerActivityService, AwsSqsNotificationSender awsSqsNotificationSender) {
+		VolunteerActivityService volunteerActivityService) {
 		super(listenerContainer);
 		this.volunteerActivityService = volunteerActivityService;
-		this.awsSqsNotificationSender = awsSqsNotificationSender;
 	}
 
 	@Override
