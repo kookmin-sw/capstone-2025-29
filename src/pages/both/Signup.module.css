@@ -59,7 +59,7 @@
 }
 
 .checkBtn {
-    padding: 1.2vh 2vw;
+    padding: 1.5vh 3vw;
     background-color: #6D57DE;
     color: white;
     border: none;
@@ -69,30 +69,6 @@
     margin-top: 1vh;
 }
 
-/* 라디오 그룹 */
-.radioGroup {
-    display: flex;
-    gap: 3vw;
-    margin-top: 1vh;
-}
-
-.radioBtn {
-    flex: 1;
-    padding: 1.4vh 0;
-    background-color: #f3f3f3;
-    border: none;
-    border-radius: 5px;
-    color: #333;
-    font-weight: 500;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-    cursor: pointer;
-    text-align: center;
-}
-
-.radioBtn.active {
-    background-color: #6A0DAD;
-    color: white;
-}
 
 /* 생년월일 드롭다운 */
 .dateSelect {
@@ -132,7 +108,7 @@
 .submitBtn {
     width: 100%;
     max-width: 400px;
-    padding: 1.8vh 0;
+    padding: 1.5vh 3vw;
     background-color: #DFDFDF;
     color: #999;
     font-size: clamp(1rem, 2.5vw, 1.2rem);

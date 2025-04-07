@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Signup.module.css";
 import Topbar from "../../components/Topbar";
 import ongi from '../../assets/ongi.svg';
 
 export default function Signup() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const selectedRole = location.state?.role || "";
+
     // form 상태 저장
     const [formValues, setFormValues] = useState({
         id: "",
@@ -91,17 +96,28 @@ export default function Signup() {
 
         console.log("전송할 데이터:", formData);
 
-        fetch("https://your-api-endpoint.com/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData)
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                alert("회원가입 완료");
-                console.log(data);
-            })
-            .catch((err) => console.error("에러:", err));
+        // 역할에 따라 이동 -> 나중에 fetch 안으로 집어 넣야야함
+
+        if (selectedRole === "volunteer") {
+            navigate("/volunteerMain");
+        } else {
+            navigate("/userMain");
+        }
+
+        // fetch("https://your-api-endpoint.com/signup", {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify(formData)
+        // })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         alert("회원가입 완료");
+        //         console.log(data);
+
+        //     })
+        //     .catch((err) => console.error("에러:", err));
+
+
     };
 
     // 비밀번호 일치 여부
@@ -111,8 +127,8 @@ export default function Signup() {
     const birthDateComplete = formValues.birthYear && formValues.birthMonth && formValues.birthDay;
 
     // 가입 버튼 비활성화 조건
-    const isSubmitDisabled =
-        !agreeAll ||
+    const isSubmitDisabled = false;
+    !agreeAll ||
         !idChecked ||
         formValues.userType === "" ||
         !passwordsMatch ||
@@ -146,7 +162,7 @@ export default function Signup() {
                         type="button"
                         className={styles.checkBtn}
                         style={{
-                            backgroundColor: idChecked ? "#E6E6FA" : "#6A0DAD",
+                            backgroundColor: idChecked ? "#E6E6FA" : "#6D57DE",
                             color: idChecked ? "#6D57DE" : "#fff"
                         }}
                         onClick={handleCheckId}
@@ -203,34 +219,8 @@ export default function Signup() {
                 />
             </div>
 
-            {/* 이용 분류 */}
-            <div className={styles.inputGroup}>
-                <label>이용하실 분류</label>
-                <div className={styles.radioGroup}>
-                    <button
-                        type="button"
-                        className={styles.radioBtn}
-                        style={{
-                            backgroundColor: formValues.userType === "senior" ? "#6D57DE" : "#E6E6FA",
-                            color: formValues.userType === "senior" ? "#fff" : "#333"
-                        }}
-                        onClick={() => setFormValues((prev) => ({ ...prev, userType: "senior" }))}
-                    >
-                        독거노인
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.radioBtn}
-                        style={{
-                            backgroundColor: formValues.userType === "volunteer" ? "#6D57DE" : "#E6E6FA",
-                            color: formValues.userType === "volunteer" ? "#fff" : "#333"
-                        }}
-                        onClick={() => setFormValues((prev) => ({ ...prev, userType: "volunteer" }))}
-                    >
-                        봉사자
-                    </button>
-                </div>
-            </div>
+
+
 
             {/* 생년월일 */}
             <div className={styles.inputGroup}>

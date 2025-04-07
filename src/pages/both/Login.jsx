@@ -32,7 +32,7 @@ export default function Login() {
 
                 {/* 이메일 로그인 / 회원가입 버튼 */}
                 <div className={styles.authButtons}>
-                    <button className={styles.signupBtn} onClick={() => navigate("/signup")}>
+                    <button className={styles.signupBtn} onClick={() => navigate("/roleselect")}>
                         회원가입
                     </button>
                 </div>
