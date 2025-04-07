@@ -61,6 +61,10 @@ public class AwsSqsNotificationSender implements NotificationSender {
 		sendNotification(makeNotification(fcmToken, "봉사자 매칭 중", "봉사자가 매칭되면 알림을 보내드리겠습니다!"));
 		notificationRedisService.unMatchingNotificationInRedis(userId, "elderly");
 	}
+	public void expireNotification(String fcmToken, Long userId) {
+		sendNotification(makeNotification(fcmToken, "봉사 일정이 만료되었습니다!", "봉사자가 매칭되지 않았습니다"));
+		notificationRedisService.ExpireNotificationInRedis(userId);
+	}
 
 	private SqsMessage makeNotification(String fcmToken, String title, String body){
 		return SqsMessage.builder()
