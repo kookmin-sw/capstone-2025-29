@@ -1,6 +1,11 @@
+
 body {
     margin: 0;
     box-sizing: border-box;
+    /* 다크모드 무시 */
+    background-color: #fff;
+    color: #000;         /* 검정 글씨 */
+    color-scheme: light;  
 }
 
 div {
@@ -22,5 +27,3 @@ button:focus {
     outline: none;
     box-shadow: none;
 }
-
-

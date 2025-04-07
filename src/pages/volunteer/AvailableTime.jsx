@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./AvailableTime.module.css";
-import Topbar from "../components/Topbar";
+import Topbar from "../../components/Topbar";
 
 export default function AvailableTime() {
     // 봉사 유형 옵션

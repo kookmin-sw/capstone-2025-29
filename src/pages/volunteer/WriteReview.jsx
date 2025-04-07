@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./WriteReview.module.css";
-import Topbar from "../components/Topbar";
+import Topbar from "../../components/Topbar";
 
 export default function WriteReview() {
     const [showModal, setShowModal] = useState(false);
