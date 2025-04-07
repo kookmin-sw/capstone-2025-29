@@ -17,6 +17,8 @@ public enum ErrorCode {
 	//volunteerActivity
 	NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR(404, "VOLUNTEER-001", "봉사활동을 찾을 수 없습니다."),
 	UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR(400, "VOLUNTEER-002", "봉사활동 취소가 불가능합니다."),
+	UNAVAILABLE_COMPLETE_VOLUNTEER_ACTIVITY_ERROR(400, "VOLUNTEER-003", "봉사활동 완료가 불가능합니다."),
+
 	//item
 	// CHAT_ROOM_JOIN_ERROR(400,"CHATROOM-001", "?"),
 	ITEM_NOT_FOUND_ERROR(404,"ITEM-001", "해당 상품이 존재하지 않습니다"),

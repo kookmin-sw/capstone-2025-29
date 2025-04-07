@@ -45,7 +45,7 @@ public class UserService implements UserDetailsService {
                     .age(userRegisterDto.getAge())
                     .gender(userRegisterDto.getGender())
                     .profileImage(userRegisterDto.getProfileImage())
-                    .phoneCode(userRegisterDto.getPhoneCode())
+                    .fcmToken(userRegisterDto.getPhoneCode())
                     .username(userRegisterDto.getUsername())
                     .password(passwordEncoder.encode(userRegisterDto.getPassword()))
                     .build();
@@ -61,7 +61,7 @@ public class UserService implements UserDetailsService {
                     .age(userRegisterDto.getAge())
                     .gender(userRegisterDto.getGender())
                     .profileImage(userRegisterDto.getProfileImage())
-                    .phoneCode(userRegisterDto.getPhoneCode())
+                    .fcmToken(userRegisterDto.getPhoneCode())
                     .username(userRegisterDto.getUsername())
                     .password(passwordEncoder.encode(userRegisterDto.getPassword()))
                     .build();

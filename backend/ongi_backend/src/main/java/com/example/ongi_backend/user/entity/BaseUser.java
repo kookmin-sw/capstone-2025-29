@@ -33,7 +33,7 @@ public abstract class BaseUser {
 	@Embedded
 	private Address address;
 	private String profileImage;
-	private String phoneCode;
+	private String fcmToken;
 
 	public BaseUser() {
 

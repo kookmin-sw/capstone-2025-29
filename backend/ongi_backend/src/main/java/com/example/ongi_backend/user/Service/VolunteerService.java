@@ -4,7 +4,9 @@ import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
@@ -33,6 +36,7 @@ public class VolunteerService {
 	private final VolunteerRepository volunteerRepository;
 	private final VolunteerActivityService volunteerActivityService;
 	private final UnMatchingService unMatchingService;
+	private final AwsSqsNotificationSender awsSqsNotificationSender;
 
 	@Transactional
 	public void updateSchedule(List<ScheduleRequest.Schedules> schedules, int category, String username) {
@@ -77,9 +81,23 @@ public class VolunteerService {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
 		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
-			// TODO : 노인에게 봉사 취소 알림 전송
+			Elderly elderly = findVolunteerActivity.getElderly();
+			awsSqsNotificationSender.cancelNotification(
+				elderly.getFcmToken(),
+				volunteer.getName(),
+				elderly.getId(),
+				"elderly"
+			);
 			findVolunteerActivity.updateVolunteer(null);
 			findVolunteerActivity.updateStatus(MATCHING);
+			if(Duration.between(LocalDateTime.now(),findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
+				awsSqsNotificationSender.expireNotification(
+					elderly.getFcmToken(),
+					elderly.getId()
+				);
+				volunteerActivityService.deleteActivity(id);
+				return ;
+			}
 
 			unMatchingService.saveUnMatching(
 				findVolunteerActivity.getId(),
@@ -105,12 +123,40 @@ public class VolunteerService {
 		volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category, request.getAddress()
 			.getDistrict()).ifPresentOrElse(
 			volunteer -> {
-				// TODO : 매칭 알림 추가
+				awsSqsNotificationSender.matchingNotification(
+					volunteer.getFcmToken(),
+					elderly.getName(),
+					volunteer.getId(),
+					"volunteer"
+				);
+				awsSqsNotificationSender.matchingNotification(
+					elderly.getFcmToken(),
+					volunteer.getName(),
+					elderly.getId(),
+					"elderly"
+				);
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
+					volunteerActivity.getStartTime(),
+					volunteer.getFcmToken(),
+					elderly.getName(),
+					volunteer.getId(),
+					"volunteer"
+				);
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
+					volunteerActivity.getStartTime(),
+					elderly.getFcmToken(),
+					volunteer.getName(),
+					elderly.getId(),
+					"elderly"
+				);
 				volunteerActivity.updateStatus(PROGRESS);
 				volunteerActivity.updateVolunteer(volunteer);
 			},
 			() -> {
-				// TODO : 매칭 안됨 알림 기능 추가
+				awsSqsNotificationSender.unMatchingNotification(
+					elderly.getFcmToken(),
+					elderly.getId()
+				);
 				unMatchingService.saveUnMatching(
 					volunteerActivity.getId(),
 					elderly.getId(),
