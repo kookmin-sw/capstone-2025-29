@@ -8,6 +8,8 @@ from modules.ttr_module import add_user_message, add_assistant_message, get_chat
 from modules.emotion_module import analyze_emotion
 import uuid
 
+app = FastAPI()
+
 # 음성 입력 채팅
 @app.post("/chat/audio/")
 async def chat_with_audio(file: UploadFile = File(...)):
@@ -42,7 +44,6 @@ async def chat_with_audio(file: UploadFile = File(...)):
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
-
 # 텍스트 입력 채팅
 @app.post("/chat/text/")
 async def chat_with_text(text: str):
@@ -65,7 +66,6 @@ async def chat_with_text(text: str):
         }
     }
 
-
 # TTS음성 파일 변환
 @app.get("/audio/{filename}")
 async def get_audio(filename: str):
@@ -73,7 +73,6 @@ async def get_audio(filename: str):
     if not os.path.exists(filename):
         raise HTTPException(status_code=404, detail="Audio file not found")
     return FileResponse(filename)
-
 
 # 감정분석
 @app.post("/end-chat/")
@@ -97,3 +96,4 @@ async def end_chat(backend_url: str):
             "emotion": emotion
         }
     }
+
