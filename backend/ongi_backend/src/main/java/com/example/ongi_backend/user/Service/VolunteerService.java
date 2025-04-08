@@ -43,14 +43,12 @@ public class VolunteerService {
 		Volunteer volunteer = volunteerRepository.findByUsername(username).orElseThrow(
 			() -> new CustomException(NOT_FOUND_USER_ERROR)
 		);
-		List<WeeklyAvailableTime> collect = schedules.stream().map(schedule -> {
-			return WeeklyAvailableTime.builder()
-				.dayOfWeek(schedule.getDayOfWeek())
-				.availableStartTime(schedule.getTime())
-				.availableEndTime(schedule.getTime().plusHours(3))
-				.volunteer(volunteer)
-				.build();
-		}).collect(Collectors.toList());
+		List<WeeklyAvailableTime> collect = schedules.stream().map(schedule -> WeeklyAvailableTime.builder()
+			.dayOfWeek(schedule.getDayOfWeek())
+			.availableStartTime(schedule.getTime())
+			.availableEndTime(schedule.getTime().plusHours(3))
+			.volunteer(volunteer)
+			.build()).collect(Collectors.toList());
 		volunteer.updateCategory(category);
 		volunteer.addWeeklyAvailableTime(collect);
 		scanUnMatching(collect, volunteer);
@@ -58,16 +56,15 @@ public class VolunteerService {
 
 	@Transactional
 	public void scanUnMatching(List<WeeklyAvailableTime> weeklyAvailableTimes, Volunteer volunteer) {
-		unMatchingService.findAllUnMatching().forEach(unMatching -> {
+		unMatchingService.findAllUnMatching().forEach(unMatching ->
 			weeklyAvailableTimes.forEach(weeklyAvailableTime -> {
-				if(unMatching.getStartTime().getDayOfWeek().equals(weeklyAvailableTime.getDayOfWeek())
-					&& unMatching.getStartTime().toLocalTime().equals(weeklyAvailableTime.getAvailableStartTime())
-					&& (VolunteerType.getCategory(unMatching.getVolunteerType()) & weeklyAvailableTime.getVolunteer().getVolunteerCategory()) != 0
-					&& unMatching.getAddress().getDistrict().equals(weeklyAvailableTime.getVolunteer().getAddress().getDistrict())) {
-						volunteerActivityService.matchingIfNotAlreadyMatched(unMatching, volunteer);
-				}
-			});
-		});
+			if(unMatching.getStartTime().getDayOfWeek().equals(weeklyAvailableTime.getDayOfWeek())
+				&& unMatching.getStartTime().toLocalTime().equals(weeklyAvailableTime.getAvailableStartTime())
+				&& (VolunteerType.getCategory(unMatching.getVolunteerType()) & weeklyAvailableTime.getVolunteer().getVolunteerCategory()) != 0
+				&& unMatching.getAddress().getDistrict().equals(weeklyAvailableTime.getVolunteer().getAddress().getDistrict())) {
+					volunteerActivityService.matchingIfNotAlreadyMatched(unMatching, volunteer);
+			}
+		}));
 	}
 
 	@Transactional
@@ -136,17 +133,15 @@ public class VolunteerService {
 					"elderly"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
-					volunteerActivity.getStartTime(),
-					volunteer.getFcmToken(),
-					elderly.getName(),
-					volunteer.getId(),
+					volunteerActivity,
+					elderly,
+					volunteer,
 					"volunteer"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
-					volunteerActivity.getStartTime(),
-					elderly.getFcmToken(),
-					volunteer.getName(),
-					elderly.getId(),
+					volunteerActivity,
+					elderly,
+					volunteer,
 					"elderly"
 				);
 				volunteerActivity.updateStatus(PROGRESS);
