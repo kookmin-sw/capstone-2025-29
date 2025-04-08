@@ -120,7 +120,7 @@ public class VolunteerActivityService {
 
 	@Transactional
 	public void matchingIfNotAlreadyMatched(UnMatching unMatching, Volunteer volunteer) {
-		volunteerActivityRepository.findByStartTimeAndVolunteer(unMatching.getStartTime(), volunteer).ifPresentOrElse(
+		volunteerActivityRepository.findByStartTimeAndVolunteer(unMatching.getStartTime().toLocalDate(), volunteer).ifPresentOrElse(
 			activity -> {
 				// 이미 해당 날짜에 매칭된 경우
 			},
