@@ -64,3 +64,12 @@ async def chat_with_text(text: str):
             }
         }
     }
+
+
+# TTS음성 파일 변환
+@app.get("/audio/{filename}")
+async def get_audio(filename: str):
+   
+    if not os.path.exists(filename):
+        raise HTTPException(status_code=404, detail="Audio file not found")
+    return FileResponse(filename)
