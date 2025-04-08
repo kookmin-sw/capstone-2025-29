@@ -73,3 +73,27 @@ async def get_audio(filename: str):
     if not os.path.exists(filename):
         raise HTTPException(status_code=404, detail="Audio file not found")
     return FileResponse(filename)
+
+
+# 감정분석
+@app.post("/end-chat/")
+async def end_chat(backend_url: str):
+    # 감정 분석
+    emotion = analyze_emotion(get_chat_history(), ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
+    
+    # 백엔드로 데이터 전송
+    async with httpx.AsyncClient() as client:
+        await client.post(
+            backend_url,
+            json={
+                "emotion": emotion,
+                "chat_history": get_chat_history()
+            }
+        )
+    
+    return {
+        "status": "success",
+        "data": {
+            "emotion": emotion
+        }
+    }
