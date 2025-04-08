@@ -41,3 +41,26 @@ async def chat_with_audio(file: UploadFile = File(...)):
         # Clean up temporary files
         if os.path.exists(temp_path):
             os.remove(temp_path)
+
+
+# 텍스트 입력 채팅
+@app.post("/chat/text/")
+async def chat_with_text(text: str):
+    # TTR: GPT 응답 생성
+    add_user_message(text)  # 채팅 기록에 사용자 메시지 추가
+    gpt_response = get_chat_response()  # GPT 응답 생성
+    add_assistant_message(gpt_response)  # 채팅 기록에 AI 응답 추가
+    
+    return {
+        "status": "success",
+        "data": {
+            "input": {
+                "type": "text",
+                "text": text
+            },
+            "response": {
+                "text": gpt_response,
+                "audio_path": None  # TTS 구현 시 추가
+            }
+        }
+    }
