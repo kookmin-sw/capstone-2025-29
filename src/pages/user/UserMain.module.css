@@ -1,0 +1,135 @@
+.container {
+    padding: 5vh 5vw;
+    min-height: 100vh;
+    width: 100vw;
+
+}
+
+/* 상단바 */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 10vh;
+}
+
+.logo {
+    height: 40px;
+    margin-left: 3vw;
+}
+
+.topRightButtons {
+    display: flex;
+    gap: 3vw;
+}
+
+.iconBtn,
+.logo {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* 카드 wrapper */
+.cardwrapper {
+    padding: 0 6vw 0 6vw;
+    margin-top: 3vh;
+
+}
+
+/* 카드 박스 */
+.mainCard {
+    background-color: #ede9fe;
+    aspect-ratio: 1 / 1;
+    padding: 5vw 5vw;
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-between;
+}
+
+/* 텍스트 영역 */
+.textSection {
+    text-align: left;
+    width: 100%;
+}
+
+.textSection h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.textSection p {
+    margin-top: 1vh;
+    font-size: 0.8rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+
+.volunteerimg{
+    width: 140px;
+    height: auto;
+}
+
+/* 이미지 */
+.imageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+}
+
+/* 왼쪽 이미지 */
+.leftImg {
+    width: 90px;
+    transform: translatex(10%);
+}
+
+/* 오른쪽 이미지: 더 위로 올라오게 */
+.rightImg {
+    width: 90px;
+    height: auto;
+    transform: translateY(-25%);
+}
+
+/* 신청 버튼 */
+.actionBtn {
+    background-color: #6D57DE;
+    color: white;
+    font-weight: bold;
+    padding: 1.3vh 0;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+/* 두 번째 카드 */
+.chatCard {
+    background-color: #ffe6ee;
+    aspect-ratio: 1 / 1;
+    padding: 5vw 5vw;
+    border-radius: 20px;
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-between;
+}
+
+/* 채팅 버튼 */
+.chatBtn {
+    background-color: #EB3C77;
+    color: white;
+    font-weight: bold;
+    padding: 1.3vh 0;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
