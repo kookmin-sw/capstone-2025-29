@@ -15,12 +15,14 @@ import MatchingDetail from './pages/volunteer/MatchingDetail';
 import ReviewDetail from './pages/volunteer/ReviewDetail';
 import RoleSelect from './pages/both/RoleSelect';
 
+import UserMain from './pages/user/UserMain';
+
 function App() {
   return (
     <>
       <Router>
         <Routes>
-        <Route path="/" element={<Splash />} />
+          <Route path="/" element={<Splash />} />
           <Route path="/login" element={<Login />} />
           <Route path="/RoleSelect" element={<RoleSelect />} />
           <Route path="/signup" element={<Signup />} />
@@ -32,6 +34,9 @@ function App() {
           <Route path='/CompleteReview' element={<CompleteReview />} />
           <Route path='/MatchingDetail' element={<MatchingDetail />} />
           <Route path='/ReviewDetail' element={<ReviewDetail />} />
+
+          <Route path="/UserMain" element={<UserMain />} />
+
 
           <Route path="*" element={<div>not found</div>} /> {/* 404 페이지 */}
         </Routes>
