@@ -33,3 +33,6 @@ cloud:
     sqs:
       queue:
         name: ${AWS_SQS_QUEUE_NAME}
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+
