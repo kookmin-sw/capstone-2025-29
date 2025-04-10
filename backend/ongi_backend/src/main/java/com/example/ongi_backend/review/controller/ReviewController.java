@@ -16,6 +16,7 @@ import com.example.ongi_backend.review.dto.ResponseDetailReview;
 import com.example.ongi_backend.review.dto.ResponseReview;
 import com.example.ongi_backend.review.service.ReviewService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,13 +35,21 @@ public class ReviewController {
 	}
 
 	@GetMapping("/{volunteerActivityId}")
-	public ResponseEntity<List<ResponseDetailReview>> getReview(@PathVariable Long volunteerActivityId) {
-		return ResponseEntity.ok(reviewService.findDetailsReview(volunteerActivityId));
+	public ResponseEntity<ResponseDetailReview> getReview(@PathVariable Long volunteerActivityId, Principal principal) {
+		return ResponseEntity.ok(reviewService.findDetailsReview(volunteerActivityId,
+			//TODO : 로그인 구현 후 수정
+			// principal.getName()
+			"username"
+		));
 	}
 
 	@PostMapping
-	public ResponseEntity<?> writeReview(@RequestBody RequestResistReview request) {
-		reviewService.saveReview(request);
+	public ResponseEntity<?> writeReview(@RequestBody @Valid RequestResistReview request, Principal principal) {
+		reviewService.writeReview(request
+			//TODO : 로그인 구현 후 수정
+			// principal.getName()
+			, "username"
+		);
 		return ResponseEntity.ok("리뷰 작성하기");
 	}
 }
