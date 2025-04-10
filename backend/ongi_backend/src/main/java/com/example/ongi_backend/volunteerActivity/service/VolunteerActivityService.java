@@ -39,73 +39,63 @@ public class VolunteerActivityService {
 
 	public List<ResponseCompletedActivity> findCompleteVolunteerActivities(String username) {
 		List<VolunteerActivity> completeList = volunteerActivityRepository.findCompleteActivitiesByUserName(username);
-		return completeList.stream().map(va -> {
-			return ResponseCompletedActivity.builder()
-				.id(va.getId())
-				.type(va.getType())
-				.time(va.getStartTime())
-				.elderlyName(va.getElderly().getName())
-				.districtType(va.getAddress().getDistrict())
-				.build();
-		}).collect(Collectors.toList());
+		return completeList.stream().map(va -> ResponseCompletedActivity.builder()
+			.id(va.getId())
+			.type(va.getType())
+			.time(va.getStartTime())
+			.elderlyName(va.getElderly().getName())
+			.districtType(va.getAddress().getDistrict())
+			.build()).collect(Collectors.toList());
 	}
 
 	public List<ResponseRegisteredActivities> findRegisteredActivities(String username) {
 		List<VolunteerActivity> completeList = volunteerActivityRepository.findRegisteredActivitiesByUserName(username);
-		return completeList.stream().map(va -> {
-			return ResponseRegisteredActivities.builder()
-				.id(va.getId())
-				.type(va.getType())
-				.time(va.getStartTime())
-				.build();
-		}).collect(Collectors.toList());
+		return completeList.stream().map(va -> ResponseRegisteredActivities.builder()
+			.id(va.getId())
+			.type(va.getType())
+			.time(va.getStartTime())
+			.build()).collect(Collectors.toList());
 	}
 
 	public ResponseActivityDetail findActivityDetail(Long volunteerActivityId) {
 		return volunteerActivityRepository.findById(volunteerActivityId)
-			.map(va -> {
-				return ResponseActivityDetail.builder()
-					.id(va.getId())
-					.type(va.getType())
-					.startTime(va.getStartTime())
-					.animalType(va.getAnimalType())
-					.addDescription(va.getAddDescription())
-					.build();
-			})
+			.map(va -> ResponseActivityDetail.builder()
+				.id(va.getId())
+				.type(va.getType())
+				.startTime(va.getStartTime())
+				.animalType(va.getAnimalType())
+				.addDescription(va.getAddDescription())
+				.build())
 			.orElseThrow(() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR));
 	}
 
 	public ResponseMatchingDetail findActivityMatchingDetail(Long volunteerActivityId) {
 		return volunteerActivityRepository.findActivityAndElderlyById(volunteerActivityId)
-			.map(va -> {
-				return ResponseMatchingDetail.builder()
-					.id(va.getId())
-					.type(va.getType())
-					.startTime(va.getStartTime())
-					.animalType(va.getAnimalType())
-					.addDescription(va.getAddDescription())
-					.elderlyName(va.getElderly().getName())
-					.address(
-						Address.builder()
-							.detail(va.getAddress().getDetail())
-							.district(va.getAddress().getDistrict())
-							.build()
-					)
-					.build();
-			})
+			.map(va -> ResponseMatchingDetail.builder()
+				.id(va.getId())
+				.type(va.getType())
+				.startTime(va.getStartTime())
+				.animalType(va.getAnimalType())
+				.addDescription(va.getAddDescription())
+				.elderlyName(va.getElderly().getName())
+				.address(
+					Address.builder()
+						.detail(va.getAddress().getDetail())
+						.district(va.getAddress().getDistrict())
+						.build()
+				)
+				.build())
 			.orElseThrow(() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR));
 	}
 
 	public List<ResponseMatching> findActivityMatches(String userName) {
-		return volunteerActivityRepository.findMatchingByUserName(userName).stream().map(va -> {
-			return ResponseMatching.builder()
-				.id(va.getId())
-				.elderlyName(va.getElderly().getName())
-				.type(va.getType())
-				.districtType(va.getAddress().getDistrict())
-				.startTime(va.getStartTime())
-				.build();
-		}).collect(Collectors.toList());
+		return volunteerActivityRepository.findMatchingByUserName(userName).stream().map(va -> ResponseMatching.builder()
+			.id(va.getId())
+			.elderlyName(va.getElderly().getName())
+			.type(va.getType())
+			.districtType(va.getAddress().getDistrict())
+			.startTime(va.getStartTime())
+			.build()).collect(Collectors.toList());
 	}
 
 	@Transactional
@@ -120,8 +110,7 @@ public class VolunteerActivityService {
 			.status(MATCHING)
 			.address(request.getAddress())
 			.build();
-		VolunteerActivity save = volunteerActivityRepository.save(volunteerActivity);
-		return save;
+		return volunteerActivityRepository.save(volunteerActivity);
 	}
 
 	public VolunteerActivity findById(Long id) {
@@ -131,7 +120,7 @@ public class VolunteerActivityService {
 
 	@Transactional
 	public void matchingIfNotAlreadyMatched(UnMatching unMatching, Volunteer volunteer) {
-		volunteerActivityRepository.findByStartTimeAndVolunteer(unMatching.getStartTime(), volunteer).ifPresentOrElse(
+		volunteerActivityRepository.findByStartTimeAndVolunteer(unMatching.getStartTime().toLocalDate(), volunteer).ifPresentOrElse(
 			activity -> {
 				// 이미 해당 날짜에 매칭된 경우
 			},
@@ -157,17 +146,15 @@ public class VolunteerActivityService {
 					"volunteer"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
-					volunteerActivity.getStartTime(),
-					volunteer.getFcmToken(),
-					elderly.getName(),
-					volunteer.getId(),
+					volunteerActivity,
+					elderly,
+					volunteer,
 					"volunteer"
 				);
 				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
-					volunteerActivity.getStartTime(),
-					elderly.getFcmToken(),
-					volunteer.getName(),
-					elderly.getId(),
+					volunteerActivity,
+					elderly,
+					volunteer,
 					"elderly"
 				);
 			}

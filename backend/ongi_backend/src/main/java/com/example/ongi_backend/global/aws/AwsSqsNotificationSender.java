@@ -1,5 +1,7 @@
 package com.example.ongi_backend.global.aws;
 
+import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -12,6 +14,10 @@ import org.springframework.stereotype.Component;
 
 import com.example.ongi_backend.global.aws.dto.SqsMessage;
 import com.example.ongi_backend.global.redis.service.NotificationRedisService;
+import com.example.ongi_backend.user.entity.Elderly;
+import com.example.ongi_backend.user.entity.Volunteer;
+import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
+import com.example.ongi_backend.volunteerActivity.repository.VolunteerActivityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.awspring.cloud.sqs.operations.SendResult;
@@ -29,6 +35,7 @@ public class AwsSqsNotificationSender implements NotificationSender {
 	private final ObjectMapper objectMapper;
 	private final TaskScheduler taskScheduler;
 	private final NotificationRedisService notificationRedisService;
+	private final VolunteerActivityRepository volunteerActivityRepository;
 	@Override
 	public void sendNotification(SqsMessage SqsMessage) {
 		try{
@@ -52,10 +59,25 @@ public class AwsSqsNotificationSender implements NotificationSender {
 		sendNotification(makeNotification(fcmToken, "이번 봉사는 어떠셨나요?", otherUserName + "님과의 봉사 리뷰를 작성해주세요"));
 		notificationRedisService.reviewNotificationInRedis(userId, "volunteer", otherUserName);
 	}
-	//TODO : 매칭이 취소 되었을 떄 해당 알림을 제거해야 되는지? 그냥 넘어가기?
-	public void scheduleNotification(String fcmToken, String otherUserName, Long userId, String userType){
-		sendNotification(makeNotification(fcmToken, "봉사 시작까지 얼마남지 않았아요!", otherUserName + "님과의 봉사 한 시간 전입니다"));
-		notificationRedisService.scheduleNotificationInRedis(userId, userType, otherUserName);
+	public void scheduleNotification(Long vaId, Elderly elderly, Volunteer volunteer, String userType) {
+		log.info("reservation Message Scheduled");
+		String fcmToken = userType.equals("elderly") ? elderly.getFcmToken() : volunteer.getFcmToken();
+		String otherUserName = userType.equals("elderly") ? volunteer.getName() : elderly.getName();
+		Long userId = userType.equals("elderly") ? elderly.getId() : volunteer.getId();
+
+		volunteerActivityRepository.findById(vaId).ifPresentOrElse(
+			va -> {
+				// 예정되어 있던 봉사가 취소되어 매칭 상태인 경우
+				if(va.getStatus().equals(MATCHING)) return ;
+				// 봉사자가 취소해서 없거나, 다른 봉사자가 매칭되어 있을 때
+				if(va.getVolunteer() == null || !va.getVolunteer().getId().equals(userId)) return ;
+				sendNotification(makeNotification(fcmToken, "봉사 시작까지 얼마남지 않았아요!", otherUserName + "님과의 봉사 한 시간 전입니다"));
+				notificationRedisService.scheduleNotificationInRedis(userId, userType, otherUserName);
+			},
+			() -> {
+				// 알림 예정되어 있던 봉사가 취소된 경우
+			}
+		);
 	}
 	public void unMatchingNotification(String fcmToken, Long userId) {
 		sendNotification(makeNotification(fcmToken, "봉사자 매칭 중", "봉사자가 매칭되면 알림을 보내드리겠습니다!"));
@@ -82,17 +104,16 @@ public class AwsSqsNotificationSender implements NotificationSender {
 
 	//TODO : @Async가 적절한지 테스트 후 수정
 	@Async
-	public void setSchedulingMessageWithTaskScheduler(LocalDateTime time, String fcmToken, String otherUserName, Long userId, String userType) {
+	public void setSchedulingMessageWithTaskScheduler(VolunteerActivity va, Elderly elderly, Volunteer volunteer, String userType) {
+		LocalDateTime time = va.getStartTime();
 		// 봉사까지 1시간도 안남았으면 즉시 전송
 		if(Duration.between(LocalDateTime.now(), time).getSeconds() <= 3600L){
-			scheduleNotification(fcmToken, otherUserName, userId, userType);
+			scheduleNotification(va.getId(), elderly, volunteer, userType);
 			return ;
 		}
 		Date executionTime = Date.from(time.minusHours(1).atZone(ZoneId.systemDefault()).toInstant());
 		// TODO : cloud 환경에서 실제로 1시간 전에 알림이 가는지 확인
-		taskScheduler.schedule(() -> {
-			scheduleNotification(fcmToken, otherUserName, userId, userType);
-		}, executionTime);
+		taskScheduler.schedule(() -> scheduleNotification(va.getId(), elderly, volunteer, userType), executionTime);
 	}
 
 }

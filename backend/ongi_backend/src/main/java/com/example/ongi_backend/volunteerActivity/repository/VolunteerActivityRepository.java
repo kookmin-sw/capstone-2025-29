@@ -1,6 +1,6 @@
 package com.example.ongi_backend.volunteerActivity.repository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +24,6 @@ public interface VolunteerActivityRepository extends JpaRepository<VolunteerActi
 	@Query("SELECT va FROM VolunteerActivity va JOIN FETCH va.elderly JOIN FETCH va.volunteer WHERE va.volunteer.username = :username")
 	List<VolunteerActivity> findMatchingByUserName(String username);
 
-	Optional<VolunteerActivity> findByStartTimeAndVolunteer(LocalDateTime startTime, Volunteer volunteer);
+	@Query("SELECT va FROM VolunteerActivity va where va.volunteer = :volunteer AND date_format(va.startTime, '%Y-%m-%d') = :startTime")
+	Optional<VolunteerActivity> findByStartTimeAndVolunteer(LocalDate startTime, Volunteer volunteer);
 }
