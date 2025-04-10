@@ -30,11 +30,12 @@ public class JwtExceptionHandler {
 		return ResponseEntity.status(errorCode.getStatus()).body(makeErrorResponse(errorCode));
 	}
 
-	@ExceptionHandler({NullPointerException.class})
-	public ResponseEntity<ErrorResponse> JwtNullPointerException() {
-		ErrorCode errorCode = ErrorCode.NULL_TOKEN_ERROR;
-		return ResponseEntity.status(errorCode.getStatus()).body(makeErrorResponse(errorCode));
-	}
+	// TODO : 모든 NPE가 token이 없다고 잡아내고 있음
+	// @ExceptionHandler({NullPointerException.class})
+	// public ResponseEntity<ErrorResponse> JwtNullPointerException() {
+	// 	ErrorCode errorCode = ErrorCode.NULL_TOKEN_ERROR;
+	// 	return ResponseEntity.status(errorCode.getStatus()).body(makeErrorResponse(errorCode));
+	// }
 
 	private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
