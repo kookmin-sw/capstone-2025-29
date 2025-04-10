@@ -3,7 +3,10 @@ package com.example.ongi_backend.Security;
 import com.example.ongi_backend.Security.Jwt.CustomAuthenticationEntryPoint;
 import com.example.ongi_backend.Security.Jwt.JwtFilter;
 import com.example.ongi_backend.Security.Jwt.JwtProvider;
+import com.example.ongi_backend.Security.oauth.OAuth2SuccessHandler;
+import com.example.ongi_backend.Security.oauth.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,11 +14,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -23,6 +28,8 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -43,6 +50,12 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/front/**", "/favicon.ico");
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 // crsf disable
@@ -54,6 +67,11 @@ public class SecurityConfig {
                 //form login disable
                 .formLogin().disable()
 
+                .oauth2Login((auth) -> auth
+                        .loginPage("/login/kakao")
+                        .userInfoEndpoint(c -> c.userService(oAuth2UserService))
+                        .successHandler(oAuth2SuccessHandler))
+
                 // jwt 사용으로 인해 세션 방식을 사용하지 않음
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
@@ -63,6 +81,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/login", "/api/user/username").permitAll()
                 // .anyRequest().authenticated()
                 .anyRequest().permitAll()
+
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
