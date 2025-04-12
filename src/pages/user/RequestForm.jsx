@@ -22,7 +22,6 @@ export default function RequestForm() {
         if (step === 4) return;
 
         if (step === 3) {
-            // step3에서 다음 누르면 step4로 이동
             navigate("/requestfinal", { state: formData });
         } else {
             setStep(step + 1);
@@ -45,7 +44,7 @@ export default function RequestForm() {
 
     return (
         <div className={styles.container}>
-            <Topbar  />
+            <Topbar />
 
             {step === 1 && (
                 <div className={styles.stepBox}>
