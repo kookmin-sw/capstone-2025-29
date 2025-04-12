@@ -6,6 +6,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.TaskScheduler;
@@ -18,33 +20,53 @@ import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.repository.VolunteerActivityRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.awspring.cloud.sqs.operations.SendResult;
-import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.services.sqs.SqsAsyncClient;
+import software.amazon.awssdk.services.sqs.model.MessageAttributeValue;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class AwsSqsNotificationSender implements NotificationSender {
-	private final SqsTemplate sqsTemplate;
 	@Value("${cloud.aws.sqs.queue.name}")
 	private String queueName;
-	private final ObjectMapper objectMapper;
+	private final SqsAsyncClient sqsAsyncClient;
 	private final TaskScheduler taskScheduler;
 	private final NotificationRedisService notificationRedisService;
 	private final VolunteerActivityRepository volunteerActivityRepository;
 	@Override
 	public void sendNotification(SqsMessage SqsMessage) {
 		try{
-			String message = objectMapper.writeValueAsString(SqsMessage);
-			SendResult<String> result = sqsTemplate.send(to -> to.queue(queueName).payload(message));
-			System.out.println("result = " + result);
+			SendMessageRequest sendMessageRequest = makeSqsMessage(SqsMessage);
+			sqsAsyncClient.sendMessage(sendMessageRequest).get();
 		}catch (Exception e) {
 			log.error("send notification error : ", e);
 		}
+	}
+
+	private SendMessageRequest makeSqsMessage(SqsMessage SqsMessage) {
+		Map<String, MessageAttributeValue> attributes = new HashMap<>();
+		attributes.put("title", MessageAttributeValue.builder()
+			.dataType("String")
+			.stringValue(SqsMessage.getMessageAttributes().getTitle().getStringValue())
+			.build());
+		attributes.put("body", MessageAttributeValue.builder()
+			.dataType("String")
+			.stringValue(SqsMessage.getMessageAttributes().getBody().getStringValue())
+			.build());
+		attributes.put("token", MessageAttributeValue.builder()
+			.dataType("String")
+			.stringValue(SqsMessage.getMessageAttributes().getToken().getStringValue())
+			.build());
+		SendMessageRequest sendMessageRequest = SendMessageRequest.builder()
+			.queueUrl(queueName)
+			.messageBody("test")
+			.messageAttributes(attributes)
+			.build();
+		return sendMessageRequest;
 	}
 
 	public void matchingNotification(String fcmToken, String otherUserName, Long userId, String userType){
