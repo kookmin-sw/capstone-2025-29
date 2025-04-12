@@ -1,15 +1,19 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
 import MatchCard from "../../components/MatchCard";
 import styles from "./RequestFinal.module.css";
-import { useNavigate } from "react-router-dom";
+
+/* 도움 요청 최종 확인 페이지 컴포넌트 */
 export default function RequestFinal() {
+    // 라우터 훅
     const location = useLocation();
     const navigate = useNavigate();
+    
+    // 이전 페이지에서 전달받은 데이터
     const { category, date, time, pet } = location.state || {};
 
-    // 예시 데이터 - 서버에서 받아온다고 가정
+    // 예시 데이터 (서버에서 받아온다고 가정)
     const mockData = {
         id: 1,
         name: "홍길동",
@@ -21,8 +25,10 @@ export default function RequestFinal() {
         address2: "서울 성북구 정릉동 861-1",
     };
 
+    // 추가 요청사항 상태
     const [requestText, setRequestText] = useState("");
 
+    // 제출 처리 함수
     const handleSubmit = () => {
         const finalData = {
             ...mockData,
@@ -36,18 +42,19 @@ export default function RequestFinal() {
 
     return (
         <div className={styles.container}>
+            {/* 상단 네비게이션 바 */}
             <Topbar />
 
-            {/* 매칭 카드 */}
+            {/* 매칭된 봉사자 정보 카드 */}
             <MatchCard {...mockData} />
 
-            {/* 주소 */}
+            {/* 봉사자 주소 정보 */}
             <div className={styles.address}>
                 <p>{mockData.address1}</p>
                 <p>{mockData.address2}</p>
             </div>
 
-            {/* 반려동물 */}
+            {/* 반려동물 정보 섹션 */}
             <div className={styles.section}>
                 <h3 className={styles.label}>반려동물 여부</h3>
                 <div className={styles.petOptions}>
@@ -62,7 +69,7 @@ export default function RequestFinal() {
                 </div>
             </div>
 
-            {/* 추가 요청사항 */}
+            {/* 추가 요청사항 섹션 */}
             <div className={styles.section}>
                 <h3 className={styles.label}>추가 요청사항</h3>
                 <textarea
@@ -77,8 +84,6 @@ export default function RequestFinal() {
                     제출하기
                 </button>
             </div>
-
-
         </div>
     );
 }

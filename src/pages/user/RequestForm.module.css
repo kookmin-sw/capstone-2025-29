@@ -1,6 +1,7 @@
-/* =================== 공통 =================== */
+/* =================== 공통 스타일 =================== */
 
-/* 전체 컨테이너 */
+/* 전체 컨테이너 스타일 */
+/* 화면 전체를 채우는 컨테이너 */
 .container {
     padding: 2vh 5vw;
     min-height: 100vh;
@@ -9,7 +10,7 @@
     background-color: #f5f5f5;
 }
 
-/* 공통 타이틀 텍스트 */
+/* 공통 타이틀 텍스트 스타일 */
 .title {
     font-size: 1.4rem;
     font-weight: bold;
@@ -17,7 +18,7 @@
     text-align: center;
 }
 
-/* STEP 화면 공통 wrapper */
+/* STEP 화면 공통 wrapper 스타일 */
 .stepBox {
     padding: 0 7vw;
     margin-top: 5vh;
@@ -27,7 +28,7 @@
     justify-content: space-between;
 }
 
-/* 다음 버튼 공통 */
+/* 다음 버튼 공통 스타일 */
 .nextButton {
     display: flex;
     justify-content: flex-end;
@@ -35,6 +36,7 @@
     margin-bottom: auto;
 }
 
+/* 다음 버튼 이미지 스타일 */
 .nextButton img {
     background-color: #6D57DE;
     border-radius: 50%;
@@ -44,18 +46,16 @@
     cursor: pointer;
 }
 
+/* =================== STEP 1: 신청 유형 선택 =================== */
 
-
-/* =================== STEP 1 =================== */
-
-/* 2x2 카테고리 그리드 */
+/* 2x2 카테고리 그리드 레이아웃 */
 .categoryGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 5vw;
 }
 
-/* 각 카테고리 버튼 */
+/* 각 카테고리 버튼 스타일 */
 .categoryBtn {
     background-color: #fff;
     border-radius: 16px;
@@ -71,21 +71,22 @@
     aspect-ratio: 1 / 1;
 }
 
+/* 카테고리 버튼 내부 이미지 */
 .categoryBtn img {
     width: 50px;
     height: 50px;
 }
 
+/* 선택된 카테고리 버튼 스타일 */
 .categoryBtn.active {
     background-color: #E6E6FA;
     border: none;
     color: #6D57DE;
 }
 
+/* =================== STEP 2: 날짜/시간 선택 =================== */
 
-/* =================== STEP 2 =================== */
-
-/* 두 줄 타이틀 텍스트 박스 */
+/* 두 줄 타이틀 텍스트 박스 스타일 */
 .dateTitleBox {
     display: flex;
     flex-direction: column;
@@ -105,7 +106,7 @@
     gap: 3vh;
 }
 
-/* 날짜/시간 input 스타일 */
+/* 날짜/시간 input 공통 스타일 */
 .dateInput,
 .timeInput {
     font-size: 1.4rem;
@@ -118,29 +119,28 @@
     width: 80%;
 }
 
-/* placeholder 색상 */
+/* input placeholder 색상 */
 .dateInput::placeholder,
 .timeInput::placeholder {
     color: #aaa;
 }
 
+/* =================== STEP 3: 반려동물 정보 =================== */
 
-/* =================== STEP 3 =================== */
-
-/* 섹션과 카드 wrapper (공통 패딩 적용) */
+/* 섹션과 카드 wrapper 공통 패딩 */
 .section,
 .cardwrapper {
     padding: 0 4vw 3vh 4vw;
 }
 
-/* 반려동물 여부 섹션 제목 */
+/* 반려동물 여부 섹션 제목 스타일 */
 .label {
     font-weight: 600;
     font-size: 1.3rem;
     margin-bottom: 1vh;
 }
 
-/* 반려동물 버튼 전체 묶음 */
+/* 반려동물 버튼 전체 컨테이너 */
 .petOptions {
     display: flex;
     gap: 2vw;
@@ -148,7 +148,7 @@
     margin-top: 1vh;
 }
 
-/* 개별 반려동물 버튼 */
+/* 개별 반려동물 버튼 스타일 */
 .petBtn {
     flex: 1;
     text-align: center;
@@ -161,23 +161,23 @@
     min-width: 0;
 }
 
+/* 선택된 반려동물 버튼 스타일 */
 .petBtn.selected {
     background-color: #ede9fe;
     color: #6D57DE;
     border: 0.5px solid #6D57DE;
 }
 
-/* STEP 3 전용 작은 다음 버튼 */
+/* STEP 3 전용 작은 다음 버튼 스타일 */
 .smallNextButton img {
     margin-top: 2vh;
     width: 32px;
     height: 32px;
 }
 
+/* =================== STEP 3: 정신건강복지센터 카드 =================== */
 
-/* =================== STEP 3 - 정신건강복지센터 카드 =================== */
-
-/* 카드 전체 영역 */
+/* 정신건강복지센터 카드 전체 스타일 */
 .mentalCard {
     background-color: #958fd6;
     border-radius: 16px;
@@ -190,7 +190,7 @@
     aspect-ratio: 1 / 1;
 }
 
-/* 카드 타이틀 */
+/* 카드 타이틀 스타일 */
 .cardTitle {
     font-size: 1.1rem;
     font-weight: 600;
@@ -199,7 +199,7 @@
     margin: 0;
 }
 
-/* 전화번호 */
+/* 전화번호 스타일 */
 .cardPhone {
     margin: auto 0 0 0;
     padding-left: 3vw;
@@ -207,18 +207,19 @@
     font-weight: 500;
 }
 
-/* 전화기 아이콘 wrapper */
+/* 전화기 아이콘 wrapper 스타일 */
 .phoneIconWrapper {
     margin: 1vh 0 2vh 0;
     padding-left: 3vw;
 }
 
+/* 전화기 아이콘 이미지 스타일 */
 .phoneIconWrapper img {
     width: 60px;
     height: 60px;
 }
 
-/* 전화연결 버튼 */
+/* 전화연결 버튼 스타일 */
 .callBtn {
     background-color: #fff;
     color: #6D57DE;
@@ -231,10 +232,9 @@
     cursor: pointer;
 }
 
+/* =================== STEP 4: 요청사항 입력 =================== */
 
-/* =================== STEP 4 =================== */
-
-/* 요청사항 textarea */
+/* 요청사항 textarea 스타일 */
 .textarea {
     width: 100%;
     min-height: 20vh;
@@ -247,21 +247,22 @@
     margin-top: 2vh;
 }
 
-/* STEP 4 제출 버튼 wrapper */
+/* STEP 4 제출 버튼 wrapper 스타일 */
 .submitBtnWrapper {
+    margin-top: 3vh;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
-/* 제출 버튼 스타일 수정 */
+/* 제출 버튼 스타일 */
 .submitBtn {
     background-color: #6D57DE;
     color: white;
-    padding: 1vh 3vw;
-    width: auto;
     border: none;
-    border-radius: 10px;
-    font-size: 1rem;
+    border-radius: 8px;
+    padding: 1.5vh 0;
+    width: 80%;
+    font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
 }
