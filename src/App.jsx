@@ -16,6 +16,11 @@ import ReviewDetail from './pages/volunteer/ReviewDetail';
 import RoleSelect from './pages/both/RoleSelect';
 
 import UserMain from './pages/user/UserMain';
+import HelpCenter from './pages/user/HelpCenter';
+import RequestForm from './pages/user/RequestForm';
+import RequestFinal from './pages/user/RequestFinal';
+import ApplyingList from './pages/user/ApplyingList';
+import ApplyingDetail from './pages/user/ApplyingDetail';
 
 function App() {
   return (
@@ -36,7 +41,11 @@ function App() {
           <Route path='/ReviewDetail' element={<ReviewDetail />} />
 
           <Route path="/UserMain" element={<UserMain />} />
-
+          <Route path="/HelpCenter" element={<HelpCenter />} />
+          <Route path="/RequestForm" element={<RequestForm />} />
+          <Route path="/Requestfinal" element={<RequestFinal />} />
+          <Route path="/ApplyingList" element={<ApplyingList />} />
+          <Route path="/ApplyingDetail" element={<ApplyingDetail />} />
 
           <Route path="*" element={<div>not found</div>} /> {/* 404 페이지 */}
         </Routes>

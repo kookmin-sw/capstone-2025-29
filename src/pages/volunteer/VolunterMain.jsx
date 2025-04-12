@@ -29,7 +29,7 @@ export default function VolunteerMain() {
                     <img src={ongi} />
                 </button>
                 <div className={styles.topRightButtons}>
-                    <button className={styles.iconBtn}>
+                    <button className={styles.iconBtn} onClick={() => navigate('/edit')}>
                         <img src="../public/profileedit.svg" />
                     </button>
                     <button className={styles.iconBtn}>
