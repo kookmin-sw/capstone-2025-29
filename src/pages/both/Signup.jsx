@@ -316,7 +316,7 @@ export default function Signup() {
                 className={styles.submitBtn}
                 disabled={isSubmitDisabled}
                 style={{
-                    backgroundColor: !isSubmitDisabled ? "#6A0DAD" : "#dcdcdc",
+                    backgroundColor: !isSubmitDisabled ? "#6D57DE" : "#dcdcdc",
                     color: !isSubmitDisabled ? "#fff" : "#999",
                     cursor: !isSubmitDisabled ? "pointer" : "not-allowed"
                 }}

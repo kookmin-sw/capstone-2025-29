@@ -13,7 +13,6 @@
     line-height: 1.5;
     color: #333;
 }
-
 .address p {
     margin: 0;
 }
@@ -30,14 +29,13 @@
     margin-top: 0vh;
 }
 
-/* 반려동물 버튼 */
+/* 반려동물 표시 */
 .petOptions {
     display: flex;
     gap: 2vw;
     flex-wrap: wrap;
     margin-top: 1vh;
 }
-
 .petBtn {
     flex: 1;
     text-align: center;
@@ -49,32 +47,36 @@
     font-size: 0.95rem;
     min-width: 0;
 }
-
-
 .petBtn.selected {
     background-color: #ede9fe;
     color: #6D57DE;
     border: 0.5px solid #6D57DE;
 }
 
-/* 요청사항 */
-.requestText {
-    margin-top: 1vh;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #333;
-    white-space: pre-line;
+/* 추가 요청사항 입력 */
+.textarea {
+    width: 100%;
+    min-height: 15vh;
+    padding: 2vw ;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    box-sizing: border-box;
 }
 
-.cancelBtn {
-    width: 100%;
-    padding: 1.5vh 0;
-
+/* 제출 버튼 */
+.submitBtn {
+    width: 40%;
+    margin-left: auto;
+    padding: 1.2vh 2vw;
     background-color: #6D57DE;
     color: white;
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: bold;
     border: none;
-    border-radius: 8px;
-
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin-top: 4vh;
 }

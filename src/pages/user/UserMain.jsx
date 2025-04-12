@@ -1,8 +1,12 @@
 import React from "react";
 import styles from "./UserMain.module.css";
 import ongi from "../../assets/ongi.svg";
+import { useNavigate } from "react-router-dom";
+
 
 export default function UserMain() {
+    const navigate = useNavigate();
+
     return (
         <div className={styles.container}>
             {/* 상단바 */}
@@ -11,7 +15,7 @@ export default function UserMain() {
                     <img src={ongi} alt="온기 로고" />
                 </button>
                 <div className={styles.topRightButtons}>
-                    <button className={styles.iconBtn}>
+                    <button className={styles.iconBtn} onClick={() => navigate('/edit')}>
                         <img src="../public/profileedit.svg" alt="프로필 편집" />
                     </button>
                     <button className={styles.iconBtn}>
@@ -31,7 +35,7 @@ export default function UserMain() {
                     <div className={styles.imageWrapper}>
                         <img src="../../public/volunteer.svg" alt="봉사자 이미지" className={styles.volunteerimg}/>
                     </div>
-                    <button className={styles.actionBtn}>신청하러 가기</button>
+                    <button className={styles.actionBtn} onClick={() => navigate('/HelpCenter')}>신청하러 가기</button>
                 </div>
 
                 {/* 두 번째 카드 */}
