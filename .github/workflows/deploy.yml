@@ -24,9 +24,9 @@ jobs:
           ./gradlew clean build -x test
         working-directory: ./backend/ongi_backend
         env:
-          MY_SQL_URL: ${{ secrets.MY_DB_URL }}
-          MY_SQL_USERNAME: ${{ secrets.MY_DB_USERNAME }}
-          MY_SQL_PASSWORD: ${{ secrets.MY_DB_PASSWORD }}
+          MYSQL_URL: ${{ secrets.MY_DB_URL }}
+          MYSQL_USERNAME: ${{ secrets.MY_DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MY_DB_PASSWORD }}
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
@@ -66,6 +66,8 @@ jobs:
             docker stop ongi || true
             docker rm ongi || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/ongi-server:latest
-            docker run -d --name ongi -p 8080:8080 \
+            docker run -d --name ongi \
+            --network ongi-net \
+            -p 8080:8080 \
             --env-file ~/env/ongi.env \
             ${{ steps.login-ecr.outputs.registry }}/ongi-server:latest
