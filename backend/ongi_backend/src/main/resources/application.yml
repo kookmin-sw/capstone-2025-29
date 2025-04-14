@@ -33,3 +33,5 @@ cloud:
     sqs:
       queue:
         name: ${AWS_SQS_QUEUE_NAME}
+springdoc:
+  override-with-generic-response: false
