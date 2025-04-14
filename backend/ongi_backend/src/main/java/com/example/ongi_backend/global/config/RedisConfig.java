@@ -1,5 +1,6 @@
 package com.example.ongi_backend.global.config;
 
+import static org.springframework.data.redis.core.RedisKeyValueAdapter.EnableKeyspaceEvents.*;
 import static org.springframework.data.redis.core.RedisKeyValueAdapter.ShadowCopy.OFF;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -7,14 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisKeyValueAdapter.EnableKeyspaceEvents;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableRedisRepositories(shadowCopy = OFF, enableKeyspaceEvents = EnableKeyspaceEvents.OFF)
+@EnableRedisRepositories(shadowCopy = OFF, enableKeyspaceEvents = ON_DEMAND)
 public class RedisConfig {
 	@Value("${spring.data.redis.host}")
 	private String host;
