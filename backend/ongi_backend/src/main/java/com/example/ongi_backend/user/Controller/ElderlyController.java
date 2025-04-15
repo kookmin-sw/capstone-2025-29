@@ -13,6 +13,7 @@ import com.example.ongi_backend.user.Service.ElderlyService;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,7 +24,8 @@ public class ElderlyController {
 
 	@PostMapping("/matching")
 	@Operation(summary = "최종 신청 내역 / 읽기 전용", description = "봉사활동 매칭서 작성")
-	public void activityMatching(@RequestBody RequestMatching request, Principal principal) {
+	// TODO : 매칭 되었을 때 봉사자 정보 출력
+	public void activityMatching(@RequestBody @Valid RequestMatching request, Principal principal) {
 		elderlyService.matching(request,
 			principal.getName()
 		);

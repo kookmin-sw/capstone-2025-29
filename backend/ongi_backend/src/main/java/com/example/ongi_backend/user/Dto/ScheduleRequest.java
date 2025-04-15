@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.Range;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -18,6 +19,7 @@ public class ScheduleRequest {
 		+ "\tHOUSING(2),\n"
 		+ "\tCULTURE(4),\n"
 		+ "\tEDUCATION(8),", minimum = "1", maximum = "15", example = "1")
+	@NotNull
 	private int category;
 	@Data
 	public static class Schedules {
