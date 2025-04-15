@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+
 import styles from "./Topbar.module.css";
+
 
 export default function Topbar({ title, navigateTo }) {
     const navigate = useNavigate();
@@ -9,7 +11,7 @@ export default function Topbar({ title, navigateTo }) {
         if (navigateTo) {
             navigate(navigateTo);
         } else {
-            navigate(-1); // 기본값으로 뒤로가기
+
         }
     };
 
