@@ -7,7 +7,7 @@ export default function NotificationPage() {
     const [notifications, setNotifications] = useState([
         {
             id: 1,
-            icon: "../../public/medical.svg",
+            icon: "/public/medical.svg",
             title: "새로운 봉사 일정이 생겼어요!",
             date: "2025년 12월 42일 00:00",
             subtitle: "고길동님과의 일정",
@@ -15,7 +15,7 @@ export default function NotificationPage() {
         },
         {
             id: 2,
-            icon: "../../public/housing.svg",
+            icon: "/public/housing.svg",
             title: "새로운 봉사 일정이 생겼어요!",
             date: "2025년 12월 42일 00:00",
             subtitle: "고길동님과의 일정",
@@ -23,7 +23,7 @@ export default function NotificationPage() {
         },
         {
             id: 3,
-            icon: "../../public/book.svg",
+            icon: "/public/book.svg",
             title: "새로운 봉사 일정이 생겼어요!",
             date: "2025년 12월 42일 00:00",
             subtitle: "고길동님과의 일정",

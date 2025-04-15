@@ -11,9 +11,9 @@ export default function ReviewDetail() {
         tags: ["의료", "강남구", "의료", "강남구", "의료"],
         icon: "../../../public/book.svg",
         images: [
-            "../../../public/imgex.png",
-            "../../../public/imgex.png",
-            "../../../public/imgex.png"
+            "/public/imgex.png",
+            "/public/imgex.png",
+            "/public/imgex.png"
         ],
         content: `어쩌구어쩌구어쩌구어쩌구어쩌구어쩌구
 어쩌구어쩌구어쩌구어쩌구어쩌구어쩌구

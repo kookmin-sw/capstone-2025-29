@@ -87,17 +87,6 @@ export default function WriteReview() {
                 <button className={styles.submitBtn}>완료</button>
             </div>
 
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-            <img src="/star.svg" alt="별점" className={styles.star} />
-
         </div>
     );
 }

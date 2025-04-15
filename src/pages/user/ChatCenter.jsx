@@ -43,7 +43,7 @@ const pieData = {
 const ChatCenter = () => {
     const navigate = useNavigate();
     // 로컬 스토리지에서 사용자 이름 가져오기
-    const userName = localStorage.getItem('userName') || '홍길동 ai';
+    const userName = localStorage.getItem('userName') || '홍길동';
 
     const handleChatClick = () => {
         navigate('/ChatPage');
