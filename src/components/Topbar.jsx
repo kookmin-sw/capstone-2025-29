@@ -11,7 +11,7 @@ export default function Topbar({ title, navigateTo }) {
         if (navigateTo) {
             navigate(navigateTo);
         } else {
-
+            navigate(-1)
         }
     };
 

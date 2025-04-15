@@ -17,9 +17,9 @@ export default function WriteReview() {
 
     const reviewData = {
         images: [
-            "../../../public/imgex.png",
-            "../../../public/imgex.png",
-            "../../../public/imgex.png"
+            "/public/imgex.png",
+            "/public/imgex.png",
+            "/public/imgex.png"
         ]
     }
 
@@ -86,6 +86,17 @@ export default function WriteReview() {
             <div className={styles.submitArea}>
                 <button className={styles.submitBtn}>완료</button>
             </div>
+
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
+            <img src="/star.svg" alt="별점" className={styles.star} />
 
         </div>
     );

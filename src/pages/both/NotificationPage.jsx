@@ -31,26 +31,26 @@ export default function NotificationPage() {
         }
     ]);
 
-    useEffect(() => {
-        // WebSocket 연결 설정
-        const ws = new WebSocket('ws://your-backend-url/notifications');
+    // useEffect(() => {
+    //     // WebSocket 연결 설정
+    //     const ws = new WebSocket('ws://your-backend-url/notifications');
         
-        // 메시지 수신 시 처리
-        ws.onmessage = (event) => {
-            const newNotification = JSON.parse(event.data);
-            setNotifications(prev => [newNotification, ...prev]);
-        };
+    //     // 메시지 수신 시 처리
+    //     ws.onmessage = (event) => {
+    //         const newNotification = JSON.parse(event.data);
+    //         setNotifications(prev => [newNotification, ...prev]);
+    //     };
 
-        // 연결 에러 처리
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+    //     // 연결 에러 처리
+    //     ws.onerror = (error) => {
+    //         console.error('WebSocket error:', error);
+    //     };
 
-        // 컴포넌트 언마운트 시 연결 종료
-        return () => {
-            ws.close();
-        };
-    }, []);
+    //     // 컴포넌트 언마운트 시 연결 종료
+    //     return () => {
+    //         ws.close();
+    //     };
+    // }, []);
 
     return (
         <div className={styles.container}>
