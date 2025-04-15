@@ -6,7 +6,8 @@ import ongi from '../../assets/ongi.svg';
 export default function VolunteerMain() {
     const navigate = useNavigate();
 
-    const volunteerStatus = "none"; // matched, done, none
+    const volunteerStatus = "matched"; // matched, done, none
+    
     const matchName = "홍길동";
     const matchDate = "2025년 10월 11일";
     const matchTime = "14:30";
@@ -30,9 +31,9 @@ export default function VolunteerMain() {
                 </button>
                 <div className={styles.topRightButtons}>
                     <button className={styles.iconBtn} onClick={() => navigate('/edit')}>
-                        <img src="../public/profileedit.svg" />
+                        <img src="../public/profileedit.svg" /> 
                     </button>
-                    <button className={styles.iconBtn}>
+                    <button className={styles.iconBtn} onClick={() => navigate('/notification')}    >
                         <img src="../public/alarm.svg" />
                     </button>
                 </div>

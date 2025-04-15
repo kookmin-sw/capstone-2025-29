@@ -36,7 +36,7 @@ export default function UserMain() {
                         <img src="../public/profileedit.svg" alt="프로필 편집" />
                     </button>
                     {/* 알림 버튼 */}
-                    <button className={styles.iconBtn}>
+                    <button className={styles.iconBtn} onClick={() => navigate('/notification')}>
                         <img src="../public/alarm.svg" alt="알람" />
                     </button>
                 </div>

@@ -97,7 +97,7 @@ const ChatPage = () => {
 
     return (
         <div className={styles.container}>
-            <Topbar title={userName + ' ai'} />
+            <Topbar title={userName + ' ai'} navigateTo="/ChatCenter" />
 
             <div className={styles.chatContainer}>
                 <div className={styles.messages}>

@@ -9,21 +9,22 @@ function HelpCenter(props) {
     const navigate = useNavigate();
 
     // 매칭 정보 props (기본값 설정)
+    const volunteerStatus = props.volunteerStatus || "done"; // matched: 매칭됨, done: 완료, none: 없음
     const matchName = props.matchName || "홍길동";
     const matchDate = props.matchDate || "2025년 10월 11일";
     const matchTime = props.matchTime || "14:30";
-    const volunteerStatus = props.volunteerStatus || "matched"; // matched: 매칭됨, done: 완료, none: 없음
+
 
     return (
         <div className={styles.container}>
             {/* 상단 네비게이션 바 */}
-            <Topbar title="도움센터" />
+            <Topbar title="도움센터" navigateTo={'/usermain'} />
 
             {/* 상단 액션 버튼 영역 */}
             <div className={styles.topButtons}>
                 {/* 새 신청 버튼 */}
                 <div onClick={() => navigate('/RequestForm')} className={`${styles.actionBtn} ${styles.squareBtn}`}>
-                    <img src="../../public/icon-plus.svg" alt="새 신청" className={styles.iconImage}  />
+                    <img src="../../public/icon-plus.svg" alt="새 신청" className={styles.iconImage} />
                     <span>새 신청</span>
                 </div>
                 {/* 신청내역 버튼 */}

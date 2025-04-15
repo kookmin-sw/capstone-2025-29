@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styles from "./AvailableTime.module.css";
 import Topbar from "../../components/Topbar";
-
+import { useNavigate } from "react-router-dom";
 export default function AvailableTime() {
+    const navigate = useNavigate();
     // 봉사 유형 옵션
     const volunteerTypes = [
         { id: "medical", label: "의료", icon: "../public/medical.svg" },
@@ -125,7 +126,7 @@ export default function AvailableTime() {
 
             {/* 완료 버튼 영역 */}
             <div className={styles.submitArea}>
-                <button className={styles.submitBtn}>완료</button>
+                <button className={styles.submitBtn} onClick={()=>{navigate("/volunteermain")}}>완료</button>
             </div>
         </div>
     );
