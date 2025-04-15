@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./TopBar.module.css";
+import styles from "./Topbar.module.css";
 
 export default function Topbar({ title, navigateTo }) {
     const navigate = useNavigate();
