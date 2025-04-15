@@ -14,7 +14,7 @@ import RoleSelect from './pages/both/RoleSelect';
 // 봉사자 관련 페이지
 import VolunteerMain from './pages/volunteer/VolunterMain';
 import WriteReview from './pages/volunteer/WriteReview';
-import AvailableTime from './pages/Volunteer/AvailableTime';
+import AvailableTime from './pages/volunteer/AvailableTime';
 import MatchingList from './pages/volunteer/MatchingList';
 import CompleteReview from './pages/volunteer/CompleteReview';
 import MatchingDetail from './pages/volunteer/MatchingDetail';
@@ -42,7 +42,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/RoleSelect" element={<RoleSelect />} />
           <Route path="/signup" element={<Signup />} />
-
+          <Route path="/edit" element={<Edit />} />
 
           {/* 봉사자 페이지 라우트 */}
           <Route path='/volunteermain' element={<VolunteerMain />} />
