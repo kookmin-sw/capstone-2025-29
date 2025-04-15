@@ -14,7 +14,7 @@ import RoleSelect from './pages/both/RoleSelect';
 // 봉사자 관련 페이지
 import VolunteerMain from './pages/Volunteer/VolunterMain';
 import WriteReview from './pages/Volunteer/WriteReview';
-import AvailableTime from './pages/volunteer/AvailableTime';
+import AvailableTime from './pages/Volunteer/AvailableTime';
 import MatchingList from './pages/Volunteer/MatchingList';
 import CompleteReview from './pages/Volunteer/CompleteReview';
 import MatchingDetail from './pages/Volunteer/MatchingDetail';
