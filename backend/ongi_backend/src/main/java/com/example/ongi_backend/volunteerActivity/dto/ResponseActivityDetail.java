@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import com.example.ongi_backend.global.entity.AnimalType;
 import com.example.ongi_backend.global.entity.VolunteerType;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +18,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class ResponseActivityDetail {
+	@Schema(description = "봉사활동 ID", example = "1")
 	private Long id;
+	@Schema(description = "봉사 활동 타입", example = "HEALTH")
 	private VolunteerType type;
 	private LocalDateTime startTime;
+	@Schema(description = "노인 애완 동물 여부", example = "cat")
 	private AnimalType animalType;
+	@Schema(description = "추가 요청 사항", example = "올 때 메로나 사다주세요")
 	private String addDescription;
 	//TODO : 스웨거 변경사항 확인
 }

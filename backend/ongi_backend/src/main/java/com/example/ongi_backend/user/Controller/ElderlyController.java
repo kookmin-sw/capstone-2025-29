@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ongi_backend.user.Service.ElderlyService;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,29 +22,26 @@ public class ElderlyController {
 	private final ElderlyService elderlyService;
 
 	@PostMapping("/matching")
+	@Operation(summary = "최종 신청 내역 / 읽기 전용", description = "봉사활동 매칭서 작성")
 	public void activityMatching(@RequestBody RequestMatching request, Principal principal) {
 		elderlyService.matching(request,
-			//TODO : 로그인 구현 후 수정
-			// principal.getName()
-			"username"
+			principal.getName()
 		);
 	}
 
 	@PostMapping("/matching/{matchingId}")
+	@Operation(summary = "봉사 완료", description = "봉사가 끝났을 때 사용")
 	public void completeMatching(@PathVariable Long matchingId, Principal principal) {
 		elderlyService.completeVolunteerActivity(matchingId,
-			//TODO : 로그인 구현 후 수정
-			// principal.getName()
-			"username"
+			principal.getName()
 		);
 	}
 
 	@DeleteMapping("/matching/{matchingId}")
+	@Operation(summary = "나의 신청 내역 2", description = "봉사 취소")
 	public void cancelMatching(@PathVariable Long matchingId ,Principal principal) {
 		elderlyService.cancelMatching(matchingId,
-			//TODO : 로그인 구현 후 수정
-			// principal.getName()
-			"username"
+			principal.getName()
 		);
 	}
 }
