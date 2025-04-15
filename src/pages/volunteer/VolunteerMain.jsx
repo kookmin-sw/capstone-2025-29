@@ -31,10 +31,10 @@ export default function VolunteerMain() {
                 </button>
                 <div className={styles.topRightButtons}>
                     <button className={styles.iconBtn} onClick={() => navigate('/edit')}>
-                        <img src="../public/profileedit.svg" /> 
+                        <img src="/profileedit.svg" /> 
                     </button>
                     <button className={styles.iconBtn} onClick={() => navigate('/notification')}    >
-                        <img src="../public/alarm.svg" />
+                        <img src="/alarm.svg" />
                     </button>
                 </div>
             </div>
@@ -105,15 +105,15 @@ export default function VolunteerMain() {
             {/* 하단 네비게이션 버튼 */}
             <div className={styles.bottomNav}>
                 <div className={styles.navBox} onClick={() => { navigate('/availableTime') }}>
-                    <img src="../public/clock.svg" />
+                    <img src="/clock.svg" />
                     <span>나의 일정</span>
                 </div>
                 <div className={`${styles.navBox} ${styles.active}`} onClick={() => { navigate('/matchinglist') }}>
-                    <img src="../public/check.svg" />
+                    <img src="/check.svg" />
                     <span>매칭내역</span>
                 </div>
                 <div className={styles.navBox} onClick={() => { navigate('/completereview') }}>
-                    <img src="../public/note.svg" />
+                    <img src="/note.svg" />
                     <span>완료/후기</span>
                 </div>
             </div>

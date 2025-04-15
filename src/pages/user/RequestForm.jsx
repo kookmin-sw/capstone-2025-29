@@ -61,13 +61,13 @@ export default function RequestForm() {
                                 className={`${styles.categoryBtn} ${formData.category === label ? styles.active : ""}`}
                                 onClick={() => handleChange("category", label)}
                             >
-                                <img src={`../../public/${icon}.svg`} alt={label} />
+                                <img src={`/${icon}.svg`} alt={label} />
                                 {label}
                             </button>
                         ))}
                     </div>
                     <div className={styles.nextButton} onClick={handleNext}>
-                        <img src="../../public/nextbtn.svg" alt="다음" />
+                        <img src="/nextbtn.svg" alt="다음" />
                     </div>
                 </div>
             )}
@@ -92,7 +92,7 @@ export default function RequestForm() {
                         />
                     </div>
                     <div className={styles.nextButton} onClick={handleNext}>
-                        <img src="../../public/nextbtn.svg" alt="다음" />
+                        <img src="/nextbtn.svg" alt="다음" />
                     </div>
                 </div>
             )}
@@ -113,7 +113,7 @@ export default function RequestForm() {
                             ))}
                         </div>
                         <div className={`${styles.nextButton} ${styles.smallNextButton}`} onClick={handleNext}>
-                            <img src="../../public/nextbtn.svg" alt="다음" />
+                            <img src="/nextbtn.svg" alt="다음" />
                         </div>
                     </div>
 
@@ -122,7 +122,7 @@ export default function RequestForm() {
                             <p className={styles.cardTitle}>정신건강복지센터에<br />도움을 요청할까요?</p>
                             <p className={styles.cardPhone}>02-2226-0344</p>
                             <div className={styles.phoneIconWrapper}>
-                                <img src="../../public/icon-call.svg" alt="전화기 아이콘" />
+                                <img src="/icon-call.svg" alt="전화기 아이콘" />
                             </div>
                             <button className={styles.callBtn}>전화연결</button>
                         </div>

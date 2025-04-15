@@ -36,7 +36,7 @@ export default function Edit() {
             {/* 기본 정보 수정 */}
             <form className={styles.form} onSubmit={handleInfoSubmit}>
                 <div className={styles.profileImageWrapper}>
-                    <img className={styles.profileImage} src="../public/profile.svg" alt="" />
+                    <img className={styles.profileImage} src="/profile.svg" alt="" />
                 </div>
 
                 <div className={styles.inputGroup}>

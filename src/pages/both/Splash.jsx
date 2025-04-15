@@ -16,7 +16,7 @@ export default function Splash() {
     return (
         <div className={styles.container}>
             <div className={styles.logoBox}>
-                <img src="../../public/splash-logo.svg" alt="온기 로고" className={styles.logo} />
+                <img src="/splash-logo.svg" alt="온기 로고" className={styles.logo} />
             </div>
         </div>
     );

@@ -24,12 +24,12 @@ function HelpCenter(props) {
             <div className={styles.topButtons}>
                 {/* 새 신청 버튼 */}
                 <div onClick={() => navigate('/RequestForm')} className={`${styles.actionBtn} ${styles.squareBtn}`}>
-                    <img src="../../public/icon-plus.svg" alt="새 신청" className={styles.iconImage} />
+                    <img src="/icon-plus.svg" alt="새 신청" className={styles.iconImage} />
                     <span>새 신청</span>
                 </div>
                 {/* 신청내역 버튼 */}
                 <div onClick={() => navigate('/ApplyingList')} className={`${styles.actionBtn} ${styles.highlight} ${styles.squareBtn}`}>
-                    <img src="../../public/icon-list.svg" alt="신청내역" className={styles.iconImage} />
+                    <img src="/icon-list.svg" alt="신청내역" className={styles.iconImage} />
                     <span>신청내역</span>
                 </div>
             </div>

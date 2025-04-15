@@ -109,7 +109,7 @@ const ChatPage = () => {
                             {message.sender === 'ai' && (
                                 <div className={styles.profileSection}>
                                     <div className={styles.profileImage}>
-                                        <img src="../../public/ai-icon.svg" alt="AI 프로필" />
+                                        <img src="/ai-icon.svg" alt="AI 프로필" />
                                     </div>
                                     <span className={styles.profileName}>{userName}</span>
                                 </div>
@@ -126,7 +126,7 @@ const ChatPage = () => {
 
                 <div className={styles.centerMic}>
                     <button className={styles.micButton}>
-                        <img src="../../public/mike-icon.svg" alt="음성 입력" />
+                        <img src="/mike-icon.svg" alt="음성 입력" />
                     </button>
                 </div>
 
@@ -141,7 +141,7 @@ const ChatPage = () => {
                             rows={1}
                         />
                         <button className={styles.sendButton} onClick={sendMessage}>
-                            <img src="../../public/send-icon.svg" alt="전송" />
+                            <img src="/send-icon.svg" alt="전송" />
                         </button>
                     </div>
                 </div>

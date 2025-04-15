@@ -61,7 +61,7 @@ const ChatCenter = () => {
                         <p>지금 바로 연결해 드릴게요.</p>
                     </div>
                     <div className={styles.imageWrapper}>
-                        <img src="../../public/chat-icon.svg" alt="채팅 오른쪽" className={styles.rightImg} />
+                        <img src="/chat-icon.svg" alt="채팅 오른쪽" className={styles.rightImg} />
                     </div>
                     <button className={styles.chatBtn} onClick={handleChatClick}>채팅 시작하기</button>
                 </div>

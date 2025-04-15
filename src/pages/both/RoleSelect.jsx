@@ -27,7 +27,7 @@ export default function RoleSelect() {
                     onClick={() => handleSelect("user")}
                 >
                     <p>앱 이용자<br />회원 가입</p>
-                    <img src="../../public/user-icon.svg" alt="앱 이용자" />
+                    <img src="/user-icon.svg" alt="앱 이용자" />
                 </div>
 
                 <div
@@ -35,7 +35,7 @@ export default function RoleSelect() {
                     onClick={() => handleSelect("volunteer")}
                 >
                     <p>봉사자<br />회원 가입</p>
-                    <img src="../../public/volunteer-icon.svg" alt="봉사자" />
+                    <img src="/volunteer-icon.svg" alt="봉사자" />
 
                 </div>
 
@@ -46,7 +46,7 @@ export default function RoleSelect() {
                         alert("가입 유형을 선택해주세요.");
                     }
                 }}>
-                    <img src="../../public/nextbtn.svg" alt="다음" />
+                    <img src="/nextbtn.svg" alt="다음" />
                 </div>
 
             </div>
