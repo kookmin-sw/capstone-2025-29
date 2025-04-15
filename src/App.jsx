@@ -12,7 +12,7 @@ import Edit from './pages/both/Edit';
 import RoleSelect from './pages/both/RoleSelect';
 
 // 봉사자 관련 페이지
-import VolunteerMain from './pages/Volunteer/VolunterMain';
+import VolunteerMain from './pages/Volunteer/VolunteerMain';
 import WriteReview from './pages/Volunteer/WriteReview';
 import AvailableTime from './pages/Volunteer/AvailableTime';
 import MatchingList from './pages/Volunteer/MatchingList';
