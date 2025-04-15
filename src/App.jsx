@@ -12,13 +12,13 @@ import Edit from './pages/both/Edit';
 import RoleSelect from './pages/both/RoleSelect';
 
 // 봉사자 관련 페이지
-import VolunteerMain from './pages/volunteer/VolunterMain';
-import WriteReview from './pages/volunteer/WriteReview';
-import AvailableTime from './pages/volunteer/AvailableTime';
-import MatchingList from './pages/volunteer/MatchingList';
-import CompleteReview from './pages/volunteer/CompleteReview';
-import MatchingDetail from './pages/volunteer/MatchingDetail';
-import ReviewDetail from './pages/volunteer/ReviewDetail';
+import VolunteerMain from './pages/Volunteer/VolunterMain';
+import WriteReview from './pages/Volunteer/WriteReview';
+import AvailableTime from './pages/Volunteer/AvailableTime';
+import MatchingList from './pages/Volunteer/MatchingList';
+import CompleteReview from './pages/Volunteer/CompleteReview';
+import MatchingDetail from './pages/Volunteer/MatchingDetail';
+import ReviewDetail from './pages/Volunteer/ReviewDetail';
 
 // 사용자 관련 페이지
 import UserMain from './pages/user/UserMain';
