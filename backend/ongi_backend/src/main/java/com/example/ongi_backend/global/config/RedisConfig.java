@@ -14,32 +14,32 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-// @EnableRedisRepositories(shadowCopy = OFF, enableKeyspaceEvents = ON_DEMAND)
 public class RedisConfig {
+
 	@Value("${spring.data.redis.host}")
 	private String host;
+
 	@Value("${spring.data.redis.port}")
 	private int port;
 
 	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
+	public LettuceConnectionFactory redisConnectionFactory() {
 		return new LettuceConnectionFactory(host, port);
 	}
 
 	@Bean
-	public RedisTemplate<String, String> redisTemplate(){
-		RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(redisConnectionFactory());
-		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new StringRedisSerializer());
-		return redisTemplate;
+	public RedisTemplate<String, String> redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
+		RedisTemplate<String, String> template = new RedisTemplate<>();
+		template.setConnectionFactory(redisConnectionFactory);
+		template.setKeySerializer(new StringRedisSerializer());
+		template.setValueSerializer(new StringRedisSerializer());
+		return template;
 	}
 
-	// @Bean
-	// public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
-	// 	RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-	// 	container.setConnectionFactory(redisConnectionFactory);
-	//
-	// 	return container;
-	// }
+	@Bean
+	public RedisMessageListenerContainer redisMessageListenerContainer(LettuceConnectionFactory redisConnectionFactory) {
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(redisConnectionFactory);
+		return container;
+	}
 }
