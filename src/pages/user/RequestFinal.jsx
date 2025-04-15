@@ -20,7 +20,7 @@ export default function RequestFinal() {
         date: "2025년 10월 11일",
         time: "14:30",
         tags: ['의료', "강남구"],
-        icon: "/public/book.svg",
+        icon: "/book.svg",
         address1: "서울 성북구 정릉로 77 국민대학교",
         address2: "서울 성북구 정릉동 861-1",
     };
