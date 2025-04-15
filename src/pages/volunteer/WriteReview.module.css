@@ -1,0 +1,174 @@
+/* 전체 컨테이너 */
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    padding: 2vh 5vw;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
+
+/* 매칭 정보 */
+.matchInfo {
+    display: flex;
+    width: 100%;
+    gap: 5vw;
+    margin: 3vh 0 1.5vh;
+}
+
+.matchIcon {
+    margin-left: 5vw;
+}
+
+.matchText {
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 600;
+}
+
+.matchDate {
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    color: #666;
+}
+
+/* 태그 */
+.tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2vw;
+    width: 100%;
+    margin: 2vh 2vh;
+}
+
+.tag {
+    background-color: #ede9fe;
+    color: #333;
+    padding: 0.6vh 2vw;
+    border-radius: 15px;
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+}
+
+/* 첨부 버튼 */
+.attachBtn {
+    width: 100%;
+    padding: 1.5vh 0;
+    background-color: white;
+    border: 1px dashed #aaa;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    margin: 3vh 0;
+}
+
+/* 이미지 미리보기 */
+.imageScroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 3vw;
+    padding: 0 0 2vh 0;
+}
+
+.previewImage {
+    width: 45vw;
+    height: 45vw;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+/* 모달 */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.modalContent {
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    border-radius: 12px 12px 0 0;
+}
+
+.modalTitle {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #666;
+    margin: 0;
+    padding: 2vh 0;
+}
+
+.modalBtn {
+    display: block;
+    width: 100%;
+    padding: 2vh 0;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #333;
+    border-top: 0.5px solid #969696;
+    border-radius: 0;
+}
+
+.cancelBtn {
+    width: 100%;
+    padding: 2vh 0;
+    background-color: #eee;
+    font-size: 1rem;
+
+    border-radius: 0;
+    color: #333;
+}
+
+/* 후기 작성 */
+.reviewSection {
+    margin-top: 2vh;
+    width: 100%;
+}
+
+.reviewSection label {
+    font-weight: bold;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    margin-bottom: 1vh;
+    display: block;
+}
+
+.reviewSection textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 120px;
+    border: none;
+    background-color: #eee;
+    padding: 1vh;
+    border-radius: 8px;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    resize: none;
+}
+
+
+/* 완료 버튼 영역 (오른쪽 정렬) */
+.submitArea {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    margin-top: 3vh;
+}
+
+/* 완료 버튼 스타일 */
+.submitBtn {
+    width: 30%;
+    padding: 1.2vh 3vw;
+    background-color: #6D57DE;
+    color: white;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+}

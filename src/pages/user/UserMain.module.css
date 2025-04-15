@@ -1,0 +1,139 @@
+/* 전체 컨테이너 스타일 */
+.container {
+    padding: 5vh 5vw;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #f5f5f5;
+}
+
+/* 상단 네비게이션 바 스타일 */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 10vh;
+}
+
+/* 로고 스타일 */
+.logo {
+    height: 40px;
+    margin-left: 3vw;
+}
+
+/* 우측 상단 버튼들 컨테이너 */
+.topRightButtons {
+    display: flex;
+    gap: 3vw;
+}
+
+/* 아이콘 버튼 공통 스타일 */
+.iconBtn,
+.logo {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* 메인 카드 영역 wrapper */
+.cardwrapper {
+
+    margin-top: 3vh;
+}
+
+/* 봉사자 연결 카드 스타일 */
+.mainCard {
+    background-color: #ede9fe;
+    aspect-ratio: 1 / 1;
+    padding: 5vw 5vw;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-between;
+}
+
+/* 텍스트 섹션 스타일 */
+.textSection {
+    text-align: left;
+    width: 100%;
+}
+
+/* 텍스트 섹션 제목 스타일 */
+.textSection h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* 텍스트 섹션 설명 스타일 */
+.textSection p {
+    margin-top: 1vh;
+    font-size: 0.8rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* 봉사자 이미지 스타일 */
+.volunteerimg{
+    width: 140px;
+    height: auto;
+}
+
+/* 이미지 wrapper 스타일 */
+.imageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+}
+
+/* 채팅 카드 왼쪽 이미지 스타일 */
+.leftImg {
+    width: 90px;
+    transform: translatex(10%);
+}
+
+/* 채팅 카드 오른쪽 이미지 스타일 */
+.rightImg {
+    width: 90px;
+    height: auto;
+    transform: translateY(-25%);
+}
+
+/* 도움 신청 버튼 스타일 */
+.actionBtn {
+    background-color: #6D57DE;
+    color: white;
+    font-weight: bold;
+    padding: 1.3vh 0;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+/* 채팅 카드 스타일 */
+.chatCard {
+    background-color: #ffe6ee;
+    aspect-ratio: 1 / 1;
+    padding: 5vw 5vw;
+    border-radius: 20px;
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-between;
+}
+
+/* 채팅 버튼 스타일 */
+.chatBtn {
+    background-color: #EB3C77;
+    color: white;
+    font-weight: bold;
+    padding: 1.3vh 0;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}

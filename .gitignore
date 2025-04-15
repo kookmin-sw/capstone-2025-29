@@ -1,0 +1,11 @@
+# AI 폴더 안 venv 무시
+AI/venv/
+
+# 파이썬 캐시 파일 무시
+__pycache__/
+*.pyc
+
+# Jupyter 노트북 체크포인트 무시
+.ipynb_checkpoints/
+
+node_modules/
