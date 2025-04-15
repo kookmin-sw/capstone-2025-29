@@ -42,7 +42,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/RoleSelect" element={<RoleSelect />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/edit" element={<Edit />} />
+
 
           {/* 봉사자 페이지 라우트 */}
           <Route path='/volunteermain' element={<VolunteerMain />} />
