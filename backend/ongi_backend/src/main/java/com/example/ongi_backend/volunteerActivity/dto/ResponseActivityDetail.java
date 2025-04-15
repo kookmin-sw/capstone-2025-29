@@ -4,7 +4,6 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 
-import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.entity.AnimalType;
 import com.example.ongi_backend.global.entity.VolunteerType;
 
@@ -23,4 +22,5 @@ public class ResponseActivityDetail {
 	private LocalDateTime startTime;
 	private AnimalType animalType;
 	private String addDescription;
+	//TODO : 스웨거 변경사항 확인
 }

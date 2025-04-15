@@ -19,4 +19,5 @@ public class ResponseRegisteredActivities {
 	private Long id;
 	private VolunteerType type;
 	private LocalDateTime time;
+	// TODO : 스웨거 변경사항 확인
 }
