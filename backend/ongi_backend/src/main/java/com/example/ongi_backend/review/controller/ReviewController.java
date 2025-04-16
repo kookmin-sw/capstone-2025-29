@@ -28,27 +28,22 @@ public class ReviewController {
 	public ResponseEntity<List<ResponseReview>> getReviews(Principal principal) {
 		return ResponseEntity.ok(
 			reviewService.findReviews(
-				//TODO : 로그인 구현 후 수정
-				// principal.getName()
-				"username"
+				principal.getName()
 			));
 	}
 
 	@GetMapping("/{volunteerActivityId}")
 	public ResponseEntity<ResponseDetailReview> getReview(@PathVariable Long volunteerActivityId, Principal principal) {
 		return ResponseEntity.ok(reviewService.findDetailsReview(volunteerActivityId,
-			//TODO : 로그인 구현 후 수정
-			// principal.getName()
-			"username"
+			principal.getName()
 		));
 	}
 
 	@PostMapping
 	public ResponseEntity<?> writeReview(@RequestBody @Valid RequestResistReview request, Principal principal) {
-		reviewService.writeReview(request
-			//TODO : 로그인 구현 후 수정
-			// principal.getName()
-			, "username"
+		reviewService.writeReview(
+			request,
+			principal.getName()
 		);
 		return ResponseEntity.ok("리뷰 작성하기");
 	}
