@@ -21,13 +21,10 @@ public class AwsController {
 	private final AwsService awsService;
 	@GetMapping("/s3/user/preSigned")
 	public ResponseEntity<GetS3UrlDto> issuedPreSignedUrl(@RequestParam("type") String type, @RequestParam("userType") String userType, Principal principal) {
-
 		return ResponseEntity.ok(awsService.getUserImagePreSignedUrl(
-			//TODO: 로그인 구현후 수정
-			// principal.getName()
-			"username"
-			, type, userType));
+			principal.getName(), type, userType));
 	}
+
 	@GetMapping("/s3/review/preSigned")
 	public ResponseEntity<List<GetS3UrlDto>> issuedPreSignedUrlForReview(@RequestParam("count") int count) {
 		return ResponseEntity.ok(awsService.getReviewPreSignedUrl(count));
