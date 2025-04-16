@@ -51,7 +51,7 @@ const ChatCenter = () => {
 
     return (
         <div className={styles.container}>
-            <Topbar title="채팅센터" />
+            <Topbar title="채팅센터" navigateTo="/helpcenter" />
 
             <div className={styles.cardwrapper}>
                 {/* 채팅 카드 */}

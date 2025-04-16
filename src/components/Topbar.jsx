@@ -3,15 +3,16 @@ import { useNavigate } from "react-router-dom";
 
 import styles from "./Topbar.module.css";
 
-
-export default function Topbar({ title, navigateTo }) {
+export default function Topbar({ title, navigateTo, handleBack: customHandleBack }) {
     const navigate = useNavigate();
 
     const handleBack = () => {
-        if (navigateTo) {
+        if (customHandleBack) {
+            customHandleBack();
+        } else if (navigateTo) {
             navigate(navigateTo);
         } else {
-            navigate(-1)
+            navigate(-1);
         }
     };
 

@@ -24,7 +24,6 @@ import ReviewDetail from './pages/volunteer/ReviewDetail';
 import UserMain from './pages/user/UserMain';
 import HelpCenter from './pages/user/HelpCenter';
 import RequestForm from './pages/user/RequestForm';
-import RequestFinal from './pages/user/RequestFinal';
 import ApplyingList from './pages/user/ApplyingList';
 import ApplyingDetail from './pages/user/ApplyingDetail';
 import SetName from './pages/user/SetName';
@@ -60,7 +59,6 @@ function App() {
           <Route path="/usermain" element={<UserMain />} />
           <Route path="/helpcenter" element={<HelpCenter />} />
           <Route path="/requestform" element={<RequestForm />} />
-          <Route path="/requestfinal" element={<RequestFinal />} />
           <Route path="/applyinglist" element={<ApplyingList />} />
           <Route path="/applyingdetail" element={<ApplyingDetail />} />
           <Route path="/setname" element={<SetName />} />
