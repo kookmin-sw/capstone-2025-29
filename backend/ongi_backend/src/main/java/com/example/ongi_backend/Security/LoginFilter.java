@@ -4,7 +4,7 @@ import com.example.ongi_backend.Security.Jwt.JwtProvider;
 import com.example.ongi_backend.global.exception.ErrorCode;
 import com.example.ongi_backend.user.Dto.UserLoginResponseDto;
 import com.example.ongi_backend.user.entity.BaseUser;
-import com.example.ongi_backend.user.entity.PrincipleDetails;
+import com.example.ongi_backend.user.entity.PrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,8 +39,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        PrincipleDetails principleDetails = (PrincipleDetails) authResult.getPrincipal();
-        BaseUser baseUser = principleDetails.getBaseUser();
+        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        BaseUser baseUser = principalDetails.getBaseUser();
 
         String accessToken = jwtProvider.createAccessToken(baseUser.getUsername());
         String refreshToken = jwtProvider.createRefreshToken(baseUser.getUsername());
