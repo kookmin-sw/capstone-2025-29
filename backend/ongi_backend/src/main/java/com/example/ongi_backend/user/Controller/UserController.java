@@ -8,6 +8,8 @@ import com.example.ongi_backend.user.Dto.ResponseUserInfo;
 import com.example.ongi_backend.user.Dto.UserRegisterDto;
 import com.example.ongi_backend.user.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,19 @@ public class UserController {
     }
 
     @GetMapping("/notification")
-    public ResponseEntity<List<RedisNotificationTemplate>> getNotification(@RequestParam String userType, @RequestParam String userId) {
+    @Operation(summary = "공통/알람", description = "유저 알림 가져오기, 프론트와 의논 후 변경 필요")
+    public ResponseEntity<List<RedisNotificationTemplate>> getNotification(@Parameter(
+        name = "userType",
+        description = "유저 타입",
+        required = true,
+        schema = @Schema(allowableValues = {"elderly", "volunteer"}, example = "elderly")
+    ) @RequestParam String userType,
+        @Parameter(
+            name = "userId",
+            description = "유저 아이디",
+            required = true,
+            example = "1")
+        @RequestParam String userId) {
         List<RedisNotificationTemplate> notifications = notificationRedisService.findNotification(userId, userType);
         return ResponseEntity.ok().body(notifications);
     }
