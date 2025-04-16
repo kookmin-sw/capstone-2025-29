@@ -4,6 +4,7 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 
+import com.example.ongi_backend.global.entity.DistrictType;
 import com.example.ongi_backend.global.entity.VolunteerType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,5 +23,10 @@ public class ResponseRegisteredActivities {
 	@Schema(description = "봉사 활동 타입", example = "HEALTH")
 	private VolunteerType type;
 	private LocalDateTime time;
-	// TODO : 스웨거 변경사항 확인
+	@Schema(description = "봉사자 매칭 여부", example = "true")
+	private boolean isMatched;
+	@Schema(description = "봉사자 이름", example = "홍길동")
+	private String volunteerName;
+	@Schema(description = "봉사 지역구", example = "GANGNAM")
+	private DistrictType districtType;
 }

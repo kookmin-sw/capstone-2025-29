@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import com.example.ongi_backend.global.entity.AnimalType;
 import com.example.ongi_backend.global.entity.VolunteerType;
+import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -27,5 +28,6 @@ public class ResponseActivityDetail {
 	private AnimalType animalType;
 	@Schema(description = "추가 요청 사항", example = "올 때 메로나 사다주세요")
 	private String addDescription;
-	//TODO : 스웨거 변경사항 확인
+	@Schema(description = "매칭된 봉사자 정보")
+	private ResponseMatchedUserInfo matchedUserInfo;
 }

@@ -14,6 +14,7 @@ import com.example.ongi_backend.global.entity.Address;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.dto.UnMatching;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
+import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
@@ -54,6 +55,9 @@ public class VolunteerActivityService {
 			.id(va.getId())
 			.type(va.getType())
 			.time(va.getStartTime())
+			.isMatched(va.getVolunteer() != null)
+			.volunteerName(va.getVolunteer() != null ? va.getVolunteer().getName() : null)
+			.districtType(va.getAddress().getDistrict())
 			.build()).collect(Collectors.toList());
 	}
 
@@ -65,6 +69,12 @@ public class VolunteerActivityService {
 				.startTime(va.getStartTime())
 				.animalType(va.getAnimalType())
 				.addDescription(va.getAddDescription())
+				.matchedUserInfo(
+					va.getVolunteer() != null ?
+						ResponseMatchedUserInfo.of(va.getVolunteer().getName(), va.getVolunteer().getPhone(),
+							va.getVolunteer().getProfileImage(),
+							va.getVolunteer().getVolunteerActivities().size() * 3) : null
+				)
 				.build())
 			.orElseThrow(() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR));
 	}
