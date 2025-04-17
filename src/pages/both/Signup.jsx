@@ -182,8 +182,6 @@ export default function Signup() {
                     onChange={handleInputChange}
                     placeholder="비밀번호 입력"
                     autoComplete="new-password"
-                    data-form-type="other"
-                    data-lpignore="true"
                 />
             </div>
 
@@ -196,8 +194,6 @@ export default function Signup() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="비밀번호 다시 입력"
                     autoComplete="new-password"
-                    data-form-type="other"
-                    data-lpignore="true"
                 />
             </div>
 
