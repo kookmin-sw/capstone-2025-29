@@ -8,36 +8,24 @@ const exampleMessages = [
     {
         id: 1,
         sender: "ai",
-        content: "네, 말씀하신 내용에 대해 더 자세히\n이야기해주시겠어요?",
+        content: "안녕하세요\n챗봇과 대화하며 마음을 나누고,\n감정을 분석해보세요.",
         timestamp: "오전 10:30",
         name: "홍길동"
     },
     {
         id: 2,
         sender: "user",
-        content: "으르르르",
+        content: "안녕하세요",
         timestamp: "오전 10:31"
     },
     {
         id: 3,
         sender: "ai",
-        content: "네, 말씀하신 내용에 대해 더 자세히\n이야기해주시겠어요?",
+        content: "안녕하세요",
         timestamp: "오전 10:31",
         name: "홍길동"
     },
-    {
-        id: 4,
-        sender: "user",
-        content: "르르르",
-        timestamp: "오전 10:32"
-    },
-    {
-        id: 5,
-        sender: "ai",
-        content: "네, 말씀하신 내용에 대해 더 자세히\n이야기해주시겠어요?",
-        timestamp: "오전 10:32",
-        name: "홍길동"
-    }
+   
 ];
 
 const ChatPage = () => {

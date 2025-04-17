@@ -28,7 +28,7 @@ function HelpCenter(props) {
                     <span>새 신청</span>
                 </div>
                 {/* 신청내역 버튼 */}
-                <div onClick={() => navigate('/ApplyingList')} className={`${styles.actionBtn} ${styles.highlight} ${styles.squareBtn}`}>
+                <div onClick={() => navigate('/ApplyingList')} className={`${styles.actionBtn} ${styles.squareBtn}`}>
                     <img src="/icon-list.svg" alt="신청내역" className={styles.iconImage} />
                     <span>신청내역</span>
                 </div>

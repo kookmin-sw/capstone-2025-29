@@ -108,7 +108,7 @@ export default function VolunteerMain() {
                     <img src="/clock.svg" />
                     <span>나의 일정</span>
                 </div>
-                <div className={`${styles.navBox} ${styles.active}`} onClick={() => { navigate('/matchinglist') }}>
+                <div className={`${styles.navBox}`} onClick={() => { navigate('/matchinglist') }}>
                     <img src="/check.svg" />
                     <span>매칭내역</span>
                 </div>
