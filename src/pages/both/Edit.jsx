@@ -34,7 +34,7 @@ export default function Edit() {
             <Topbar title="프로필 수정" />
 
             {/* 기본 정보 수정 */}
-            <form className={styles.form} onSubmit={handleInfoSubmit} autoComplete="off">
+            <form className={styles.form} onSubmit={handleInfoSubmit}>
                 <div className={styles.profileImageWrapper}>
                     <img className={styles.profileImage} src="/profile.svg" alt="" />
                 </div>
@@ -91,10 +91,6 @@ export default function Edit() {
                         placeholder="새 비밀번호를 입력해 주세요."
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        autoComplete="off"           // 자동완성 비활성화
-                        autoCorrect="off"            // 자동수정 비활성화
-                        autoCapitalize="off"         // 자동 대문자 비활성화
-                        spellCheck="false"           // 맞춤법 검사 비활성화
                     />
                 </div>
 
@@ -105,10 +101,6 @@ export default function Edit() {
                         placeholder="새 비밀번호를 한번 더 입력해 주세요."
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        autoComplete="off"           // 자동완성 비활성화
-                        autoCorrect="off"            // 자동수정 비활성화
-                        autoCapitalize="off"         // 자동 대문자 비활성화
-                        spellCheck="false"           // 맞춤법 검사 비활성화
                     />
                     {matchError && (
                         <span className={styles.errorText}>* 새 비밀번호를 확인해주세요.</span>

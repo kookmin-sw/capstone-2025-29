@@ -15,9 +15,7 @@ export default function ReviewDetail() {
             "/imgex.png",
             "/imgex.png"
         ],
-        content: `어쩌구어쩌구어쩌구어쩌구어쩌구어쩌구
-어쩌구어쩌구어쩌구어쩌구어쩌구어쩌구
-어쩌구어쩌구어쩌구어쩌구어쩌구어쩌구`
+        content: `즐겁고 유익한 봉사였습니다. 감사합니다~!`
     };
 
     return (

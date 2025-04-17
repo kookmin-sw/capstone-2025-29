@@ -138,7 +138,7 @@ export default function Signup() {
         !birthDateComplete;
 
     return (
-        <form className={styles.container} onSubmit={handleSubmit} autoComplete="off">
+        <form className={styles.container} onSubmit={handleSubmit} >
             <NotificationSetup />
             <Topbar title="" />
 
@@ -181,10 +181,9 @@ export default function Signup() {
                     value={formValues.password}
                     onChange={handleInputChange}
                     placeholder="비밀번호 입력"
-                    autoComplete="off"           // 자동완성 비활성화
-                    autoCorrect="off"            // 자동수정 비활성화
-                    autoCapitalize="off"         // 자동 대문자 비활성화
-                    spellCheck="false"           // 맞춤법 검사 비활성화
+                    autoComplete="new-password"
+                    data-form-type="other"
+                    data-lpignore="true"
                 />
             </div>
 
@@ -196,10 +195,9 @@ export default function Signup() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="비밀번호 다시 입력"
-                    autoComplete="off"           // 자동완성 비활성화
-                    autoCorrect="off"            // 자동수정 비활성화
-                    autoCapitalize="off"         // 자동 대문자 비활성화
-                    spellCheck="false"           // 맞춤법 검사 비활성화
+                    autoComplete="new-password"
+                    data-form-type="other"
+                    data-lpignore="true"
                 />
             </div>
 
@@ -226,9 +224,6 @@ export default function Signup() {
                     placeholder="구/군/면/읍"
                 />
             </div>
-
-
-
 
             {/* 생년월일 */}
             <div className={styles.inputGroup}>
