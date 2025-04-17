@@ -82,4 +82,35 @@
     margin-top: 5vh;
 }
 
+.passwordWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.passwordWrapper input {
+    width: 100%;
+    background-color: #EEEEEE !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+.passwordWrapper input:-webkit-autofill,
+.passwordWrapper input:-webkit-autofill:hover,
+.passwordWrapper input:-webkit-autofill:focus,
+.passwordWrapper input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #EEEEEE inset !important;
+    -webkit-text-fill-color: inherit !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* 강력한 암호 제안 팝업 스타일 제거 */
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
 
