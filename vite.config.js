@@ -8,9 +8,6 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
-      devOptions: {
-        enabled: true
-      },
       manifest: {
         name: 'ongi',
         short_name: '온기',
