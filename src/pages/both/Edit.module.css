@@ -81,3 +81,27 @@
 .form:nth-child(3) {
     margin-top: 5vh;
 }
+/* 자동완성 배경색 제거 */
+.inputGroup input:-webkit-autofill,
+.inputGroup input:-webkit-autofill:hover,
+.inputGroup input:-webkit-autofill:focus,
+.inputGroup input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: inherit !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+
+
+/* iOS에서 입력 필드 스타일 초기화 */
+.inputGroup input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #EEEEEE;
+}
+
+/* 터치 하이라이트 제거 */
+.inputGroup input {
+    -webkit-tap-highlight-color: transparent;
+}
