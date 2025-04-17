@@ -43,7 +43,7 @@ public class ReviewService {
 		if(findVa.getVolunteer() == null || !findVa.getVolunteer().equals(volunteer)) {
 			throw new CustomException(UNABLE_TO_WRITE_REVIEW_ERROR);
 		}
-		VolunteerReview review = VolunteerReview.of(findVa, "리뷰 내용", request.getImageUrls());
+		VolunteerReview review = VolunteerReview.of(findVa, request.getContent(), request.getImageUrls());
 		reviewRepository.save(review);
 		findVa.updateStatus(COMPLETED);
 	}
