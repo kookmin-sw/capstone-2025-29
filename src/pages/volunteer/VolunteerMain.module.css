@@ -127,7 +127,7 @@
     border-radius: 12px;
     padding: 2vh 3vw;
     text-align: center;
-    margin: 5vh 0;
+    margin:4vh 0;
 }
 
 .matchName {
@@ -173,7 +173,7 @@
 .bottomNav {
     display: flex;
     justify-content: space-between;
-    margin: 3vh 0;
+    margin: 1vh 0;
     padding: 0 5vw;
     gap: 2vw;
 }
