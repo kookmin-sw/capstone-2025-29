@@ -14,7 +14,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-// @EnableRedisRepositories(shadowCopy = OFF, enableKeyspaceEvents = ON_DEMAND)
+@EnableRedisRepositories(shadowCopy = OFF, enableKeyspaceEvents = ON_STARTUP, keyspaceNotificationsConfigParameter = "")
 public class RedisConfig {
 	@Value("${spring.data.redis.host}")
 	private String host;
@@ -35,11 +35,11 @@ public class RedisConfig {
 		return redisTemplate;
 	}
 
-	// @Bean
-	// public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
-	// 	RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-	// 	container.setConnectionFactory(redisConnectionFactory);
-	//
-	// 	return container;
-	// }
+	@Bean
+	public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(redisConnectionFactory);
+
+		return container;
+	}
 }
