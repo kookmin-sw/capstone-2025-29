@@ -6,8 +6,10 @@ import ongi from '../../assets/ongi.svg';
 export default function VolunteerMain() {
     const navigate = useNavigate();
 
+
     const volunteerStatus = "matched"; // matched, done, none
     
+
     const matchName = "홍길동";
     const matchDate = "2025년 10월 11일";
     const matchTime = "14:30";
@@ -35,6 +37,7 @@ export default function VolunteerMain() {
                     </button>
                     <button className={styles.iconBtn} onClick={() => navigate('/notification')}    >
                         <img src="/alarm.svg" />
+
                     </button>
                 </div>
             </div>
@@ -105,6 +108,7 @@ export default function VolunteerMain() {
             {/* 하단 네비게이션 버튼 */}
             <div className={styles.bottomNav}>
                 <div className={styles.navBox} onClick={() => { navigate('/availableTime') }}>
+
                     <img src="/clock.svg" />
                     <span>나의 일정</span>
                 </div>
@@ -114,6 +118,7 @@ export default function VolunteerMain() {
                 </div>
                 <div className={styles.navBox} onClick={() => { navigate('/completereview') }}>
                     <img src="/note.svg" />
+
                     <span>완료/후기</span>
                 </div>
             </div>
