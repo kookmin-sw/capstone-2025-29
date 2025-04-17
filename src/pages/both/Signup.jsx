@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Signup.module.css";
 import Topbar from "../../components/Topbar";
 import ongi from '../../assets/ongi.svg';
-import { messaging, getToken, onMessage } from '../../firebase';
-import NotificationSetup from '../../components/NotificationSetup';
 
 export default function Signup() {
     const location = useLocation();
@@ -115,8 +113,11 @@ export default function Signup() {
         //     .then((data) => {
         //         alert("회원가입 완료");
         //         console.log(data);
+
         //     })
         //     .catch((err) => console.error("에러:", err));
+
+
     };
 
     // 비밀번호 일치 여부
@@ -138,8 +139,7 @@ export default function Signup() {
         !birthDateComplete;
 
     return (
-        <form className={styles.container} onSubmit={handleSubmit} >
-            <NotificationSetup />
+        <form className={styles.container} onSubmit={handleSubmit}>
             <Topbar title="" />
 
             {/* 프로필 이미지 */}
@@ -181,7 +181,6 @@ export default function Signup() {
                     value={formValues.password}
                     onChange={handleInputChange}
                     placeholder="비밀번호 입력"
-                    autoComplete="new-password"
                 />
             </div>
 
@@ -193,7 +192,6 @@ export default function Signup() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="비밀번호 다시 입력"
-                    autoComplete="new-password"
                 />
             </div>
 
@@ -220,6 +218,9 @@ export default function Signup() {
                     placeholder="구/군/면/읍"
                 />
             </div>
+
+
+
 
             {/* 생년월일 */}
             <div className={styles.inputGroup}>
