@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Signup.module.css";
 import Topbar from "../../components/Topbar";
 import ongi from '../../assets/ongi.svg';
+import { messaging, getToken, onMessage } from '../../firebase';
+import NotificationSetup from '../../components/NotificationSetup';
 
 export default function Signup() {
     const location = useLocation();
@@ -113,11 +115,8 @@ export default function Signup() {
         //     .then((data) => {
         //         alert("회원가입 완료");
         //         console.log(data);
-
         //     })
         //     .catch((err) => console.error("에러:", err));
-
-
     };
 
     // 비밀번호 일치 여부
@@ -140,6 +139,7 @@ export default function Signup() {
 
     return (
         <form className={styles.container} onSubmit={handleSubmit}>
+            <NotificationSetup />
             <Topbar title="" />
 
             {/* 프로필 이미지 */}
