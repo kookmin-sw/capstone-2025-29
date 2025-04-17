@@ -117,6 +117,30 @@
     border-bottom: 2px solid #ccc;
     outline: none;
     width: 80%;
+    position: relative;
+    z-index: 1;
+}
+
+/* 시간 입력 wrapper 스타일 */
+.timeInputWrapper {
+    position: relative;
+    width: 80%;
+    min-height: 40px;
+}
+
+/* 시간 입력 placeholder 스타일 */
+.timePlaceholder {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #aaa;
+    font-size: 1.4rem;
+    font-weight: bold;
+    pointer-events: none;
+    text-align: center;
+    width: 100%;
+    z-index: 0;
 }
 
 /* input placeholder 색상 */
@@ -232,37 +256,46 @@
     cursor: pointer;
 }
 
-/* =================== STEP 4: 요청사항 입력 =================== */
+/* =================== STEP 4: 최종 확인 =================== */
+
+/* 주소 정보 스타일 */
+.address {
+    padding: 3vh 4vw;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* 주소 텍스트 마진 제거 */
+.address p {
+    margin: 0;
+}
 
 /* 요청사항 textarea 스타일 */
 .textarea {
     width: 100%;
-    min-height: 20vh;
-    padding: 2vh 2vw;
+    min-height: 15vh;
+    padding: 2vw;
     font-size: 1rem;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 1px solid #ccc;
     resize: none;
     box-sizing: border-box;
     margin-top: 2vh;
 }
 
-/* STEP 4 제출 버튼 wrapper 스타일 */
-.submitBtnWrapper {
-    margin-top: 3vh;
-    display: flex;
-    justify-content: center;
-}
-
 /* 제출 버튼 스타일 */
 .submitBtn {
+    width: 40%;
+    margin-left: auto;
+    padding: 1.2vh 2vw;
     background-color: #6D57DE;
     color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 1.5vh 0;
-    width: 80%;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: bold;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    display: block;
+    margin-top: 4vh;
 }

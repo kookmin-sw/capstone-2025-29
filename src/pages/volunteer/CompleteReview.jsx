@@ -19,7 +19,7 @@ export default function CompleteReview() {
             date: "2025년 10월 11일",
             time: "14:30",
             tags: ["의료", "강남구", "의료", "강남구", "의료"],
-            icon: "../../../public/book.svg",
+            icon: "/book.svg",
         },
         {
             id: 2,
@@ -27,7 +27,7 @@ export default function CompleteReview() {
             date: "2025년 10월 11일",
             time: "14:30",
             tags: ["의료", "강남구"],
-            icon: "../../../public/housing.svg",
+            icon: "/housing.svg",
         },
         {
             id: 3,
@@ -35,7 +35,7 @@ export default function CompleteReview() {
             date: "2025년 10월 11일",
             time: "14:30",
             tags: ["의료", "강남구", "의료"],
-            icon: "../../../public/medical.svg",
+            icon: "/medical.svg",
         },
     ];
 

@@ -9,11 +9,11 @@ export default function ReviewDetail() {
         date: "2025년 10월 11일",
         time: "14:30",
         tags: ["의료", "강남구", "의료", "강남구", "의료"],
-        icon: "../../../public/book.svg",
+        icon: "/book.svg",
         images: [
-            "../../../public/imgex.png",
-            "../../../public/imgex.png",
-            "../../../public/imgex.png"
+            "/imgex.png",
+            "/imgex.png",
+            "/imgex.png"
         ],
         content: `어쩌구어쩌구어쩌구어쩌구어쩌구어쩌구
 어쩌구어쩌구어쩌구어쩌구어쩌구어쩌구

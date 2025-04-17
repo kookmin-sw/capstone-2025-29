@@ -9,7 +9,7 @@ export default function SetName() {
     // 상태 관리
     const [showModal, setShowModal] = useState(false); // 모달 표시 여부
     const [name, setName] = useState("홍길동 ai"); // 사용자 이름
-    const [previewImg, setPreviewImg] = useState("../../public/profile.svg"); // 프로필 이미지 미리보기
+    const [previewImg, setPreviewImg] = useState("/public/profile.svg"); // 프로필 이미지 미리보기
 
     // 모달 관련 함수
     const openModal = () => setShowModal(true);

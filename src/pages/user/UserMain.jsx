@@ -33,11 +33,11 @@ export default function UserMain() {
                 <div className={styles.topRightButtons}>
                     {/* 프로필 편집 버튼 */}
                     <button className={styles.iconBtn} onClick={() => navigate('/edit')}>
-                        <img src="../public/profileedit.svg" alt="프로필 편집" />
+                        <img src="/profileedit.svg" alt="프로필 편집" />
                     </button>
                     {/* 알림 버튼 */}
-                    <button className={styles.iconBtn}>
-                        <img src="../public/alarm.svg" alt="알람" />
+                    <button className={styles.iconBtn} onClick={() => navigate('/notification')}>
+                        <img src="/alarm.svg" alt="알람" />
                     </button>
                 </div>
             </div>
@@ -52,7 +52,7 @@ export default function UserMain() {
                             필요한 도움, 지금 바로 신청하세요!</p>
                     </div>
                     <div className={styles.imageWrapper}>
-                        <img src="../../public/volunteer.svg" alt="봉사자 이미지" className={styles.volunteerimg}/>
+                        <img src="/volunteer.svg" alt="봉사자 이미지" className={styles.volunteerimg}/>
                     </div>
                     {/* 도움 신청 버튼 */}
                     <button className={styles.actionBtn} onClick={() => navigate('/HelpCenter')}>신청하러 가기</button>
@@ -66,8 +66,8 @@ export default function UserMain() {
                             당신의 하루를 함께할 따뜻한 친구를 만나보세요.</p>
                     </div>
                     <div className={styles.imageWrapper}>
-                        <img src="../../public/chat-left.svg" alt="왼쪽 이미지" className={styles.leftImg} />
-                        <img src="../../public/chat-right.svg" alt="오른쪽 이미지" className={styles.rightImg} />
+                        <img src="/chat-left.svg" alt="왼쪽 이미지" className={styles.leftImg} />
+                        <img src="/chat-right.svg" alt="오른쪽 이미지" className={styles.rightImg} />
                     </div>
                     {/* 채팅 시작 버튼 */}
                     <button className={styles.chatBtn} onClick={handleChatClick}>채팅하러 가기</button>

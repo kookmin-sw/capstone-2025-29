@@ -6,7 +6,10 @@ import ongi from '../../assets/ongi.svg';
 export default function VolunteerMain() {
     const navigate = useNavigate();
 
-    const volunteerStatus = "none"; // matched, done, none
+
+    const volunteerStatus = "matched"; // matched, done, none
+    
+
     const matchName = "홍길동";
     const matchDate = "2025년 10월 11일";
     const matchTime = "14:30";
@@ -30,10 +33,11 @@ export default function VolunteerMain() {
                 </button>
                 <div className={styles.topRightButtons}>
                     <button className={styles.iconBtn} onClick={() => navigate('/edit')}>
-                        <img src="../public/profileedit.svg" />
+                        <img src="/profileedit.svg" /> 
                     </button>
-                    <button className={styles.iconBtn}>
-                        <img src="../public/alarm.svg" />
+                    <button className={styles.iconBtn} onClick={() => navigate('/notification')}    >
+                        <img src="/alarm.svg" />
+
                     </button>
                 </div>
             </div>
@@ -104,15 +108,17 @@ export default function VolunteerMain() {
             {/* 하단 네비게이션 버튼 */}
             <div className={styles.bottomNav}>
                 <div className={styles.navBox} onClick={() => { navigate('/availableTime') }}>
-                    <img src="../public/clock.svg" />
+
+                    <img src="/clock.svg" />
                     <span>나의 일정</span>
                 </div>
-                <div className={`${styles.navBox} ${styles.active}`} onClick={() => { navigate('/matchinglist') }}>
-                    <img src="../public/check.svg" />
+                <div className={`${styles.navBox}`} onClick={() => { navigate('/matchinglist') }}>
+                    <img src="/check.svg" />
                     <span>매칭내역</span>
                 </div>
                 <div className={styles.navBox} onClick={() => { navigate('/completereview') }}>
-                    <img src="../public/note.svg" />
+                    <img src="/note.svg" />
+
                     <span>완료/후기</span>
                 </div>
             </div>

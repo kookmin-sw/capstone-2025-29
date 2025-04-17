@@ -17,13 +17,13 @@ export default function Login() {
             <div className={styles.bottomHalf}>
                 {/* 아이디 입력 */}
                 <div className={styles.inputField}>
-                    <img src="/public/login_id.svg" alt="" className={styles.icon} />
+                    <img src="/login_id.svg" alt="" className={styles.icon} />
                     <input type="text" placeholder="아이디" />
                 </div>
 
                 {/* 비밀번호 입력 */}
                 <div className={styles.inputField}>
-                    <img src="/public/login_pw.svg" alt="" className={styles.icon} />
+                    <img src="/login_pw.svg" alt="" className={styles.icon} />
                     <input type="password" placeholder="비밀번호" />
                 </div>
 
@@ -39,7 +39,7 @@ export default function Login() {
 
                 {/* 카카오 로그인 버튼 */}
                 <button className={styles.kakaoBtn}>
-                    <img src="/public/login_kakko.svg" alt="" className={styles.icon} />
+                    <img src="/login_kakko.svg" alt="" className={styles.icon} />
                     카카오로 시작하기
                 </button>
             </div>

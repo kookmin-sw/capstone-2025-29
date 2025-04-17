@@ -24,12 +24,13 @@ import ReviewDetail from './pages/volunteer/ReviewDetail';
 import UserMain from './pages/user/UserMain';
 import HelpCenter from './pages/user/HelpCenter';
 import RequestForm from './pages/user/RequestForm';
-import RequestFinal from './pages/user/RequestFinal';
 import ApplyingList from './pages/user/ApplyingList';
 import ApplyingDetail from './pages/user/ApplyingDetail';
 import SetName from './pages/user/SetName';
 import ChatCenter from './pages/user/ChatCenter';
 import ChatPage from './pages/user/ChatPage';
+import NotificationPage from './pages/both/NotificationPage';
+
 /* 메인 App 컴포넌트 */
 function App() {
   return (
@@ -40,29 +41,29 @@ function App() {
           {/* 공통 페이지 라우트 */}
           <Route path="/" element={<Splash />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/RoleSelect" element={<RoleSelect />} />
+          <Route path="/roleselect" element={<RoleSelect />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/edit" element={<Edit />} />
+          <Route path="/notification" element={<NotificationPage />} />
 
           {/* 봉사자 페이지 라우트 */}
-          <Route path='/volunteermain' element={<VolunteerMain />} />
-          <Route path='/writereview' element={<WriteReview />} />
-          <Route path='/availabletime' element={<AvailableTime />} />
-          <Route path='/MatchingList' element={<MatchingList />} />
-          <Route path='/CompleteReview' element={<CompleteReview />} />
-          <Route path='/MatchingDetail' element={<MatchingDetail />} />
-          <Route path='/ReviewDetail' element={<ReviewDetail />} />
+          <Route path="/volunteermain" element={<VolunteerMain />} />
+          <Route path="/writereview" element={<WriteReview />} />
+          <Route path="/availabletime" element={<AvailableTime />} />
+          <Route path="/matchinglist" element={<MatchingList />} />
+          <Route path="/completereview" element={<CompleteReview />} />
+          <Route path="/matchingdetail" element={<MatchingDetail />} />
+          <Route path="/reviewdetail" element={<ReviewDetail />} />
 
           {/* 사용자 페이지 라우트 */}
-          <Route path="/UserMain" element={<UserMain />} />
-          <Route path="/HelpCenter" element={<HelpCenter />} />
-          <Route path="/RequestForm" element={<RequestForm />} />
-          <Route path="/Requestfinal" element={<RequestFinal />} />
-          <Route path="/ApplyingList" element={<ApplyingList />} />
-          <Route path="/ApplyingDetail" element={<ApplyingDetail />} />
-          <Route path="/SetName" element={<SetName />} />
-          <Route path="/ChatCenter" element={<ChatCenter />} />
-          <Route path="/ChatPage" element={<ChatPage />} />
+          <Route path="/usermain" element={<UserMain />} />
+          <Route path="/helpcenter" element={<HelpCenter />} />
+          <Route path="/requestform" element={<RequestForm />} />
+          <Route path="/applyinglist" element={<ApplyingList />} />
+          <Route path="/applyingdetail" element={<ApplyingDetail />} />
+          <Route path="/setname" element={<SetName />} />
+          <Route path="/chatcenter" element={<ChatCenter />} />
+          <Route path="/chatpage" element={<ChatPage />} />
           {/* 404 페이지 - 정의되지 않은 경로로 접근 시 표시 */}
           <Route path="*" element={<div>not found</div>} />
         </Routes>

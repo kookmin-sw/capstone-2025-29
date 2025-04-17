@@ -43,7 +43,7 @@ const pieData = {
 const ChatCenter = () => {
     const navigate = useNavigate();
     // 로컬 스토리지에서 사용자 이름 가져오기
-    const userName = localStorage.getItem('userName') || '홍길동 ai';
+    const userName = localStorage.getItem('userName') || '홍길동';
 
     const handleChatClick = () => {
         navigate('/ChatPage');
@@ -51,7 +51,7 @@ const ChatCenter = () => {
 
     return (
         <div className={styles.container}>
-            <Topbar title="채팅센터" />
+            <Topbar title="채팅센터" navigateTo="/helpcenter" />
 
             <div className={styles.cardwrapper}>
                 {/* 채팅 카드 */}
@@ -61,7 +61,7 @@ const ChatCenter = () => {
                         <p>지금 바로 연결해 드릴게요.</p>
                     </div>
                     <div className={styles.imageWrapper}>
-                        <img src="../../public/chat-icon.svg" alt="채팅 오른쪽" className={styles.rightImg} />
+                        <img src="/chat-icon.svg" alt="채팅 오른쪽" className={styles.rightImg} />
                     </div>
                     <button className={styles.chatBtn} onClick={handleChatClick}>채팅 시작하기</button>
                 </div>

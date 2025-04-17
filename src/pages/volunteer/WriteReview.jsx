@@ -17,9 +17,9 @@ export default function WriteReview() {
 
     const reviewData = {
         images: [
-            "../../../public/imgex.png",
-            "../../../public/imgex.png",
-            "../../../public/imgex.png"
+            "/public/imgex.png",
+            "/public/imgex.png",
+            "/public/imgex.png"
         ]
     }
 
@@ -29,7 +29,7 @@ export default function WriteReview() {
 
             {/* 매칭 정보 */}
             <div className={styles.matchInfo}>
-                <img src="../public/book.svg" className={styles.matchIcon} />
+                <img src="/book.svg" className={styles.matchIcon} />
                 <div>
                     <div className={styles.matchText}><strong>홍길동</strong> 님과의 매칭</div>
                     <div className={styles.matchDate}>2025년 10월 11일 &nbsp; | &nbsp; 14:30</div>

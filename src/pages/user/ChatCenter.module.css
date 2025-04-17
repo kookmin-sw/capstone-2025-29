@@ -7,7 +7,7 @@
 
 /* 메인 카드 영역 wrapper */
 .cardwrapper {
-    padding: 0 6vw 0 6vw;
+
     margin-top: 3vh;
 }
 
@@ -53,11 +53,10 @@
 
 
 
-/* 채팅 카드 오른쪽 이미지 스타일 */
 .rightImg {
-    width: 90px;
+    width: 120px;
     height: auto;
-    transform: translateY(30%);
+    transform: translateY(40%);
 }
 
 
