@@ -14,11 +14,9 @@ export default function MatchingDetail() {
         icon: "/book.svg",
         address1: "서울 성북구 정릉로 77 국민대학교",
         address2: "서울 성북구 정릉동 861-1",
-        pet: "고양이",
+        pet: "개",
         request: "잘 부탁드립니다 편하게 와주세요!!",
     };
-
-    const [selectedPet, setSelectedPet] = useState(mockData.pet);
 
     const petOptions = ["개", "고양이", "기타", "없음"];
 
@@ -40,14 +38,12 @@ export default function MatchingDetail() {
                 <h3 className={styles.label}>반려동물 여부</h3>
                 <div className={styles.petOptions}>
                     {petOptions.map((option) => (
-                        <button
+                        <div
                             key={option}
-                            className={`${styles.petBtn} ${selectedPet === option ? styles.selected : ""}`}
-                            onClick={() => setSelectedPet(option)} 
+                            className={`${styles.petBtn} ${mockData.pet === option ? styles.selected : ""}`}
                         >
                             {option}
-                        </button>
-
+                        </div>
                     ))}
                 </div>
             </div>

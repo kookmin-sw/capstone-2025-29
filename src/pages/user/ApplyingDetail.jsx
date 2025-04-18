@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Topbar from "../../components/Topbar";
 import MatchCard from "../../components/MatchCard";
 import styles from "./ApplyingDetail.module.css";
@@ -17,8 +17,6 @@ export default function ApplyingDetail() {
         pet: "고양이",
         request: "잘 부탁드립니다!! 감사합니다!!",
     };
-
-    const [selectedPet, setSelectedPet] = useState(mockData.pet);
 
     const petOptions = ["개", "고양이", "기타", "없음"];
 
@@ -40,14 +38,12 @@ export default function ApplyingDetail() {
                 <h3 className={styles.label}>반려동물 여부</h3>
                 <div className={styles.petOptions}>
                     {petOptions.map((option) => (
-                        <button
+                        <div
                             key={option}
-                            className={`${styles.petBtn} ${selectedPet === option ? styles.selected : ""}`}
-                            onClick={() => setSelectedPet(option)} 
+                            className={`${styles.petBtn} ${mockData.pet === option ? styles.selected : ""}`}
                         >
                             {option}
-                        </button>
-
+                        </div>
                     ))}
                 </div>
             </div>
@@ -57,7 +53,6 @@ export default function ApplyingDetail() {
                 <h3 className={styles.label}>추가 요청사항</h3>
                 <p className={styles.requestText}>{mockData.request}</p>
             </div>
-
 
             {/* 취소하기 버튼 */}
             <button className={styles.cancelBtn}>

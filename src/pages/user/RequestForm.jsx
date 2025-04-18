@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./RequestForm.module.css";
 import Topbar from "../../components/Topbar";
@@ -10,6 +10,33 @@ import MatchCard from "../../components/MatchCard";
  */
 export default function RequestForm() {
     const navigate = useNavigate();
+    const [currentDate, setCurrentDate] = useState('');
+    const [currentTime, setCurrentTime] = useState('');
+
+    useEffect(() => {
+        const updateDateTime = () => {
+            const now = new Date();
+            
+            // 날짜 형식: YYYY년 MM월 DD일
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            setCurrentDate(`${year}년 ${month}월 ${day}일`);
+
+            // 시간 형식: HH:MM
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            setCurrentTime(`${hours}:${minutes}`);
+        };
+
+        // 초기 실행
+        updateDateTime();
+
+        // 1분마다 업데이트
+        const interval = setInterval(updateDateTime, 60000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     // 현재 단계와 폼 데이터 상태 관리
     const [step, setStep] = useState(1);
@@ -207,9 +234,9 @@ export default function RequestForm() {
                             <div>
                                 <div className={styles.name}><strong>김춘배</strong>님의 신청</div>
                                 <div className={styles.dateTime}>
-                                    <span>2025년 10월 11일</span>
+                                    <span>{currentDate}</span>
                                     <span className={styles.divider}>|</span>
-                                    <span>14:30</span>
+                                    <span>{currentTime}</span>
                                 </div>
                             </div>
                         </div>
