@@ -74,7 +74,6 @@
 
 .active {
     border-color: #6D57DE;
-    background-color: #f5f3ff;
     color: #6D57DE;
 }
 
@@ -92,4 +91,8 @@
     height: 40px;
     padding: 0.2rem;
     cursor: pointer;
+}
+
+.selectedText {
+    color: #6D57DE !important;
 }

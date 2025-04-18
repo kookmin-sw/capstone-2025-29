@@ -17,7 +17,7 @@ export default function RequestForm() {
         category: "",      // 도움 유형 (의료, 주거, 문화, 교육)
         date: "",          // 요청 날짜
         time: "",          // 요청 시간
-        pet: [],           // 반려동물 정보
+        pet: ["없음"],     // 반려동물 정보 (기본값으로 '없음' 선택)
         requestText: "",   // 추가 요청사항
     });
 
@@ -70,9 +70,17 @@ export default function RequestForm() {
         if (key === "pet") {
             setFormData(prev => {
                 const isSelected = prev.pet.includes(value);
-                const newPets = isSelected
-                    ? prev.pet.filter(p => p !== value)
-                    : [...prev.pet, value];
+                let newPets;
+
+                if (value === "없음") {
+                    // '없음'을 선택하면 다른 모든 선택을 해제하고 '없음'만 선택
+                    newPets = ["없음"];
+                } else {
+                    // 다른 옵션을 선택하면 '없음'을 제거하고 선택된 옵션을 토글
+                    newPets = isSelected
+                        ? prev.pet.filter(p => p !== value)
+                        : [...prev.pet.filter(p => p !== "없음"), value];
+                }
                 return { ...prev, pet: newPets };
             });
         } else {
@@ -107,18 +115,18 @@ export default function RequestForm() {
                     <p className={styles.title}>신청하실 유형을 선택해주세요</p>
                     <div className={styles.categoryGrid}>
                         {[
-                            { icon: "medical", label: "의료" },
-                            { icon: "housing", label: "주거" },
-                            { icon: "culture", label: "문화" },
-                            { icon: "education", label: "교육" }
-                        ].map(({ icon, label }) => (
+                            { id: "medical", label: "의료", icon: formData.category === "의료" ? "/medical-purple.svg" : "/medical.svg" },
+                            { id: "housing", label: "주거", icon: formData.category === "주거" ? "/housing-purple.svg" : "/housing.svg" },
+                            { id: "culture", label: "문화", icon: formData.category === "문화" ? "/culture-purple.svg" : "/culture.svg" },
+                            { id: "education", label: "교육", icon: formData.category === "교육" ? "/education-purple.svg" : "/education.svg" }
+                        ].map((category) => (
                             <button
-                                key={icon}
-                                className={`${styles.categoryBtn} ${formData.category === label ? styles.active : ""}`}
-                                onClick={() => handleChange("category", label)}
+                                key={category.id}
+                                className={`${styles.categoryBtn} ${formData.category === category.label ? styles.active : ""}`}
+                                onClick={() => handleChange("category", category.label)}
                             >
-                                <img src={`/${icon}.svg`} alt={label} />
-                                {label}
+                                <img src={category.icon} alt={category.label} />
+                                <span>{category.label}</span>
                             </button>
                         ))}
                     </div>
@@ -193,7 +201,21 @@ export default function RequestForm() {
             {step === 4 && (
                 <>
                     {/* 매칭된 봉사자 정보 표시 */}
-                    <MatchCard {...mockData} />
+                    <div className={styles.card}>
+                        <div className={styles.top}>
+                            <img src="/book.svg" className={styles.icon} />
+                            <div>
+                                <div className={styles.name}><strong>김춘배</strong>님의 신청</div>
+                                <div className={styles.dateTime}>
+                                    <span>2025년 10월 11일</span>
+                                    <span className={styles.divider}>|</span>
+                                    <span>14:30</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.tags}>
+                        </div>
+                    </div>
 
                     {/* 봉사자 주소 정보 */}
                     <div className={styles.address}>
@@ -214,6 +236,11 @@ export default function RequestForm() {
                                 </div>
                             ))}
                         </div>
+                        {/* <div className={styles.tags}>
+                            {tags.map((tag, idx) => (
+                                <span key={idx} className={styles.tag}>{tag}</span>
+                            ))}
+                        </div> */}
                     </div>
 
                     {/* 추가 요청사항 입력 */}

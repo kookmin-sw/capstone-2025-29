@@ -26,16 +26,16 @@ export default function RoleSelect() {
                     className={`${styles.roleCard} ${styles.userCard} ${selectedRole === "user" ? styles.active : ""}`}
                     onClick={() => handleSelect("user")}
                 >
-                    <p>앱 이용자<br />회원 가입</p>
-                    <img src="/user-icon.svg" alt="앱 이용자" />
+                    <p className={selectedRole === "user" ? styles.selectedText : ""}>앱 이용자<br />회원 가입</p>
+                    <img src={selectedRole === "user" ? "/user-icon-purple.svg" : "/user-icon.svg"} alt="앱 이용자" />
                 </div>
 
                 <div
                     className={`${styles.roleCard} ${styles.volunteerCard} ${selectedRole === "volunteer" ? styles.active : ""}`}
                     onClick={() => handleSelect("volunteer")}
                 >
-                    <p>봉사자<br />회원 가입</p>
-                    <img src="/volunteer-icon.svg" alt="봉사자" />
+                    <p className={selectedRole === "volunteer" ? styles.selectedText : ""}>봉사자<br />회원 가입</p>
+                    <img src={selectedRole === "volunteer" ? "/volunteer-icon-purple.svg" : "/volunteer-icon.svg"} alt="봉사자" />
 
                 </div>
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./UserMain.module.css";
 import ongi from "../../assets/ongi.svg";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 export default function UserMain() {
     // 페이지 이동을 위한 navigate 훅
     const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     // 채팅 버튼 클릭 핸들러
     const handleChatClick = () => {
