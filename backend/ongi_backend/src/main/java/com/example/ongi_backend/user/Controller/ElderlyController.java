@@ -27,6 +27,7 @@ public class ElderlyController {
 	private final ElderlyService elderlyService;
 
 	@GetMapping
+	@Operation(summary = "봉사탭", description = "봉사탭 메인 페이지")
 	public ResponseEntity<ResponseElderlyMainPage> getElderlyMainPage(Principal principal) {
 		return ResponseEntity.ok(elderlyService.getElderlyMainPage(principal.getName()));
 	}
