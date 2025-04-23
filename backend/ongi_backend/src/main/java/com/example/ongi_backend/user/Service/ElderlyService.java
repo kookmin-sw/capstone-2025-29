@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
+import com.example.ongi_backend.global.entity.CurrentMatching;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
+import com.example.ongi_backend.user.Dto.ResponseElderlyMainPage;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
@@ -30,6 +32,7 @@ public class ElderlyService {
 	private final VolunteerActivityService volunteerActivityService;
 	private final UnMatchingService unMatchingService;
 	private final VolunteerService volunteerService;
+	private final UserService userService;
 	private final AwsSqsNotificationSender awsSqsNotificationSender;
 
 	@Transactional
@@ -95,5 +98,17 @@ public class ElderlyService {
 	public Elderly findElderlyById(Long id) {
 		return elderlyRepository.findById(id)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_USER_ERROR));
+	}
+
+	public ResponseElderlyMainPage getElderlyMainPage(String name) {
+		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
+
+		//오늘 날짜
+		VolunteerActivity currentVa = elderly.getVolunteerActivities()
+			.stream()
+			.filter(volunteerActivity ->
+				volunteerActivity.getStartTime().toLocalDate().isEqual(LocalDateTime.now().toLocalDate())
+			).findAny().orElse(null);
+		return ResponseElderlyMainPage.of(currentVa == null ? null : CurrentMatching.ElderlyOf(currentVa));
 	}
 }

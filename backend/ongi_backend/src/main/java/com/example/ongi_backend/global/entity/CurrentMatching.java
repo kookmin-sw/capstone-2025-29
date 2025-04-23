@@ -1,5 +1,7 @@
 package com.example.ongi_backend.global.entity;
 
+import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
+
 import java.time.LocalDateTime;
 
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
@@ -14,21 +16,35 @@ import lombok.Data;
 public class CurrentMatching{
 	@Schema(description = "매칭 ID", example = "1")
 	private Long matchingId;
-	@Schema(description = "독거 노인 이름", example = "홍길동")
-	private String elderlyName;
+	@Schema(description = "상대방 이름", example = "홍길동")
+	private String otherName;
 	@Schema(description = "매칭 상태", example = "REVIEWING")
-	private String status;
+	private VolunteerStatus status;
 	private LocalDateTime startTime;
-	public static CurrentMatching of(VolunteerActivity volunteerActivity) {
+	public static CurrentMatching VolunteerOf(VolunteerActivity volunteerActivity) {
 		return CurrentMatching.builder()
 			.matchingId(volunteerActivity.getId())
-			.elderlyName(
+			.otherName(
 				volunteerActivity.getElderly().getName()
 			)
 			.status(
-				volunteerActivity.getStatus().name()
+				volunteerActivity.getStatus()
 			)
 			.startTime(volunteerActivity.getStartTime())
 			.build();
 	}
+	public static CurrentMatching ElderlyOf(VolunteerActivity volunteerActivity) {
+		return CurrentMatching.builder()
+			.matchingId(volunteerActivity.getId())
+			.otherName(
+				volunteerActivity.getVolunteer().getName()
+			)
+			.status(
+				volunteerActivity.getStartTime().isBefore(LocalDateTime.now()) ? STARTED : NOT_STARTED)
+			.startTime(
+				volunteerActivity.getStartTime()
+			)
+			.build();
+	}
+
 }

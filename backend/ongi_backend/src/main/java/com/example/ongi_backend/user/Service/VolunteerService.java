@@ -179,7 +179,7 @@ public class VolunteerService {
 		return ResponseVolunteerMainPage.of(VolunteerInfo.of(userByUserName),
 			userByUserName.getWeeklyAvailableTimes().stream().map(
 				availTime -> Schedules.of(availTime.getDayOfWeek(), availTime.getAvailableStartTime())
-			).collect(Collectors.toList()), currentVa == null ? null : CurrentMatching.of(
+			).collect(Collectors.toList()), currentVa == null ? null : CurrentMatching.VolunteerOf(
 				currentVa
 			));
 	}
