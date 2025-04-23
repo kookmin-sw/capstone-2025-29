@@ -1,0 +1,73 @@
+
+name : Deploy To EC2
+
+on:
+  push:
+    branches:
+      - feat/75
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: JDK 17 version install
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: test and build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
+        working-directory: ./backend/ongi_backend
+        env:
+          MYSQL_URL: ${{ secrets.MY_DB_URL }}
+          MYSQL_USERNAME: ${{ secrets.MY_DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MY_DB_PASSWORD }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_SQS_QUEUE_NAME: ${{ secrets.AWS_SQS_QUEUE_NAME }}
+          SECRET: ${{ secrets.SECRET }}
+#          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+
+      - name: AWS credential setup
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+
+      - name: ECR login
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Docker image create
+        run: docker build -t ongi .
+        working-directory: ./backend/ongi_backend
+
+      - name: Docker tag
+        run: docker tag ongi ${{ steps.login-ecr.outputs.registry }}/ongi-server:latest
+
+      - name: Docker image push to ECR
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/ongi-server:latest
+
+      - name: EC2 connection with SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            docker stop ongi || true
+            docker rm ongi || true
+            docker pull ${{ steps.login-ecr.outputs.registry }}/ongi-server:latest
+            docker run -d --name ongi \
+            --network ongi-net \
+            -p 8080:8080 \
+            --env-file ~/env/ongi.env \
+            ${{ steps.login-ecr.outputs.registry }}/ongi-server:latest

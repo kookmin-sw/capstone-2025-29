@@ -16,6 +16,7 @@ import com.example.ongi_backend.volunteerActivity.dto.ResponseMatchingDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseRegisteredActivities;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -24,51 +25,38 @@ import lombok.RequiredArgsConstructor;
 public class VolunteerActivityController {
 	private final VolunteerActivityService volunteerActivityService;
 
-	//TODO : 추후 Redis를 통해 조회
-	@GetMapping
-	public ResponseEntity<?> getVolunteerActivityList() {
-		return null;
-	}
-
 	@GetMapping("/complete")
+	@Operation(summary = "완료 / 후기", description = "봉사 완료 목록을 조회합니다.")
 	public ResponseEntity<List<ResponseCompletedActivity>> getCompleteVolunteerActivities(Principal principal) {
 		return ResponseEntity.ok(volunteerActivityService.findCompleteVolunteerActivities(
-			"username"
-			//TODO : 로그인 구현 후 코드 수정
-			// principal.getName()
+			principal.getName()
 		));
 	}
 
-	//TODO : 추후 Redis를 통해 조회
-	@GetMapping("/incomplete")
-	public ResponseEntity<?> getIncompleteVolunteerActivityList() {
-		return null;
-	}
-
 	@GetMapping("/registration")
-	public ResponseEntity<List<ResponseRegisteredActivities>> getRegisteredVolunteerActivityList() {
+	@Operation(summary = "나의 신청 내역", description = "봉사 신청 목록을 조회합니다.")
+	public ResponseEntity<List<ResponseRegisteredActivities>> getRegisteredVolunteerActivityList(Principal principal) {
 		return ResponseEntity.ok(volunteerActivityService.findRegisteredActivities(
-			"username"
-			//TODO : 로그인 구현 후 코드 수정
-			// principal.getName()
+			principal.getName()
 		));
 	}
 
 	@GetMapping("/registration/{volunteerActivityId}")
+	@Operation(summary = "나의 신청 내역2", description = "봉사 신청 상세 내역을 조회합니다.")
 	public ResponseEntity<ResponseActivityDetail> getVolunteerActivityDetail(@PathVariable Long volunteerActivityId) {
 		return ResponseEntity.ok(volunteerActivityService.findActivityDetail(volunteerActivityId));
 	}
 
 	@GetMapping("/matching")
+	@Operation(summary = "매칭 내역", description = "봉사 매칭 목록을 조회합니다.")
 	public ResponseEntity<List<ResponseMatching>> getMatchingVolunteerActivityList(Principal principal) {
 		return ResponseEntity.ok(volunteerActivityService.findActivityMatches(
-			// TODO : 로그인 구현 후 코드 수정
-			// principal
-			"username"
+			principal.getName()
 		));
 	}
 
 	@GetMapping("/matching/{volunteerActivityId}")
+	@Operation(summary = "매칭 내역 상세", description = "봉사 매칭 상세 내역을 조회합니다.")
 	public ResponseEntity<ResponseMatchingDetail> getActivityMatchingDetail(@PathVariable Long volunteerActivityId) {
 		return ResponseEntity.ok(volunteerActivityService.findActivityMatchingDetail(volunteerActivityId));
 	}

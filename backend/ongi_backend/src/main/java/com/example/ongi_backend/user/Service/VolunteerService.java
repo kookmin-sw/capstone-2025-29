@@ -18,6 +18,7 @@ import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
+import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Dto.ScheduleRequest;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
 import com.example.ongi_backend.user.entity.Elderly;
@@ -58,13 +59,16 @@ public class VolunteerService {
 	public void scanUnMatching(List<WeeklyAvailableTime> weeklyAvailableTimes, Volunteer volunteer) {
 		unMatchingService.findAllUnMatching().forEach(unMatching ->
 			weeklyAvailableTimes.forEach(weeklyAvailableTime -> {
-			if(unMatching.getStartTime().getDayOfWeek().equals(weeklyAvailableTime.getDayOfWeek())
-				&& unMatching.getStartTime().toLocalTime().equals(weeklyAvailableTime.getAvailableStartTime())
-				&& (VolunteerType.getCategory(unMatching.getVolunteerType()) & weeklyAvailableTime.getVolunteer().getVolunteerCategory()) != 0
-				&& unMatching.getAddress().getDistrict().equals(weeklyAvailableTime.getVolunteer().getAddress().getDistrict())) {
+				if (unMatching.getStartTime().getDayOfWeek().equals(weeklyAvailableTime.getDayOfWeek())
+					&& unMatching.getStartTime().toLocalTime().equals(weeklyAvailableTime.getAvailableStartTime())
+					&& (VolunteerType.getCategory(unMatching.getVolunteerType()) & weeklyAvailableTime.getVolunteer()
+					.getVolunteerCategory()) != 0
+					&& unMatching.getAddress()
+					.getDistrict()
+					.equals(weeklyAvailableTime.getVolunteer().getAddress().getDistrict())) {
 					volunteerActivityService.matchingIfNotAlreadyMatched(unMatching, volunteer);
-			}
-		}));
+				}
+			}));
 	}
 
 	@Transactional
@@ -77,7 +81,7 @@ public class VolunteerService {
 		if (findVolunteerActivity.getVolunteer() == null || !findVolunteerActivity.getVolunteer().equals(volunteer)) {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
-		if(findVolunteerActivity.getStatus().equals(PROGRESS)) {
+		if (findVolunteerActivity.getStatus().equals(PROGRESS)) {
 			Elderly elderly = findVolunteerActivity.getElderly();
 			awsSqsNotificationSender.cancelNotification(
 				elderly.getFcmToken(),
@@ -87,13 +91,13 @@ public class VolunteerService {
 			);
 			findVolunteerActivity.updateVolunteer(null);
 			findVolunteerActivity.updateStatus(MATCHING);
-			if(Duration.between(LocalDateTime.now(),findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
+			if (Duration.between(LocalDateTime.now(), findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
 				awsSqsNotificationSender.expireNotification(
 					elderly.getFcmToken(),
 					elderly.getId()
 				);
 				volunteerActivityService.deleteActivity(id);
-				return ;
+				return;
 			}
 
 			unMatchingService.saveUnMatching(
@@ -105,53 +109,51 @@ public class VolunteerService {
 				findVolunteerActivity.getAddress(),
 				findVolunteerActivity.getAddDescription()
 			);
-		}else {
+		} else {
 			throw new CustomException(UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR);
 		}
 	}
 
 	@Transactional
-	public void matchingIfDayOfWeekTimeMatched (RequestMatching request, Elderly elderly){
+	public ResponseMatchedUserInfo matchingIfDayOfWeekTimeMatched(RequestMatching request, Elderly elderly) {
 		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
 		LocalTime startTime = request.getStartTime().toLocalTime();
 		LocalDate date = request.getStartTime().toLocalDate();
 		Integer category = VolunteerType.getCategory(request.getVolunteerType());
 		VolunteerActivity volunteerActivity = volunteerActivityService.addVolunteerActivity(request, elderly);
-		volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category, request.getAddress()
-			.getDistrict()).ifPresentOrElse(
-			volunteer -> {
+
+		return volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category,
+				request.getAddress().getDistrict())
+			.map(volunteer -> {
+				// 매칭 알림
 				awsSqsNotificationSender.matchingNotification(
-					volunteer.getFcmToken(),
-					elderly.getName(),
-					volunteer.getId(),
-					"volunteer"
+					volunteer.getFcmToken(), elderly.getName(), volunteer.getId(), "volunteer"
 				);
 				awsSqsNotificationSender.matchingNotification(
-					elderly.getFcmToken(),
-					volunteer.getName(),
-					elderly.getId(),
-					"elderly"
+					elderly.getFcmToken(), volunteer.getName(), elderly.getId(), "elderly"
 				);
-				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
-					volunteerActivity,
-					elderly,
-					volunteer,
-					"volunteer"
-				);
-				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(
-					volunteerActivity,
-					elderly,
-					volunteer,
-					"elderly"
-				);
+
+				// 일정 예약 메시지
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(volunteerActivity, elderly, volunteer,
+					"volunteer");
+				awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(volunteerActivity, elderly, volunteer,
+					"elderly");
+
+				// 상태 업데이트
 				volunteerActivity.updateStatus(PROGRESS);
 				volunteerActivity.updateVolunteer(volunteer);
-			},
-			() -> {
-				awsSqsNotificationSender.unMatchingNotification(
-					elderly.getFcmToken(),
-					elderly.getId()
+
+				// 응답 객체 생성
+				return ResponseMatchedUserInfo.of(
+					volunteer.getName(),
+					volunteer.getPhone(),
+					volunteer.getProfileImage(),
+					volunteer.getVolunteerActivities().size() * 3
 				);
+			})
+			.orElseGet(() -> {
+				// 매칭 실패 처리
+				awsSqsNotificationSender.unMatchingNotification(elderly.getFcmToken(), elderly.getId());
 				unMatchingService.saveUnMatching(
 					volunteerActivity.getId(),
 					elderly.getId(),
@@ -159,7 +161,9 @@ public class VolunteerService {
 					request.getStartTime(),
 					request.getAnimalType(),
 					request.getAddress(),
-					request.getAddDescription());
+					request.getAddDescription()
+				);
+				return null; // 또는 throw new NoMatchingVolunteerException();
 			});
 	}
 }

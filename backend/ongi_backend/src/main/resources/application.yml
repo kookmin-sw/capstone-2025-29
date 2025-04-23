@@ -18,6 +18,8 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      ssl:
+        enabled: true
 Authorization:
   header: "Authorization"
 
@@ -36,3 +38,5 @@ cloud:
     s3:
       bucket: ${AWS_S3_BUCKET}
 
+springdoc:
+  override-with-generic-response: false

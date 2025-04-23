@@ -16,7 +16,7 @@ import java.util.Date;
 public class JwtProvider {
     @Value("${secret}")
     private String secretKey;
-    private Long accessTokenExp = 86400L;
+    private Long accessTokenExp = 86400L * 7 * 4;
     private Long refreshTokenExp = 86400L;
 
     @PostConstruct
