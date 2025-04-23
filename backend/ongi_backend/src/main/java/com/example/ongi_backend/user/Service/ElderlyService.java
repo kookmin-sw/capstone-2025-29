@@ -5,6 +5,8 @@ import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +39,7 @@ public class ElderlyService {
 
 	@Transactional
 	public ResponseMatchedUserInfo matching(RequestMatching request, String name) {
-		if(Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds() < 0L) {
+		if(Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), request.getStartTime()).getSeconds() < 0L) {
 			throw new CustomException(POST_TIME_ERROR);
 		}
 
@@ -107,7 +109,7 @@ public class ElderlyService {
 		VolunteerActivity currentVa = elderly.getVolunteerActivities()
 			.stream()
 			.filter(volunteerActivity ->
-				volunteerActivity.getStartTime().toLocalDate().isEqual(LocalDateTime.now().toLocalDate())
+				volunteerActivity.getStartTime().toLocalDate().isEqual(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime().toLocalDate())
 			).findAny().orElse(null);
 		return ResponseElderlyMainPage.of(currentVa == null ? null : CurrentMatching.ElderlyOf(currentVa));
 	}

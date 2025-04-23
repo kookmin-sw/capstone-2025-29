@@ -8,6 +8,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,7 +96,7 @@ public class VolunteerService {
 			);
 			findVolunteerActivity.updateVolunteer(null);
 			findVolunteerActivity.updateStatus(MATCHING);
-			if (Duration.between(LocalDateTime.now(), findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
+			if (Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
 				awsSqsNotificationSender.expireNotification(
 					elderly.getFcmToken(),
 					elderly.getId()
@@ -174,7 +176,7 @@ public class VolunteerService {
 		Volunteer userByUserName = (Volunteer)userService.findUserByUserName(name, "volunteer");
 		// 오늘 날짜
 		VolunteerActivity currentVa = userByUserName.getVolunteerActivities().stream().filter(
-			volunteerActivity -> LocalDate.now().equals(volunteerActivity.getStartTime().toLocalDate())
+			volunteerActivity -> ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDate().equals(volunteerActivity.getStartTime().toLocalDate())
 		).findAny().orElse(null);
 		return ResponseVolunteerMainPage.of(VolunteerInfo.of(userByUserName),
 			userByUserName.getWeeklyAvailableTimes().stream().map(

@@ -3,6 +3,8 @@ package com.example.ongi_backend.global.entity;
 import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 
@@ -40,7 +42,7 @@ public class CurrentMatching{
 				volunteerActivity.getVolunteer().getName()
 			)
 			.status(
-				volunteerActivity.getStartTime().isBefore(LocalDateTime.now()) ? STARTED : NOT_STARTED)
+				volunteerActivity.getStartTime().isBefore(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()) ? STARTED : NOT_STARTED)
 			.startTime(
 				volunteerActivity.getStartTime()
 			)
