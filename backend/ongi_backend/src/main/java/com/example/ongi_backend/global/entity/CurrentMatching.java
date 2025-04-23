@@ -1,0 +1,34 @@
+package com.example.ongi_backend.global.entity;
+
+import java.time.LocalDateTime;
+
+import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+import lombok.Data;
+
+@Builder
+@Data
+@Schema(description = "봉사 진행 여부")
+public class CurrentMatching{
+	@Schema(description = "매칭 ID", example = "1")
+	private Long matchingId;
+	@Schema(description = "독거 노인 이름", example = "홍길동")
+	private String elderlyName;
+	@Schema(description = "매칭 상태", example = "REVIEWING")
+	private String status;
+	private LocalDateTime startTime;
+	public static CurrentMatching of(VolunteerActivity volunteerActivity) {
+		return CurrentMatching.builder()
+			.matchingId(volunteerActivity.getId())
+			.elderlyName(
+				volunteerActivity.getElderly().getName()
+			)
+			.status(
+				volunteerActivity.getStatus().name()
+			)
+			.startTime(volunteerActivity.getStartTime())
+			.build();
+	}
+}

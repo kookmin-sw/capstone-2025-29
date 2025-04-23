@@ -15,11 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
+import com.example.ongi_backend.global.entity.CurrentMatching;
+import com.example.ongi_backend.global.entity.VolunteerInfo;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
-import com.example.ongi_backend.user.Dto.ScheduleRequest;
+import com.example.ongi_backend.user.Dto.ResponseVolunteerMainPage;
+import com.example.ongi_backend.global.entity.Schedules;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
@@ -37,13 +40,13 @@ public class VolunteerService {
 	private final VolunteerRepository volunteerRepository;
 	private final VolunteerActivityService volunteerActivityService;
 	private final UnMatchingService unMatchingService;
+	private final UserService userService;
 	private final AwsSqsNotificationSender awsSqsNotificationSender;
 
 	@Transactional
-	public void updateSchedule(List<ScheduleRequest.Schedules> schedules, int category, String username) {
-		Volunteer volunteer = volunteerRepository.findByUsername(username).orElseThrow(
-			() -> new CustomException(NOT_FOUND_USER_ERROR)
-		);
+	public void updateSchedule(List<Schedules> schedules, int category, String username) {
+		Volunteer volunteer = (Volunteer)userService.findUserByUserName(username, "volunteer");
+
 		List<WeeklyAvailableTime> collect = schedules.stream().map(schedule -> WeeklyAvailableTime.builder()
 			.dayOfWeek(schedule.getDayOfWeek())
 			.availableStartTime(schedule.getTime())
@@ -57,7 +60,8 @@ public class VolunteerService {
 
 	@Transactional
 	public void scanUnMatching(List<WeeklyAvailableTime> weeklyAvailableTimes, Volunteer volunteer) {
-		unMatchingService.findAllUnMatching().forEach(unMatching ->
+		unMatchingService.findAllUnMatching().forEach(unMatching -> {
+			if(unMatching == null) return ;
 			weeklyAvailableTimes.forEach(weeklyAvailableTime -> {
 				if (unMatching.getStartTime().getDayOfWeek().equals(weeklyAvailableTime.getDayOfWeek())
 					&& unMatching.getStartTime().toLocalTime().equals(weeklyAvailableTime.getAvailableStartTime())
@@ -68,16 +72,15 @@ public class VolunteerService {
 					.equals(weeklyAvailableTime.getVolunteer().getAddress().getDistrict())) {
 					volunteerActivityService.matchingIfNotAlreadyMatched(unMatching, volunteer);
 				}
-			}));
+			});
+		});
 	}
 
 	@Transactional
 	public void deleteMatching(Long id, String username) {
 		VolunteerActivity findVolunteerActivity = volunteerActivityService.findById(id);
-		// TODO : 현재 로그인된 봉사자의 정보를 가져오는 방법이 따로 있으면 수정
-		Volunteer volunteer = volunteerRepository.findByUsername(username).orElseThrow(
-			() -> new CustomException(NOT_FOUND_USER_ERROR)
-		);
+
+		Volunteer volunteer = (Volunteer)userService.findUserByUserName(username, "volunteer");
 		if (findVolunteerActivity.getVolunteer() == null || !findVolunteerActivity.getVolunteer().equals(volunteer)) {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
@@ -165,5 +168,19 @@ public class VolunteerService {
 				);
 				return null; // 또는 throw new NoMatchingVolunteerException();
 			});
+	}
+
+	public ResponseVolunteerMainPage getVolunteerMainPage(String name) {
+		Volunteer userByUserName = (Volunteer)userService.findUserByUserName(name, "volunteer");
+		// 오늘 날짜
+		VolunteerActivity currentVa = userByUserName.getVolunteerActivities().stream().filter(
+			volunteerActivity -> LocalDate.now().equals(volunteerActivity.getStartTime().toLocalDate())
+		).findAny().orElse(null);
+		return ResponseVolunteerMainPage.of(VolunteerInfo.of(userByUserName),
+			userByUserName.getWeeklyAvailableTimes().stream().map(
+				availTime -> Schedules.of(availTime.getDayOfWeek(), availTime.getAvailableStartTime())
+			).collect(Collectors.toList()), currentVa == null ? null : CurrentMatching.of(
+				currentVa
+			));
 	}
 }
