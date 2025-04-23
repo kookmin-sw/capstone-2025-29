@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ongi_backend.user.Dto.ScheduleRequest;
 import com.example.ongi_backend.user.Service.VolunteerService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -23,20 +24,18 @@ public class VolunteerController {
 	private final VolunteerService volunteerService;
 
 	@PostMapping("/schedule")
+	@Operation(summary = "나의 봉사 가능 시간 설정", description = "봉사자 봉사 가능 시간, 봉사 타입 설정")
 	public ResponseEntity<?> setSchedule(@Valid @RequestBody ScheduleRequest request, Principal principal) {
 		volunteerService.updateSchedule(request.getSchedules(),request.getCategory(),
-			"username"
-			// TODO : 로그인 구현 후 주석 해제
-			// principal.getName()
+			principal.getName()
 		);
 		return null;
 	}
 	@DeleteMapping("/matching/{matchingId}")
+	@Operation(summary = "매칭 내역 상세", description = "봉사 취소")
 	public ResponseEntity<?> deleteMatching(@PathVariable Long matchingId, Principal principal) {
 		volunteerService.deleteMatching(matchingId,
-			"username"
-			// TODO : 로그인 구현 후 주석 해제
-			// principal.getName()ㅌ
+			principal.getName()
 		);
 		return null;
 	}

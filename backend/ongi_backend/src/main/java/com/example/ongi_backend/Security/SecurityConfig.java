@@ -38,7 +38,7 @@ public class SecurityConfig {
     public LoginFilter loginFilter() throws Exception {
         LoginFilter loginFilter = new LoginFilter(jwtProvider);
         loginFilter.setAuthenticationManager(this.authenticationManager(authenticationConfiguration));
-        loginFilter.setFilterProcessesUrl("/login");  // 필터가 "/login" 요청을 처리하도록 설정
+        loginFilter.setFilterProcessesUrl("/api/login");  // 필터가 "/login" 요청을 처리하도록 설정
         return loginFilter;
     }
 
@@ -60,9 +60,9 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
-                .requestMatchers(HttpMethod.GET, "/login", "/api/user/username").permitAll()
-                .anyRequest().authenticated()
-
+                .requestMatchers(HttpMethod.GET, "/api/login", "/api/user/username").permitAll()
+                // .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)

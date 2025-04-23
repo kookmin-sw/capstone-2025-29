@@ -3,6 +3,7 @@ package com.example.ongi_backend.global.exception;
 import static java.time.LocalDateTime.*;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -26,5 +27,18 @@ public class GlobalExceptionHandler {
 			.path(request.getRequestURI())
 			.build();
 		return ResponseEntity.status(e.getErrorCode().getStatus()).body(response);
+	}
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+		log.info("exception 발생");
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+		ErrorResponse response = ErrorResponse.builder()
+			.timeStamp(now())
+			.status(400)
+			.error("BAD_REQUEST")
+			.message(e.getBindingResult().getFieldError().getDefaultMessage())
+			.path(request.getRequestURI())
+			.build();
+		return ResponseEntity.badRequest().body(response);
 	}
 }

@@ -13,7 +13,6 @@ public class UserRegisterDto {
     private Gender gender;
     private String phone;
     private Address address;
-    private String profileImage;
     private String phoneCode;
     private String userType;
 }

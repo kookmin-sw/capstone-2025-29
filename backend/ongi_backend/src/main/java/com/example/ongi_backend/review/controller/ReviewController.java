@@ -16,6 +16,7 @@ import com.example.ongi_backend.review.dto.ResponseDetailReview;
 import com.example.ongi_backend.review.dto.ResponseReview;
 import com.example.ongi_backend.review.service.ReviewService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ReviewController {
 	private final ReviewService reviewService;
 	@GetMapping
+	@Operation(summary = "완료 후기", description = "리뷰 조회")
 	public ResponseEntity<List<ResponseReview>> getReviews(Principal principal) {
 		return ResponseEntity.ok(
 			reviewService.findReviews(
@@ -33,6 +35,7 @@ public class ReviewController {
 	}
 
 	@GetMapping("/{volunteerActivityId}")
+	@Operation(summary = "후기 / 사진추가", description = "리뷰 상세 조회")
 	public ResponseEntity<ResponseDetailReview> getReview(@PathVariable Long volunteerActivityId, Principal principal) {
 		return ResponseEntity.ok(reviewService.findDetailsReview(volunteerActivityId,
 			principal.getName()
@@ -40,6 +43,7 @@ public class ReviewController {
 	}
 
 	@PostMapping
+	@Operation(summary = "후기작성", description = "리뷰 작성하기")
 	public ResponseEntity<?> writeReview(@RequestBody @Valid RequestResistReview request, Principal principal) {
 		reviewService.writeReview(
 			request,
