@@ -12,11 +12,19 @@ from modules.auth import get_current_user
 
 app = FastAPI()
 
+@app.get("/auth/check")
+async def check_auth(username: str = Depends(get_current_user)):
+    return {
+        "status": "authorized",
+        "username": username,
+        "message": "JWT 토큰 인증 성공!"
+    }
+
 
 @app.post("/chat/audio/")
 async def chat_with_audio(
     file: UploadFile = File(...),
-    userId: str = Depends(get_current_user)
+    username: str = Depends(get_current_user)
 ):
     temp_path = f"temp_{uuid.uuid4().hex}.wav"
     try:
@@ -30,6 +38,7 @@ async def chat_with_audio(
 
         return {
             "status": "success",
+            "username": username,
             "data": {
                 "input": {
                     "type": "audio",
@@ -51,7 +60,7 @@ async def chat_with_audio(
 @app.post("/chat/text/")
 async def chat_with_text(
     text: str,
-    userId: str = Depends(get_current_user)
+    username: str = Depends(get_current_user)
 ):
     try:
         add_user_message(text)
@@ -60,6 +69,7 @@ async def chat_with_text(
 
         return {
             "status": "success",
+            "username": username,
             "data": {
                 "input": {
                     "type": "text",
@@ -78,7 +88,7 @@ async def chat_with_text(
 @app.get("/audio/{filename}")
 async def get_audio(
     filename: str,
-    userId: str = Depends(get_current_user)
+    username: str = Depends(get_current_user)
 ):
     try:
         if not os.path.exists(filename):
@@ -91,7 +101,7 @@ async def get_audio(
 @app.post("/end-chat/")
 async def end_chat(
     backend_url: str,
-    userId: str = Depends(get_current_user)
+    username: str = Depends(get_current_user)
 ):
     try:
         emotion = analyze_emotion(get_chat_history(), ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
@@ -102,12 +112,13 @@ async def end_chat(
                 json={
                     "emotion": emotion,
                     "chat_history": get_chat_history(),
-                    "userId": userId
+                    "username": username
                 }
             )
 
         return {
             "status": "success",
+            "username": username,
             "data": {
                 "emotion": emotion
             }
