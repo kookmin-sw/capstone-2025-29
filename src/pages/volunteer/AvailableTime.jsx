@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./AvailableTime.module.css";
 import Topbar from "../../components/Topbar";
 import { useNavigate } from "react-router-dom";
+import { setAvailableTimes } from '../../api/VolunteerApi';
 
 export default function AvailableTime() {
     const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function AvailableTime() {
 
     // 영어 요일 / 한국어 요일
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const korDays = ["일", "월", "화", "수", "목", "금", "토"];
+    const korDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     // 선택된 봉사 유형
     const [selectedTypes, setSelectedTypes] = useState([]);
@@ -71,11 +72,73 @@ export default function AvailableTime() {
     };
 
     // 완료 버튼 클릭 시 실행
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        if (selectedDays.length === 0) {
+            alert("요일을 선택해주세요.");
+            return;
+        }
+
+        // 선택된 요일들의 시간 정보 수집
+        let schedules = [];
+        const availableTimes = {};  // 로컬 스토리지용 데이터
+
+        for (const day of selectedDays) {
+            const timeInfo = timeRanges[day];
+            if (!timeInfo?.start) continue;
+
+            const [hour, minute] = timeInfo.start.split(":").map(Number);
+            const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+            // 요일 매핑
+            let dayOfWeek;
+            switch (day) {
+                case "Mon": dayOfWeek = "MONDAY"; break;
+                case "Tue": dayOfWeek = "TUESDAY"; break;
+                case "Wed": dayOfWeek = "WEDNESDAY"; break;
+                case "Thu": dayOfWeek = "THURSDAY"; break;
+                case "Fri": dayOfWeek = "FRIDAY"; break;
+                case "Sat": dayOfWeek = "SATURDAY"; break;
+                case "Sun": dayOfWeek = "SUNDAY"; break;
+                default: continue;
+            }
+
+            // 서버 전송용 데이터
+            schedules.push({
+                dayOfWeek: dayOfWeek,
+                time: timeStr
+            });
+
+            // 로컬 스토리지용 데이터
+            if (!availableTimes[dayOfWeek]) {
+                availableTimes[dayOfWeek] = [];
+            }
+            availableTimes[dayOfWeek].push(timeStr);
+        }
+
+        if (schedules.length === 0) {
+            alert("시간을 선택해주세요.");
+            return;
+        }
+
+        try {
+            // 서버에 봉사 가능 시간 전송
+            const response = await setAvailableTimes({
+                schedules: schedules,
+                category: 1
+            });
 
 
-        alert("신청이 완료되었습니다!");
-        navigate('/volunteermain');
+
+            alert("신청이 완료되었습니다!");
+            navigate('/volunteermain');
+        } catch (error) {
+            console.error('스케줄 설정 실패:', error);
+            if (error.response?.status === 401) {
+                navigate('/login');
+            } else {
+                alert('스케줄 설정에 실패했습니다. 다시 시도해주세요.');
+            }
+        }
     };
 
     return (
@@ -122,11 +185,11 @@ export default function AvailableTime() {
 
             {/* 가능한 시간 설정 */}
             <div className={styles.section}>
-                <h3 className={styles.title}>가능한 시간 (3시간 고정)</h3>
+                <h3 className={styles.title}>가능한 시간</h3>
                 {selectedDays.map((day) => {
                     const kor = korDays[weekDays.indexOf(day)];
                     return (
-                        <div className={styles.timeRow}>
+                        <div key={day} className={styles.timeRow}>
                             <span className={styles.dayLabel}>{kor}</span>
 
                             {/* 이 부분만 따로 감싸서 가운데 정렬 */}

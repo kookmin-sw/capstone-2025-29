@@ -104,15 +104,15 @@
 }
 
 .dayLabel {
-    width: 34px;
-    height: 34px;
+    width: 45px;
+    height: 45px;
     background-color: #ede9fe;
     color: #6D57DE;
     border-radius: 50%;
     text-align: center;
-    line-height: 34px;
+    line-height: 45px;
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: 0.8rem;
 }
 
 .timeRow input[type="time"] {

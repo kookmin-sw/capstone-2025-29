@@ -24,10 +24,10 @@ export default function RoleSelect() {
             <div className={styles.roleBox}>
                 <div
                     className={`${styles.roleCard} ${styles.userCard} ${selectedRole === "user" ? styles.active : ""}`}
-                    onClick={() => handleSelect("user")}
+                    onClick={() => handleSelect("elderly")}
                 >
-                    <p className={selectedRole === "user" ? styles.selectedText : ""}>앱 이용자<br />회원 가입</p>
-                    <img src={selectedRole === "user" ? "/user-icon-purple.svg" : "/user-icon.svg"} alt="앱 이용자" />
+                    <p className={selectedRole === "elderly" ? styles.selectedText : ""}>앱 이용자<br />회원 가입</p>
+                    <img src={selectedRole === "elderly" ? "/user-icon-purple.svg" : "/user-icon.svg"} alt="앱 이용자" />
                 </div>
 
                 <div

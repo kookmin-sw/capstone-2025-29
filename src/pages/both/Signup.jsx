@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Signup.module.css";
 import Topbar from "../../components/Topbar";
 import ongi from '../../assets/ongi.svg';
+import { checkUsername, registerUser } from '../../api/both';
+
 
 export default function Signup() {
     const location = useLocation();
@@ -49,24 +51,18 @@ export default function Signup() {
         setAgreeAll(allChecked);
     }, [agreements]);
 
-    // 비밀번호 유효성 검사 함수 (8자리 + 특수기호)
-    const validatePassword = (password) => {
-        const lengthCheck = password.length >= 8;
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        const hasNumber = /\d/.test(password);
-        //return lengthCheck && hasSpecialChar && hasNumber;
-
-        return true
-    };
+    // 필수 약관 동의 여부 확인
+    const isRequiredTermsAgreed = agreements.terms && agreements.privacy;
 
     // 입력값 변경 핸들러
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        // 비밀번호 입력 시 유효성 검사 적용
-        if (name === "password") {
-            setIsPasswordValid(validatePassword(value));
+        // 아이디 입력 필드가 변경될 때 중복확인 상태 초기화
+        if (name === 'id') {
+            setIdChecked(false);
         }
+
 
         //입력에 대한 값 변경
         setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -78,46 +74,37 @@ export default function Signup() {
         setAgreements({ terms: checked, privacy: checked, marketing: checked });
     };
 
-    // 아이디 중복 확인 요청 로직 (추후 구현)
-    const handleCheckId = () => {
-        // TODO: 서버와 중복확인 API 통신 후 결과 반영
-        setIdChecked(true);
-    };
-
-    // 회원가입 폼 제출
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const formData = {
-            ...formValues,
-            birth: `${formValues.birthYear}-${formValues.birthMonth}-${formValues.birthDay}`,
-            agreements
-        };
-
-        console.log("전송할 데이터:", formData);
-
-        // 역할에 따라 이동 -> 나중에 fetch 안으로 집어 넣야야함
-
-        if (selectedRole === "volunteer") {
-            navigate("/volunteerMain");
-        } else {
-            navigate("/userMain");
+    // 아이디 중복 확인 요청 로직
+    const handleCheckId = async () => {
+        if (!formValues.id) {
+            alert('아이디를 입력해주세요.');
+            return;
         }
 
-        // fetch("https://your-api-endpoint.com/signup", {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify(formData)
-        // })
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         alert("회원가입 완료");
-        //         console.log(data);
+        try {
+            await checkUsername(formValues.id, selectedRole);
+            setIdChecked(true);
+            alert('사용 가능한 아이디입니다.');
+        } catch (error) {
+            console.error('중복 확인 에러:', error);
+            setIdChecked(false);
+            alert(error.message);
+        }
+    };
 
-        //     })
-        //     .catch((err) => console.error("에러:", err));
+    // 생년월일로부터 정확한 나이를 계산하는 함수
+    const calculateAge = (birthYear, birthMonth, birthDay) => {
+        const today = new Date();
+        const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
 
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
 
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age;
     };
 
     // 비밀번호 일치 여부
@@ -126,17 +113,108 @@ export default function Signup() {
     // 생년월일 입력 여부
     const birthDateComplete = formValues.birthYear && formValues.birthMonth && formValues.birthDay;
 
+    // 필수 입력값 검증
+    const isRequiredFieldsFilled =
+        formValues.id.trim() !== "" &&
+        formValues.password.trim() !== "" &&
+        formValues.name.trim() !== "" &&
+        formValues.region.trim() !== "" &&
+        birthDateComplete &&
+        formValues.phone.trim() !== "";
+
     // 가입 버튼 비활성화 조건
-    const isSubmitDisabled = false;
-    !agreeAll ||
+    const isSubmitDisabled =
+        !isRequiredTermsAgreed ||
         !idChecked ||
-        formValues.userType === "" ||
-        !passwordsMatch ||
+        !isRequiredFieldsFilled ||
         !isPasswordValid ||
-        formValues.phone.trim() === "" ||
-        formValues.region.trim() === "" ||
-        !authCodeVerified ||
-        !birthDateComplete;
+        !authCodeVerified;
+
+    // 회원가입 폼 제출
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // 필수 입력값 검증
+        if (!formValues.id.trim()) {
+            alert('아이디를 입력해주세요.');
+            return;
+        }
+
+        if (!idChecked) {
+            alert('아이디 중복확인을 해주세요.');
+            return;
+        }
+
+        if (!formValues.password.trim()) {
+            alert('비밀번호를 입력해주세요.');
+            return;
+        }
+
+        if (!passwordsMatch) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
+        if (!formValues.name.trim()) {
+            alert('이름을 입력해주세요.');
+            return;
+        }
+
+        if (!formValues.region.trim()) {
+            alert('지역을 입력해주세요.');
+            return;
+        }
+
+        if (!birthDateComplete) {
+            alert('생년월일을 모두 선택해주세요.');
+            return;
+        }
+
+        if (!formValues.phone.trim()) {
+            alert('휴대전화 번호를 입력해주세요.');
+            return;
+        }
+
+        if (!authCodeVerified) {
+            alert('휴대전화 인증을 완료해주세요.');
+            return;
+        }
+
+        if (!isRequiredTermsAgreed) {
+            alert('필수 약관에 동의해주세요.');
+            return;
+        }
+
+        // formData 객체 생성
+        const formData = {
+            username: formValues.id,
+            password: formValues.password,
+            name: formValues.name,
+            age: calculateAge(
+                parseInt(formValues.birthYear),
+                parseInt(formValues.birthMonth),
+                parseInt(formValues.birthDay)
+            ),
+            gender: formValues.gender || "male",
+            phone: formValues.phone,
+            address: {
+                district: formValues.region | "",
+                detail: formValues.detailAddress || "",
+            },
+            phoneCode: formValues.phoneCode || "1234",
+            userType: selectedRole || "volunteer",
+        };
+
+        try {
+            await registerUser(formData);
+            alert('회원가입이 완료되었습니다.');
+            navigate('/login');
+        } catch (error) {
+            console.error("=== 에러 발생 ===");
+            console.error("에러 메시지:", error.message);
+            alert(error.message);
+        }
+    };
 
     return (
         <form className={styles.container} onSubmit={handleSubmit}>
@@ -157,15 +235,18 @@ export default function Signup() {
                         value={formValues.id}
                         onChange={handleInputChange}
                         placeholder="아이디 입력"
+                        disabled={idChecked}
                     />
                     <button
                         type="button"
                         className={styles.checkBtn}
+                        onClick={handleCheckId}
+                        disabled={idChecked}
                         style={{
                             backgroundColor: idChecked ? "#E6E6FA" : "#6D57DE",
-                            color: idChecked ? "#6D57DE" : "#fff"
+                            color: idChecked ? "#6D57DE" : "#fff",
+                            cursor: idChecked ? "not-allowed" : "pointer"
                         }}
-                        onClick={handleCheckId}
                     >
                         중복확인
                     </button>
@@ -269,6 +350,7 @@ export default function Signup() {
                     className={styles.checkBtn}
                     onClick={() => {
                         // TODO: 실제 인증번호 비교 로직
+                        alert('인증번호가 확인되었습니다.');
                         setAuthCodeVerified(true);
                     }}
                 >
