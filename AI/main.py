@@ -1,30 +1,32 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
 from fastapi.responses import FileResponse
 import shutil
 import os
 import httpx
+import uuid
+
 from modules.stt_module import transcribe
 from modules.ttr_module import add_user_message, add_assistant_message, get_chat_response, get_chat_history
 from modules.emotion_module import analyze_emotion
-import uuid
+from modules.auth import get_current_user
 
 app = FastAPI()
 
-# 음성 입력 채팅
+
 @app.post("/chat/audio/")
-async def chat_with_audio(file: UploadFile = File(...)):
+async def chat_with_audio(
+    file: UploadFile = File(...),
+    userId: str = Depends(get_current_user)
+):
     temp_path = f"temp_{uuid.uuid4().hex}.wav"
     try:
         with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # STT: 음성을 텍스트로 변환
         text = transcribe(temp_path)
-        
-        # TTR: GPT 응답 생성
-        add_user_message(text)  # 채팅 기록에 사용자 메시지 추가
-        gpt_response = get_chat_response()  # GPT 응답 생성
-        add_assistant_message(gpt_response)  # 채팅 기록에 AI 응답 추가
+        add_user_message(text)
+        gpt_response = get_chat_response()
+        add_assistant_message(gpt_response)
 
         return {
             "status": "success",
@@ -35,65 +37,80 @@ async def chat_with_audio(file: UploadFile = File(...)):
                 },
                 "response": {
                     "text": gpt_response,
-                    "audio_path": None  # TTS 구현 시 추가
+                    "audio_path": None
                 }
             }
         }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"오디오 채팅 처리 중 오류: {str(e)}")
     finally:
-        # Clean up temporary files
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
-# 텍스트 입력 채팅
+
 @app.post("/chat/text/")
-async def chat_with_text(text: str):
-    # TTR: GPT 응답 생성
-    add_user_message(text)  # 채팅 기록에 사용자 메시지 추가
-    gpt_response = get_chat_response()  # GPT 응답 생성
-    add_assistant_message(gpt_response)  # 채팅 기록에 AI 응답 추가
-    
-    return {
-        "status": "success",
-        "data": {
-            "input": {
-                "type": "text",
-                "text": text
-            },
-            "response": {
-                "text": gpt_response,
-                "audio_path": None  # TTS 구현 시 추가
+async def chat_with_text(
+    text: str,
+    userId: str = Depends(get_current_user)
+):
+    try:
+        add_user_message(text)
+        gpt_response = get_chat_response()
+        add_assistant_message(gpt_response)
+
+        return {
+            "status": "success",
+            "data": {
+                "input": {
+                    "type": "text",
+                    "text": text
+                },
+                "response": {
+                    "text": gpt_response,
+                    "audio_path": None
+                }
             }
         }
-    }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"텍스트 채팅 처리 중 오류: {str(e)}")
 
-# TTS음성 파일 변환
+
 @app.get("/audio/{filename}")
-async def get_audio(filename: str):
-   
-    if not os.path.exists(filename):
-        raise HTTPException(status_code=404, detail="Audio file not found")
-    return FileResponse(filename)
+async def get_audio(
+    filename: str,
+    userId: str = Depends(get_current_user)
+):
+    try:
+        if not os.path.exists(filename):
+            raise HTTPException(status_code=404, detail="오디오 파일이 존재하지 않습니다.")
+        return FileResponse(filename)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"오디오 파일 반환 중 오류: {str(e)}")
 
-# 감정분석
+
 @app.post("/end-chat/")
-async def end_chat(backend_url: str):
-    # 감정 분석
-    emotion = analyze_emotion(get_chat_history(), ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
-    
-    # 백엔드로 데이터 전송
-    async with httpx.AsyncClient() as client:
-        await client.post(
-            backend_url,
-            json={
-                "emotion": emotion,
-                "chat_history": get_chat_history()
-            }
-        )
-    
-    return {
-        "status": "success",
-        "data": {
-            "emotion": emotion
-        }
-    }
+async def end_chat(
+    backend_url: str,
+    userId: str = Depends(get_current_user)
+):
+    try:
+        emotion = analyze_emotion(get_chat_history(), ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
 
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                backend_url,
+                json={
+                    "emotion": emotion,
+                    "chat_history": get_chat_history(),
+                    "userId": userId
+                }
+            )
+
+        return {
+            "status": "success",
+            "data": {
+                "emotion": emotion
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"감정 분석 또는 백엔드 전송 중 오류: {str(e)}")
