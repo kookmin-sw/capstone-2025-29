@@ -4,6 +4,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   base: '/',
+  build: {
+    target: 'esnext',
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    minify: 'terser',
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
   plugins: [
     react(),
     VitePWA({
@@ -66,15 +78,12 @@ export default defineConfig({
     })
   ],
   server: {
-    port:5174,
+    port: 5174,
     proxy: {
       '/api': {
         target: 'http://54.180.122.49:8080',
         changeOrigin: true,
-      },
-
+      }
     }
   }
-
-
 })
