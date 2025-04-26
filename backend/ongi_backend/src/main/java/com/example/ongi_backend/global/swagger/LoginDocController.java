@@ -18,7 +18,7 @@ public class LoginDocController {
             @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = UserLoginResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 실패")
     })
-    @PostMapping("/login")
+    @PostMapping("api/login")
     public void login(
             @Parameter(description = "아이디") @RequestParam String username,
             @Parameter(description = "비밀번호") @RequestParam String password,
