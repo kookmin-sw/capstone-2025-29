@@ -98,8 +98,8 @@ async def get_audio(
         raise HTTPException(status_code=500, detail=f"오디오 파일 반환 중 오류: {str(e)}")
 
 
-@app.post("/end-chat/")
-async def end_chat(
+@app.post("/emotion/")
+async def emotion(
     backend_url: str,
     username: str = Depends(get_current_user)
 ):
