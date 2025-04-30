@@ -6,6 +6,7 @@ import httpx
 import uuid
 
 from modules.stt_module import transcribe
+from modules.tts_module import synthesize
 from modules.ttr_module import add_user_message, add_assistant_message, get_chat_response, get_chat_history
 from modules.emotion_module import analyze_emotion
 from modules.auth import get_current_user
@@ -32,9 +33,13 @@ async def chat_with_audio(
             shutil.copyfileobj(file.file, buffer)
 
         text = transcribe(temp_path)
+
         add_user_message(text)
         gpt_response = get_chat_response()
         add_assistant_message(gpt_response)
+
+        tts_filename = f"tts_{uuid.uuid4().hex}.wav"
+        synthesize(gpt_response, tts_filename)
 
         return {
             "status": "success",
@@ -46,7 +51,7 @@ async def chat_with_audio(
                 },
                 "response": {
                     "text": gpt_response,
-                    "audio_path": None
+                    "audio_path": f"/audio/{tts_filename}"
                 }
             }
         }
