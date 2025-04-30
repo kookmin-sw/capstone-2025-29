@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import FileResponse
 import shutil
 import os
@@ -10,6 +10,7 @@ from modules.tts_module import synthesize
 from modules.ttr_module import add_user_message, add_assistant_message, get_chat_response, get_chat_history
 from modules.emotion_module import analyze_emotion
 from modules.auth import get_current_user
+from modules.delete_audiofile import delete_file_after_delay
 
 app = FastAPI()
 
@@ -24,8 +25,9 @@ async def check_auth(username: str = Depends(get_current_user)):
 
 @app.post("/chat/audio/")
 async def chat_with_audio(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
-    username: str = Depends(get_current_user)
+    username: str = Depends(get_current_user)   
 ):
     temp_path = f"temp_{uuid.uuid4().hex}.wav"
     try:
@@ -40,6 +42,8 @@ async def chat_with_audio(
 
         tts_filename = f"tts_{uuid.uuid4().hex}.wav"
         synthesize(gpt_response, tts_filename)
+
+        background_tasks.add_task(delete_file_after_delay, tts_filename)
 
         return {
             "status": "success",
