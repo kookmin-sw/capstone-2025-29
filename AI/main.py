@@ -80,7 +80,7 @@ class TextInput(BaseModel):
 async def chat_with_text(
     background_tasks: BackgroundTasks,
     data: TextInput,
-    username: str = Depends(get_current_user)
+    # username: str = Depends(get_current_user)
 ):
     try:
         text = data.text
@@ -94,7 +94,7 @@ async def chat_with_text(
 
         return {
             "status": "success",
-            "username": username,
+            # "username": username,
             "data": {
                 "input": {
                     "type": "text",
