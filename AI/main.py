@@ -8,7 +8,7 @@ import httpx
 import uuid
 
 from modules.stt_module import transcribe
-# from modules.tts_module import synthesize
+from modules.tts_module import synthesize
 from modules.ttr_module import add_user_message, add_assistant_message, get_chat_response, get_chat_history
 from modules.emotion_module import analyze_emotion
 from modules.auth import get_current_user
@@ -52,11 +52,6 @@ async def chat_with_audio(
         gpt_response = get_chat_response()
         add_assistant_message(gpt_response)
 
-        # tts_filename = f"tts_{uuid.uuid4().hex}.wav"
-        # # synthesize(gpt_response, tts_filename)
-
-        # background_tasks.add_task(delete_file_after_delay, tts_filename)
-
         return {
             "status": "success",
             "username": username,
@@ -83,6 +78,7 @@ class TextInput(BaseModel):
 
 @app.post("/chat/text")
 async def chat_with_text(
+    background_tasks: BackgroundTasks,
     data: TextInput,
     username: str = Depends(get_current_user)
 ):
@@ -91,6 +87,10 @@ async def chat_with_text(
         add_user_message(text)
         gpt_response = get_chat_response()
         add_assistant_message(gpt_response)
+
+        tts_path = synthesize(gpt_response)
+
+        background_tasks.add_task(delete_file_after_delay, tts_path)
 
         return {
             "status": "success",
@@ -102,7 +102,7 @@ async def chat_with_text(
                 },
                 "response": {
                     "text": gpt_response,
-                    "audio_path": None
+                    "audio_path": f"/audio/{os.path.basename(tts_path)}"
                 }
             }
         }
