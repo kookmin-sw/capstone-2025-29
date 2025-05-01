@@ -13,7 +13,7 @@ public interface ReviewRepository extends JpaRepository<VolunteerReview, Long> {
 	@Query("SELECT r FROM VolunteerReview r JOIN FETCH r.volunteerActivity va JOIN FETCH va.elderly e WHERE va.volunteer = :volunteer AND va.status= 'COMPLETED'")
 	public List<VolunteerReview> findByVolunteer(Volunteer volunteer);
 
-	@Query("SELECT r FROM VolunteerReview r JOIN FETCH r.volunteerActivity va JOIN FETCH va.elderly e JOIN FETCH r.images i WHERE va.id = :volunteerActivityId AND va.status = 'COMPLETED'")
-	public Optional<VolunteerReview> findElderlyAndVolunteerActivityAndReviewByVolunteerActivityId(Long volunteerActivityId);
+	@Query("SELECT r FROM VolunteerReview r JOIN FETCH r.volunteerActivity va JOIN FETCH va.elderly e JOIN FETCH r.images i WHERE r.id = :reviewId AND va.status = 'COMPLETED'")
+	public Optional<VolunteerReview> findElderlyAndVolunteerActivityAndReviewByReviewId(Long reviewId);
 
 }

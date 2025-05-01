@@ -34,10 +34,10 @@ public class ReviewController {
 			));
 	}
 
-	@GetMapping("/{volunteerActivityId}")
+	@GetMapping("/{reviewId}")
 	@Operation(summary = "후기 / 사진추가", description = "리뷰 상세 조회")
-	public ResponseEntity<ResponseDetailReview> getReview(@PathVariable Long volunteerActivityId, Principal principal) {
-		return ResponseEntity.ok(reviewService.findDetailsReview(volunteerActivityId,
+	public ResponseEntity<ResponseDetailReview> getReview(@PathVariable Long reviewId, Principal principal) {
+		return ResponseEntity.ok(reviewService.findDetailsReview(reviewId,
 			principal.getName()
 		));
 	}
