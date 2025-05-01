@@ -1,18 +1,30 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import shutil
 import os
 import httpx
 import uuid
 
 from modules.stt_module import transcribe
-from modules.tts_module import synthesize
+# from modules.tts_module import synthesize
 from modules.ttr_module import add_user_message, add_assistant_message, get_chat_response, get_chat_history
 from modules.emotion_module import analyze_emotion
 from modules.auth import get_current_user
 from modules.delete_audiofile import delete_file_after_delay
 
+
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 또는 프론트 도메인 명시
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/auth/check")
 async def check_auth(username: str = Depends(get_current_user)):
@@ -40,10 +52,10 @@ async def chat_with_audio(
         gpt_response = get_chat_response()
         add_assistant_message(gpt_response)
 
-        tts_filename = f"tts_{uuid.uuid4().hex}.wav"
-        synthesize(gpt_response, tts_filename)
+        # tts_filename = f"tts_{uuid.uuid4().hex}.wav"
+        # # synthesize(gpt_response, tts_filename)
 
-        background_tasks.add_task(delete_file_after_delay, tts_filename)
+        # background_tasks.add_task(delete_file_after_delay, tts_filename)
 
         return {
             "status": "success",
@@ -55,7 +67,7 @@ async def chat_with_audio(
                 },
                 "response": {
                     "text": gpt_response,
-                    "audio_path": f"/audio/{tts_filename}"
+                    # "audio_path": f"/audio/{tts_filename}"
                 }
             }
         }
@@ -66,12 +78,16 @@ async def chat_with_audio(
             os.remove(temp_path)
 
 
-@app.post("/chat/text/")
+class TextInput(BaseModel):
+    text: str
+
+@app.post("/chat/text")
 async def chat_with_text(
-    text: str,
+    data: TextInput,
     username: str = Depends(get_current_user)
 ):
     try:
+        text = data.text
         add_user_message(text)
         gpt_response = get_chat_response()
         add_assistant_message(gpt_response)
