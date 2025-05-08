@@ -28,6 +28,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/test")
+async def test():
+    return {"status": "ok"}
+
 @app.get("/auth/check")
 async def check_auth(username: str = Depends(get_current_user)):
     return {
