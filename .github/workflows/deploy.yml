@@ -18,7 +18,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
-        run: docker build -t ai-server .
+        run: docker build -t ai-server -f AI/Dockerfile .
 
       - name: Stop existing container (if any)
         run: |
