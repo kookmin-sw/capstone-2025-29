@@ -30,3 +30,6 @@ jobs:
 
       - name: Run Docker container with restart policy
         run: docker run -d --restart always --name ai-server -p 8000:8000 ai-server
+        
+      - name: Build Docker image
+        run: docker build --no-cache -t ai-server .
