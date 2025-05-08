@@ -2,6 +2,8 @@ package com.example.ongi_backend.global.redis.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -91,7 +93,7 @@ public class NotificationRedisService {
 			.id(userId)
 			.title(title)
 			.body(body)
-			.createdAt(LocalDateTime.now())
+			.createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime())
 			.build();
 	}
 }

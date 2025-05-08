@@ -5,6 +5,7 @@ import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -129,7 +130,7 @@ public class AwsSqsNotificationSender implements NotificationSender {
 	public void setSchedulingMessageWithTaskScheduler(VolunteerActivity va, Elderly elderly, Volunteer volunteer, String userType) {
 		LocalDateTime time = va.getStartTime();
 		// 봉사까지 1시간도 안남았으면 즉시 전송
-		if(Duration.between(LocalDateTime.now(), time).getSeconds() <= 3600L){
+		if(Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), time).getSeconds() <= 3600L){
 			scheduleNotification(va.getId(), elderly, volunteer, userType);
 			return ;
 		}

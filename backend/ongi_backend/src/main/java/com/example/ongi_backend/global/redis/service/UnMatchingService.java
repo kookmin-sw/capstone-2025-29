@@ -2,6 +2,8 @@ package com.example.ongi_backend.global.redis.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ public class UnMatchingService {
 			.address(address)
 			.addDescription(addDescription)
 			.ttl(
-				Duration.between(LocalDateTime.now(), startTime).getSeconds()
+				Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), startTime).getSeconds()
 			)
 			.build());
 	}

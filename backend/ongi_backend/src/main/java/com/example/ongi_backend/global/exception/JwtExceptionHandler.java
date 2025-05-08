@@ -2,6 +2,9 @@ package com.example.ongi_backend.global.exception;
 
 import static java.time.LocalDateTime.*;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -40,7 +43,7 @@ public class JwtExceptionHandler {
 	private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		return ErrorResponse.builder()
-			.timeStamp(now())
+			.timeStamp(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime())
 			.status(errorCode.getStatus())
 			.error(errorCode.getCode())
 			.message(errorCode.getMessage())
