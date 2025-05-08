@@ -1,11 +1,12 @@
 venv/
 __pycache__/
 *.pyc
-
+*.pyo
 .env
-
+.vscode
+.idea
 tts_output/
-
+*.md
 *.log
 .DS_Store
 .git
