@@ -2,6 +2,9 @@ package com.example.ongi_backend.global.exception;
 
 import static java.time.LocalDateTime.*;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +23,7 @@ public class GlobalExceptionHandler {
 		log.info("exception 발생");
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		ErrorResponse response = ErrorResponse.builder()
-			.timeStamp(now())
+			.timeStamp(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime())
 			.status(e.getErrorCode().getStatus())
 			.error(e.getErrorCode().getCode())
 			.message(e.getMessage())
@@ -33,7 +36,7 @@ public class GlobalExceptionHandler {
 		log.info("exception 발생");
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		ErrorResponse response = ErrorResponse.builder()
-			.timeStamp(now())
+			.timeStamp(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime())
 			.status(400)
 			.error("BAD_REQUEST")
 			.message(e.getBindingResult().getFieldError().getDefaultMessage())

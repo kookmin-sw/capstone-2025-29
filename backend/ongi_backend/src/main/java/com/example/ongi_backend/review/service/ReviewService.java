@@ -60,11 +60,11 @@ public class ReviewService {
 			.toList();
 	}
 
-	public ResponseDetailReview findDetailsReview(Long volunteerActivityId, String username) {
+	public ResponseDetailReview findDetailsReview(Long reviewId, String username) {
 		Volunteer volunteer = (Volunteer)userService.findUserByUserName(username, "volunteer");
 
-		VolunteerReview review = reviewRepository.findElderlyAndVolunteerActivityAndReviewByVolunteerActivityId(
-			volunteerActivityId).orElseThrow(
+		VolunteerReview review = reviewRepository.findElderlyAndVolunteerActivityAndReviewByReviewId(
+			reviewId).orElseThrow(
 			() -> new CustomException(NOT_FOUND_REVIEW_ERROR));
 
 		// 리뷰 작성자가 봉사자와 다르면 리뷰 조회 불가
