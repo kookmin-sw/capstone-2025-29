@@ -6,11 +6,12 @@ import com.example.ongi_backend.user.Dto.RequestModify;
 import com.example.ongi_backend.user.Dto.RequestModifyPassword;
 import com.example.ongi_backend.user.Dto.ResponseUserInfo;
 import com.example.ongi_backend.user.Dto.UserRegisterDto;
+import com.example.ongi_backend.user.Repository.BaseUserRepository;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
 import com.example.ongi_backend.user.entity.BaseUser;
 import com.example.ongi_backend.user.entity.Elderly;
-import com.example.ongi_backend.user.entity.PrincipleDetails;
+import com.example.ongi_backend.user.entity.PrincipalDetails;
 import com.example.ongi_backend.user.entity.Volunteer;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +23,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
+    private final BaseUserRepository baseUserRepository;
     private final ElderlyRepository elderlyRepository;
     private final VolunteerRepository volunteerRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void saveUser(UserRegisterDto userRegisterDto) {
+        if (baseUserRepository.countUsernameInBothTables(userRegisterDto.getUsername()) > 0)
+            throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
         if ("elderly".equalsIgnoreCase(userRegisterDto.getUserType())) {
-            if (elderlyRepository.existsByUsername(userRegisterDto.getUsername()))
-                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
             Elderly elderly = Elderly.builder()
                     .name(userRegisterDto.getName())
                     .phone(userRegisterDto.getPhone())
@@ -48,8 +48,6 @@ public class UserService implements UserDetailsService {
             elderlyRepository.save(elderly);
 
         } else if ("volunteer".equalsIgnoreCase(userRegisterDto.getUserType())) {
-            if (volunteerRepository.existsByUsername(userRegisterDto.getUsername()))
-                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
             Volunteer volunteer = Volunteer.builder()
                     .name(userRegisterDto.getName())
                     .phone(userRegisterDto.getPhone())
@@ -134,11 +132,11 @@ public class UserService implements UserDetailsService {
         if (userType.equalsIgnoreCase("volunteer")) {
             Volunteer volunteer = volunteerRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
-            return PrincipleDetails.builder().baseUser(volunteer).build();
+            return PrincipalDetails.builder().baseUser(volunteer).build();
         } else if (userType.equalsIgnoreCase("elderly")) {
             Elderly elderly = elderlyRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
-            return PrincipleDetails.builder().baseUser(elderly).build();
+            return PrincipalDetails.builder().baseUser(elderly).build();
         }
         throw new UsernameNotFoundException("유저가 존재하지 않습니다.");
     }

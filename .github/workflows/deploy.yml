@@ -3,7 +3,8 @@ name: Deploy To EC2
 on:
   push:
     branches:
-      - feat/90
+      - backend
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
