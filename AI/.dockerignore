@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+
+.env
+
+tts_output/
+
+*.log
+.DS_Store
+.git
+.gitignore

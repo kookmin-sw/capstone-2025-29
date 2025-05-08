@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, Backgroun
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
 import shutil
 import os
 import httpx
@@ -17,10 +18,11 @@ from modules.delete_audiofile import delete_file_after_delay
 
 
 app = FastAPI()
+app.mount("/audio", StaticFiles(directory="tts_output"), name="audio")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 또는 프론트 도메인 명시
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -80,7 +82,7 @@ class TextInput(BaseModel):
 async def chat_with_text(
     background_tasks: BackgroundTasks,
     data: TextInput,
-    # username: str = Depends(get_current_user)
+    username: str = Depends(get_current_user)
 ):
     try:
         text = data.text
@@ -94,7 +96,7 @@ async def chat_with_text(
 
         return {
             "status": "success",
-            # "username": username,
+            "username": username,
             "data": {
                 "input": {
                     "type": "text",
