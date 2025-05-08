@@ -1,0 +1,29 @@
+name: Ongi
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker build -t ai-server .
+
+      - name: Stop existing container (if any)
+        run: |
+          docker stop ai-server || true
+          docker rm ai-server || true
+
+      - name: Run Docker container with restart policy
+        run: docker run -d --restart always --name ai-server -p 8000:8000 ai-server
