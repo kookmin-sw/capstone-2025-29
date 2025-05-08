@@ -4,7 +4,7 @@ name : Deploy To EC2
 on:
   push:
     branches:
-      - feat/75
+      - backend
 jobs:
   deploy:
     runs-on: ubuntu-latest
