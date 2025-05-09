@@ -32,7 +32,8 @@ jobs:
         run: docker build --no-cache -t ai-server .
 
       - name: Run Docker container with restart policy
-        run: docker run -d --restart always --name ai-server -p 8000:8000 \
-              -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
-              -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
-              ai-server
+        run: |
+          docker run -d --restart always --name ai-server -p 8000:8000 \
+            -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+            -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+            ai-server
