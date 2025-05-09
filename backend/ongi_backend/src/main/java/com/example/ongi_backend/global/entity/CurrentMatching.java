@@ -39,11 +39,12 @@ public class CurrentMatching{
 		return CurrentMatching.builder()
 			.matchingId(volunteerActivity.getId())
 			.otherName(
-				volunteerActivity.getVolunteer().getName()
+				volunteerActivity.getVolunteer() != null ? volunteerActivity.getVolunteer().getName() : null
 			)
 			.status(
-				volunteerActivity.getStatus() == COMPLETED ? COMPLETED : volunteerActivity.getStartTime()
-					.isBefore(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()) ? STARTED : NOT_STARTED)
+				volunteerActivity.getStatus() == null ? NOT_MATCHING :
+					volunteerActivity.getStatus() == COMPLETED ? COMPLETED : volunteerActivity.getStartTime()
+						.isBefore(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()) ? STARTED : NOT_STARTED)
 			.startTime(
 				volunteerActivity.getStartTime()
 			)
