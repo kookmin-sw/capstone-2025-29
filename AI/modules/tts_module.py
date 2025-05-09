@@ -1,7 +1,7 @@
 from gradio_client import Client
 import uuid, os, shutil
 
-GRADIO_URL = "http://127.0.0.1:8888"
+GRADIO_URL = "http://melotts:8888"
 
 def synthesize(text: str, output_dir="tts_output") -> str:
     client = Client(GRADIO_URL)
