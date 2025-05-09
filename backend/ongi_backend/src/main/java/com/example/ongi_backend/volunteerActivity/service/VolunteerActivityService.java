@@ -3,6 +3,7 @@ package com.example.ongi_backend.volunteerActivity.service;
 import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -181,5 +182,8 @@ public class VolunteerActivityService {
 		Elderly elderly = activity.getElderly();
 		deleteActivity(id);
 		awsSqsNotificationSender.expireNotification(elderly.getFcmToken(), elderly.getId());
+	}
+	public VolunteerActivity existVolunteerActivity(Elderly elderly, LocalDate startDate) {
+		return volunteerActivityRepository.findVaByElderlyAndDate(elderly, startDate).orElse(null);
 	}
 }
