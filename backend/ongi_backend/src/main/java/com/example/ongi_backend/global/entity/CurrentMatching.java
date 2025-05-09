@@ -43,7 +43,8 @@ public class CurrentMatching{
 			)
 			.status(
 				volunteerActivity.getVolunteer() == null ? NOT_MATCHING :
-					volunteerActivity.getStatus() == COMPLETED ? COMPLETED : volunteerActivity.getStartTime()
+					volunteerActivity.getStatus() == COMPLETED || volunteerActivity.getStatus() == REVIEWING ?
+						COMPLETED : volunteerActivity.getStartTime()
 						.isBefore(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()) ? STARTED : NOT_STARTED)
 			.startTime(
 				volunteerActivity.getStartTime()
