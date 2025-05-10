@@ -8,7 +8,7 @@ const API_BASE = import.meta.env.MODE === 'production'
 // ✅ 로그인 API
 export const login = async (username, password, userType) => {
     try {
-        const response = await axios.get(`${API_BASE}/api/login`, {
+        const response = await axios.get(`http://54.180.122.49:8080/api/login`, {
             params: { username, password, userType },
             headers: {
                 'Content-Type': 'application/json',
