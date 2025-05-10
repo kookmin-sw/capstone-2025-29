@@ -35,4 +35,8 @@ public class Elderly extends BaseUser{
 	public Elderly() {
 		super();
 	}
+
+	public void updateChatBot(ChatBot chatBot) {
+		this.chatBot = chatBot;
+	}
 }
