@@ -5,6 +5,7 @@ import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,8 @@ import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
+import com.example.ongi_backend.user.Dto.RecommendVolunteer;
+import com.example.ongi_backend.user.Dto.ResponseRecommend;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
@@ -31,6 +34,7 @@ public class ElderlyService {
 	private final UnMatchingService unMatchingService;
 	private final VolunteerService volunteerService;
 	private final AwsSqsNotificationSender awsSqsNotificationSender;
+	private final UserService userService;
 
 	@Transactional
 	public ResponseMatchedUserInfo matching(RequestMatching request, String name) {
@@ -38,9 +42,7 @@ public class ElderlyService {
 			throw new CustomException(POST_TIME_ERROR);
 		}
 
-		//TODO : 현재 로그인된 노인의 정보를 가져오는 방법이 따로 있으면 수정
-		Elderly elderly = elderlyRepository.findByUsername(name)
-			.orElseThrow(() -> new CustomException(NOT_FOUND_USER_ERROR));
+		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
 
 		ResponseMatchedUserInfo responseMatchedUserInfo = volunteerService.matchingIfDayOfWeekTimeMatched(request,
 			elderly);
@@ -51,10 +53,7 @@ public class ElderlyService {
 	@Transactional
 	public void cancelMatching(Long id, String username) {
 		VolunteerActivity findVolunteerActivity = volunteerActivityService.findById(id);
-		// TODO : 현재 로그인된 노인의 정보를 가져오는 방법이 따로 있으면 수정
-		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
-			() -> new CustomException(NOT_FOUND_USER_ERROR)
-		);
+		Elderly elderly = (Elderly)userService.findUserByUserName(username, "elderly");
 		if(!findVolunteerActivity.getElderly().equals(elderly)) {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
@@ -95,5 +94,18 @@ public class ElderlyService {
 	public Elderly findElderlyById(Long id) {
 		return elderlyRepository.findById(id)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_USER_ERROR));
+	}
+
+	@Transactional
+	public ResponseRecommend recommendVolunteer(RequestMatching request, String name) {
+		if(Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds() < 0L) {
+			throw new CustomException(POST_TIME_ERROR);
+		}
+		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
+
+		VolunteerActivity volunteerActivity = volunteerActivityService.addVolunteerActivity(request, elderly);
+
+		List<RecommendVolunteer> availableVolunteer = volunteerService.findAvailableVolunteer(request);
+		return ResponseRecommend.of(availableVolunteer, volunteerActivity.getId());
 	}
 }

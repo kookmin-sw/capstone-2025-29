@@ -18,9 +18,12 @@ import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
+import com.example.ongi_backend.user.Dto.ResponseAvailableVolunteerDetail;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
+import com.example.ongi_backend.user.Dto.RecommendVolunteer;
 import com.example.ongi_backend.user.Dto.ScheduleRequest;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
+import com.example.ongi_backend.user.entity.BaseUser;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
@@ -114,8 +117,35 @@ public class VolunteerService {
 		}
 	}
 
+	public List<RecommendVolunteer> findAvailableVolunteer(RequestMatching request) {
+		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
+		LocalTime startTime = request.getStartTime().toLocalTime();
+		LocalDate date = request.getStartTime().toLocalDate();
+		Integer category = VolunteerType.getCategory(request.getVolunteerType());
+
+		List<Long> list = volunteerRepository.findAllByWeeklyAvailableTime(dayOfWeek, startTime, date, category,
+			request.getAddress().getDistrict()).stream().map(BaseUser::getId).toList();
+		// TODO : fastAPI와 연결
+
+		return list.stream().map(
+			id ->
+			{
+				Volunteer volunteer = volunteerRepository.findById(id).orElseThrow(
+					() -> new CustomException(NOT_FOUND_USER_ERROR)
+				);
+				return RecommendVolunteer.of(
+					volunteer.getName(),
+					volunteer.getVolunteerActivities().size() * 3,
+					volunteer.getId(),
+					volunteer.getProfileImage()
+				);
+			}
+		).toList();
+	}
+
 	@Transactional
 	public ResponseMatchedUserInfo matchingIfDayOfWeekTimeMatched(RequestMatching request, Elderly elderly) {
+		// TODO : 추천 때 봉사를 저장했기 때문에 중복저장되는 문제 발생
 		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
 		LocalTime startTime = request.getStartTime().toLocalTime();
 		LocalDate date = request.getStartTime().toLocalDate();
@@ -165,5 +195,18 @@ public class VolunteerService {
 				);
 				return null; // 또는 throw new NoMatchingVolunteerException();
 			});
+	}
+
+	public ResponseAvailableVolunteerDetail getAvailableVolunteerDetail(Long volunteerId) {
+		Volunteer volunteer = volunteerRepository.findById(volunteerId).orElseThrow(
+			() -> new CustomException(NOT_FOUND_USER_ERROR)
+		);
+		return ResponseAvailableVolunteerDetail.of(
+			volunteer.getName(),
+			volunteer.getPhone(),
+			volunteer.getProfileImage(),
+			volunteer.getBio(),
+			volunteer.getVolunteerActivities().size() * 3
+		);
 	}
 }

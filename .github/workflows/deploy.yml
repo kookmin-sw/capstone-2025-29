@@ -1,10 +1,9 @@
-
-name : Deploy To EC2
+name: Deploy To EC2
 
 on:
   push:
     branches:
-      - feat/75
+      - feat/92
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -33,7 +32,7 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_SQS_QUEUE_NAME: ${{ secrets.AWS_SQS_QUEUE_NAME }}
           SECRET: ${{ secrets.SECRET }}
-#          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      #          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
 
       - name: AWS credential setup
         uses: aws-actions/configure-aws-credentials@v4

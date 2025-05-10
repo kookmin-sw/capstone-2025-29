@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
+import com.example.ongi_backend.user.Dto.ResponseRecommend;
 import com.example.ongi_backend.user.Service.ElderlyService;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
 
@@ -29,6 +30,14 @@ public class ElderlyController {
 	// TODO : 매칭 되었을 때 봉사자 정보 출력
 	public ResponseEntity<ResponseMatchedUserInfo> activityMatching(@RequestBody @Valid RequestMatching request, Principal principal) {
 		return ResponseEntity.ok(elderlyService.matching(request,
+			principal.getName()
+		));
+	}
+
+	@PostMapping("/matching/recommend")
+	@Operation(summary = "봉사자 추천", description = "봉사자 추천")
+	public ResponseEntity<ResponseRecommend> recommendVolunteer(@RequestBody @Valid RequestMatching request, Principal principal) {
+		return ResponseEntity.ok(elderlyService.recommendVolunteer(request,
 			principal.getName()
 		));
 	}
