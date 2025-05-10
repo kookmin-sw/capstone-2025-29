@@ -47,7 +47,7 @@ export const checkUsername = async (username, userType) => {
                 'Accept': 'application/json'
             }
         });
-        return response.data;
+        return response;
     } catch (error) {
         const errorMessage = error.response?.data?.message ||
             (error.response ? '아이디 중복 확인에 실패했습니다.' :
