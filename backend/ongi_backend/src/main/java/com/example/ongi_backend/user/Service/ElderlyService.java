@@ -8,6 +8,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import com.example.ongi_backend.chatBot.entity.ChatBot;
+import com.example.ongi_backend.chatBot.repository.ChatBotRepository;
+import com.example.ongi_backend.global.exception.ErrorCode;
+import com.example.ongi_backend.user.Dto.RequestModifyChatBot;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +40,7 @@ public class ElderlyService {
 	private final VolunteerService volunteerService;
 	private final UserService userService;
 	private final AwsSqsNotificationSender awsSqsNotificationSender;
+	private final ChatBotRepository chatBotRepository;
 
 	@Transactional
 	public ResponseMatchedUserInfo matching(RequestMatching request, String name) {
@@ -112,5 +117,19 @@ public class ElderlyService {
 				volunteerActivity.getStartTime().toLocalDate().isEqual(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime().toLocalDate())
 			).findAny().orElse(null);
 		return ResponseElderlyMainPage.of(currentVa == null ? null : CurrentMatching.ElderlyOf(currentVa));
+	}
+
+	@Transactional
+	public void updateElderlyChatBot(String username, RequestModifyChatBot request) {
+		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
+				() -> new CustomException(NOT_FOUND_USER_ERROR)
+		);
+		ChatBot chatBot = chatBotRepository.save(
+				ChatBot.builder()
+						.name(request.getName())
+						.profileImage(request.getProfileImage())
+						.build()
+		);
+		elderly.updateChatBot(chatBot);
 	}
 }

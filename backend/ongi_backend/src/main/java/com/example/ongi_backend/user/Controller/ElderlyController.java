@@ -2,14 +2,9 @@ package com.example.ongi_backend.user.Controller;
 
 import java.security.Principal;
 
+import com.example.ongi_backend.user.Dto.RequestModifyChatBot;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.ongi_backend.user.Dto.ResponseElderlyMainPage;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
@@ -55,5 +50,11 @@ public class ElderlyController {
 		elderlyService.cancelMatching(matchingId,
 			principal.getName()
 		);
+	}
+
+	@PatchMapping
+	public ResponseEntity<?> updateChatBot(Principal principal, @RequestBody RequestModifyChatBot request) {
+		elderlyService.updateElderlyChatBot(principal.getName(), request);
+		return ResponseEntity.ok("챗봇 저장");
 	}
 }
