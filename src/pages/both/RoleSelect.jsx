@@ -23,7 +23,7 @@ export default function RoleSelect() {
 
             <div className={styles.roleBox}>
                 <div
-                    className={`${styles.roleCard} ${styles.userCard} ${selectedRole === "user" ? styles.active : ""}`}
+                    className={`${styles.roleCard} ${styles.userCard} ${selectedRole === "elderly" ? styles.active : ""}`}
                     onClick={() => handleSelect("elderly")}
                 >
                     <p className={selectedRole === "elderly" ? styles.selectedText : ""}>앱 이용자<br />회원 가입</p>
@@ -36,7 +36,6 @@ export default function RoleSelect() {
                 >
                     <p className={selectedRole === "volunteer" ? styles.selectedText : ""}>봉사자<br />회원 가입</p>
                     <img src={selectedRole === "volunteer" ? "/volunteer-icon-purple.svg" : "/volunteer-icon.svg"} alt="봉사자" />
-
                 </div>
 
                 <div className={styles.arrowButton} onClick={() => {
@@ -48,10 +47,7 @@ export default function RoleSelect() {
                 }}>
                     <img src="/nextbtn.svg" alt="다음" />
                 </div>
-
             </div>
-
-
         </div>
     );
 }
