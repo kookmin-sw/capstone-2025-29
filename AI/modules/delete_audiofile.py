@@ -1,7 +1,7 @@
-import time
 import os
+import asyncio
 
-def delete_file_after_delay(file_path: str, delay: int = 600):
-    time.sleep(delay)  
+async def delete_file_after_delay(file_path: str, delay: int = 120):
+    await asyncio.sleep(delay)
     if os.path.exists(file_path):
         os.remove(file_path)

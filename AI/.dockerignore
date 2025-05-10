@@ -5,7 +5,6 @@ __pycache__/
 .env
 .vscode
 .idea
-tts_output/
 *.md
 *.log
 .DS_Store
