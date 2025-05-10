@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // ✅ 환경에 따라 API_BASE 설정
-const API_BASE = 'http://54.180.122.49:8080'
+const API_BASE = import.meta.env.MODE === 'production'
     ? import.meta.env.VITE_API_URL
     : ''; // 로컬에서는 프록시 사용을 위해 빈 문자열
 
