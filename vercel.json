@@ -6,6 +6,10 @@
       "destination": "http://54.180.122.49:8080/api/$1"
     },
     {
+      "source": "/chatapi/(.*)",
+      "destination": "http://43.202.0.116:8000/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

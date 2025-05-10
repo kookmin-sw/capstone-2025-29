@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const BASE_URL = "http://43.202.0.116:8000"; 
+// ✅ 채팅 API 서버 전용 프록시 경로
+const CHAT_API_BASE = import.meta.env.MODE === "production" ? "/chatapi" : "";
 
+// 채팅 요청
 export const sendChatMessage = async (text, accessToken) => {
     try {
-        // 텍스트 응답 받기
         const response = await axios.post(
-            `${BASE_URL}/chat/text`,
+            `${CHAT_API_BASE}/chat/text`,
             { text },
             {
                 headers: {
-
                     Authorization: `Bearer ${accessToken}`,
                     "Content-Type": "application/json"
                 }
@@ -20,32 +20,24 @@ export const sendChatMessage = async (text, accessToken) => {
         console.log("API 응답:", response.data.data.response);
         const { text: responseText, audio_path } = response.data.data.response;
 
-        // 전체 오디오 경로 구성
-        const audioUrl = `${BASE_URL}${audio_path}`;
+        // 오디오도 같은 경로로 프록시 경유
+        const audioUrl = `${CHAT_API_BASE}${audio_path}`;
 
-        // 오디오 파일 fetch + blob 생성
         let audioBlobUrl = null;
         try {
-            const audioResponse = await fetch(audioUrl, {
-                headers: {
-                    "ngrok-skip-browser-warning": "true"
-                }
-            });
-
+            const audioResponse = await fetch(audioUrl);
             if (!audioResponse.ok) {
                 throw new Error("오디오 fetch 실패");
             }
-
             const blob = await audioResponse.blob();
-            audioBlobUrl = URL.createObjectURL(blob); // blob → 재생 가능한 URL
-
+            audioBlobUrl = URL.createObjectURL(blob);
         } catch (fetchError) {
             console.error("오디오 fetch 실패:", fetchError);
         }
 
         return {
             text: responseText,
-            audioUrl: audioBlobUrl // blob URL 반환
+            audioUrl: audioBlobUrl
         };
     } catch (error) {
         console.error("채팅 API 호출 실패:", error.response?.data || error.message);
