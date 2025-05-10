@@ -3,6 +3,7 @@ package com.example.ongi_backend.user.Service;
 import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
+import java.security.Principal;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -11,6 +12,7 @@ import com.example.ongi_backend.chatBot.entity.ChatBot;
 import com.example.ongi_backend.chatBot.repository.ChatBotRepository;
 import com.example.ongi_backend.global.exception.ErrorCode;
 import com.example.ongi_backend.user.Dto.RequestModifyChatBot;
+import com.example.ongi_backend.user.Dto.ResponseChatBot;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,5 +132,16 @@ public class ElderlyService {
 						.build()
 		);
 		elderly.updateChatBot(chatBot);
+	}
+
+	public ResponseChatBot getChatBot(String username) {
+		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
+				() -> new CustomException(NOT_FOUND_USER_ERROR)
+		);
+		ChatBot chatBot = elderly.getChatBot();
+		return ResponseChatBot.builder()
+				.name(chatBot.getName())
+				.profileImage(chatBot.getProfileImage())
+				.build();
 	}
 }

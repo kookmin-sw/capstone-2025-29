@@ -3,6 +3,7 @@ package com.example.ongi_backend.user.Controller;
 import java.security.Principal;
 
 import com.example.ongi_backend.user.Dto.RequestModifyChatBot;
+import com.example.ongi_backend.user.Dto.ResponseChatBot;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,5 +57,11 @@ public class ElderlyController {
 	public ResponseEntity<?> updateChatBot(Principal principal, @RequestBody RequestModifyChatBot request) {
 		elderlyService.updateElderlyChatBot(principal.getName(), request);
 		return ResponseEntity.ok("챗봇 저장");
+	}
+
+	@GetMapping("/chatBot")
+	public ResponseEntity<?> getChatBotByElderly(Principal principal) {
+		ResponseChatBot response = elderlyService.getChatBot(principal.getName());
+		return ResponseEntity.ok(response);
 	}
 }
