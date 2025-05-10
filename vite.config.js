@@ -74,9 +74,5 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    outDir: 'dist', // 빌드 결과물이 저장될 디렉토리
-  },
-
 
 })
