@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "http://54.180.122.49:8080/api/$1"
+    }
+  ],
   "routes": [
     {
       "handle": "filesystem"
