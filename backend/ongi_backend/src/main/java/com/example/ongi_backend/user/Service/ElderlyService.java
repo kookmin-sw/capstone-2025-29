@@ -4,7 +4,6 @@ import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -43,13 +42,13 @@ public class ElderlyService {
 			throw new CustomException(POST_TIME_ERROR);
 		}
 
-		//TODO : 현재 로그인된 노인의 정보를 가져오는 방법이 따로 있으면 수정
-		Elderly elderly = elderlyRepository.findByUsername(name)
-			.orElseThrow(() -> new CustomException(NOT_FOUND_USER_ERROR));
+		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
+		if(volunteerActivityService.existVolunteerActivity(elderly, request.getStartTime().toLocalDate()) != null){
+			throw new CustomException(ALREADY_REGISTERED_ERROR);
+		}
 
-		ResponseMatchedUserInfo responseMatchedUserInfo = volunteerService.matchingIfDayOfWeekTimeMatched(request,
+		return volunteerService.matchingIfDayOfWeekTimeMatched(request,
 			elderly);
-		return responseMatchedUserInfo;
 
 	}
 

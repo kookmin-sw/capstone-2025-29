@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 
@@ -26,4 +27,7 @@ public interface VolunteerActivityRepository extends JpaRepository<VolunteerActi
 
 	@Query("SELECT va FROM VolunteerActivity va where va.volunteer = :volunteer AND date_format(va.startTime, '%Y-%m-%d') = :startTime")
 	Optional<VolunteerActivity> findByStartTimeAndVolunteer(LocalDate startTime, Volunteer volunteer);
+
+	@Query("SELECT va FROM VolunteerActivity va JOIN FETCH va.elderly WHERE va.elderly = :elderly AND date_format(va.startTime, '%Y-%m-%d') = :date")
+	Optional<VolunteerActivity> findVaByElderlyAndDate(Elderly elderly, LocalDate date);
 }
