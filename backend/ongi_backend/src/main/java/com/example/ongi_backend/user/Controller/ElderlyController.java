@@ -54,13 +54,15 @@ public class ElderlyController {
 	}
 
 	@PatchMapping
+	@Operation(summary = "ChatBot 이름 저장", description = "챗봇 저장")
 	public ResponseEntity<?> updateChatBot(Principal principal, @RequestBody RequestModifyChatBot request) {
 		elderlyService.updateElderlyChatBot(principal.getName(), request);
 		return ResponseEntity.ok("챗봇 저장");
 	}
 
 	@GetMapping("/chatBot")
-	public ResponseEntity<?> getChatBotByElderly(Principal principal) {
+	@Operation(summary = "챗봇 이름 불러오기", description = "챗봇 불러오기")
+	public ResponseEntity<ResponseChatBot> getChatBotByElderly(Principal principal) {
 		ResponseChatBot response = elderlyService.getChatBot(principal.getName());
 		return ResponseEntity.ok(response);
 	}
