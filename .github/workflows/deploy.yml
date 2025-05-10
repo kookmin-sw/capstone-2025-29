@@ -43,6 +43,6 @@ jobs:
             ai-server
       - name: Run ai-server container
         run: |
-          docker run -d --name ai-server --network ai-net -p 8000:8000 \
+          docker run -d --restart always --name ai-server -p 8000:8000 \
             -v ${{ github.workspace }}/AI/tts_output:/app/tts_output \
             ai-server
