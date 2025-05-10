@@ -1,16 +1,15 @@
 import axios from 'axios';
 
+// ✅ 환경에 따라 API_BASE 설정
+const API_BASE = import.meta.env.MODE === 'production'
+    ? import.meta.env.VITE_API_URL
+    : ''; // 로컬에서는 프록시 사용을 위해 빈 문자열
 
 // ✅ 로그인 API
 export const login = async (username, password, userType) => {
     try {
-        const response = await axios.get('/api/login', {
-            params: {
-                username: username,
-                password: password,
-                userType: userType
-            },
-        }, {
+        const response = await axios.get(`${API_BASE}/api/login`, {
+            params: { username, password, userType },
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -24,7 +23,6 @@ export const login = async (username, password, userType) => {
 
         localStorage.setItem('accessToken', response.data.accessToken);
         localStorage.setItem('userType', userType);
-
     } catch (error) {
         const errorMessage = error.response?.data?.message ||
             (error.response ? '로그인에 실패했습니다.' :
@@ -40,7 +38,7 @@ export const login = async (username, password, userType) => {
 // ✅ 아이디 중복 확인 API
 export const checkUsername = async (username, userType) => {
     try {
-        const response = await axios.get('/api/user/username', {
+        const response = await axios.get(`${API_BASE}/api/user/username`, {
             params: { username, userType },
             headers: {
                 'Content-Type': 'application/json',
@@ -63,7 +61,7 @@ export const checkUsername = async (username, userType) => {
 // ✅ 회원가입 API
 export const registerUser = async (userData) => {
     try {
-        const response = await axios.post('/api/user', userData, {
+        const response = await axios.post(`${API_BASE}/api/user`, userData, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -87,7 +85,7 @@ export const fetchUserInfo = async (userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.get('/api/user', {
+        const response = await axios.get(`${API_BASE}/api/user`, {
             params: { userType },
             headers: {
                 'Content-Type': 'application/json',
@@ -111,7 +109,7 @@ export const updateUserInfo = async (userData) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.put('/api/user', userData, {
+        const response = await axios.put(`${API_BASE}/api/user`, userData, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
@@ -133,7 +131,7 @@ export const checkPassword = async (password, userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.get('/api/user/password', {
+        const response = await axios.get(`${API_BASE}/api/user/password`, {
             params: { password, userType },
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -156,7 +154,7 @@ export const updatePassword = async (password, userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.patch('/api/user', {
+        const response = await axios.patch(`${API_BASE}/api/user`, {
             password,
             userType
         }, {
