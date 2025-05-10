@@ -5,12 +5,6 @@ import MatchCard from "../../components/MatchCard";
 import { useNavigate } from "react-router-dom";
 import { fetchMatchingList } from "../../api/VolunteerApi"; // API 호출 함수 가져오기
 
-// 날짜 형식 변환 함수
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, "0")}월 ${String(date.getDate()).padStart(2, "0")}일`;
-};
-
 export default function MatchingList() {
     const navigate = useNavigate();
     const [matchData, setMatchData] = useState([]); // 매칭 내역 데이터 상태
@@ -21,26 +15,19 @@ export default function MatchingList() {
     useEffect(() => {
         const loadMatchingList = async () => {
             try {
-                const data = await fetchMatchingList(); // API 호출
-                const now = Date.now(); // 현재 시간 (타임스탬프)
 
+                const data = await fetchMatchingList(); // API 호출
+                console.log("Matching data:", data);
                 const formattedData = data.map((item) => ({
                     id: item.id,
                     name: item.elderlyName,
-                    date: formatDate(item.startTime), // 날짜 형식 변환
+                    date: new Date(item.startTime).toLocaleDateString(),
                     time: new Date(item.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
                     tags: [item.type, item.districtType],
-                    icon: item.type === "CULTURE" ? "/culture.svg" : item.type === "HOUSING" ? "/housing.svg" : "/medical.svg",
-                    timestamp: new Date(item.startTime).getTime(), // 타임스탬프 추가
+                    icon: item.type === "CULTURE" ? "/book.svg" : item.type === "HOUSING" ? "/housing.svg" : "/medical.svg",
                 }));
 
-                // 현재 날짜보다 이전의 데이터 필터링
-                const filteredData = formattedData.filter((item) => item.timestamp >= now);
-
-                // 현재 날짜와 가까운 순으로 정렬
-                const sortedData = filteredData.sort((a, b) => Math.abs(a.timestamp - now) - Math.abs(b.timestamp - now));
-
-                setMatchData(sortedData);
+                setMatchData(formattedData);
                 setLoading(false);
             } catch (err) {
                 console.error("Failed to load matching list:", err);
@@ -51,6 +38,9 @@ export default function MatchingList() {
 
         loadMatchingList();
     }, []); // 빈 배열로 설정
+
+    if (loading) return <div>로딩 중...</div>;
+    if (error) return <div>에러 발생: {error}</div>;
 
     return (
         <div className={styles.container}>

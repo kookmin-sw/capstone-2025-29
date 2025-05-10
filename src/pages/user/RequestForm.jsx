@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./RequestForm.module.css";
 import Topbar from "../../components/Topbar";
 import MatchCard from "../../components/MatchCard";
-
+import { requestElderlyMatching } from "../../api/UserApi";
 /**
  * 도움 요청 폼 컴포넌트
  * 4단계로 구성된 폼을 통해 사용자의 도움 요청 정보를 수집
@@ -16,7 +16,7 @@ export default function RequestForm() {
     useEffect(() => {
         const updateDateTime = () => {
             const now = new Date();
-            
+
             // 날짜 형식: YYYY년 MM월 DD일
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -120,15 +120,54 @@ export default function RequestForm() {
      * - 최종 데이터를 콘솔에 출력
      * - 완료 알림 후 도움센터 페이지로 이동
      */
-    const handleSubmit = () => {
-        const finalData = {
-            ...mockData,
-            pet: formData.pet,
-            request: formData.requestText,
+    const handleSubmit = async () => {
+        // formData를 API에 맞게 변환
+        const requestBody = {
+            volunteerType: formData.category === "의료" ? "HEALTH"
+                : formData.category === "주거" ? "HOUSING"
+                    : formData.category === "문화" ? "CULTURE"
+                        : formData.category === "교육" ? "EDUCATION"
+                            : "",
+            addDescription: formData.requestText || "추가 요청사항 없음",
+            startTime: formData.date && formData.time
+                ? `${formData.date}T${formData.time}:00`
+                : "",
+            animalType: formData.pet.includes("개") ? "dog"
+                : formData.pet.includes("고양이") ? "cat"
+                    : formData.pet.includes("기타") ? "etc"
+                        : "none",
+            address: {
+                district: "GANGNAM", // 실제 주소 데이터로 교체 필요
+                detail: "역삼동 123-45", // 실제 주소 데이터로 교체 필요
+            }
         };
-        console.log("최종 제출 데이터:", finalData);
-        alert("신청이 완료되었습니다!");
-        navigate('/HelpCenter');
+        // 시간 유효성 검사
+        if (requestBody.startTime) {
+            const now = new Date();
+            const selected = new Date(requestBody.startTime);
+            if (selected <= now) {
+                alert("현재 시각 이후의 시간만 선택할 수 있습니다.");
+                return;
+            }
+        }
+        console.log(requestBody)
+        try {
+            const response = await requestElderlyMatching(requestBody);
+
+            console.log('requestform', response)
+
+            alert("신청이 완료되었습니다!");
+            navigate('/HelpCenter');
+        } catch (error) {
+            console.error("신청 에러 상세:", error);
+            if (error.message) {
+                console.error("에러 메시지:", error.message);
+            }
+            if (error.status) {
+                console.error("에러 상태코드:", error.status);
+            }
+            alert("신청에 실패했습니다. 다시 시도해주세요.\n" + (error.message || ""));
+        }
     };
 
     return (
@@ -174,6 +213,7 @@ export default function RequestForm() {
                             className={styles.dateInput}
                             type="date"
                             value={formData.date}
+                            min={new Date().toISOString().split('T')[0]}
                             onChange={(e) => handleChange("date", e.target.value)}
                         />
                         <input
@@ -227,28 +267,49 @@ export default function RequestForm() {
             {/* STEP 4: 최종 확인 및 제출 */}
             {step === 4 && (
                 <>
-                    {/* 매칭된 봉사자 정보 표시 */}
+                    {/* 신청자 정보 카드 */}
                     <div className={styles.card}>
                         <div className={styles.top}>
-                            <img src="/book.svg" className={styles.icon} />
+                            <img
+                                src={
+                                    formData.category === "의료" ? "/medical.svg" :
+                                        formData.category === "주거" ? "/housing.svg" :
+                                            formData.category === "문화" ? "/culture.svg" :
+                                                formData.category === "교육" ? "/education.svg" :
+                                                    "/book.svg" // fallback
+                                }
+                                className={styles.icon}
+                                alt={formData.category}
+                            />
                             <div>
                                 <div className={styles.name}><strong>김춘배</strong>님의 신청</div>
                                 <div className={styles.dateTime}>
-                                    <span>{currentDate}</span>
+                                    <span>
+                                        {
+                                            formData.date
+                                                ? `${formData.date.slice(0, 4)}년 ${formData.date.slice(5, 7)}월 ${formData.date.slice(8, 10)}일`
+                                                : ""
+                                        }
+                                    </span>
                                     <span className={styles.divider}>|</span>
-                                    <span>{currentTime}</span>
+                                    <span>{formData.time}</span>
                                 </div>
                             </div>
                         </div>
                         <div className={styles.tags}>
+                            {formData.category && (
+                                <span className={styles.tag}>{formData.category}</span>
+                            )}
                         </div>
                     </div>
 
-                    {/* 봉사자 주소 정보 */}
+                    {/* 주소 하드코딩 */}
                     <div className={styles.address}>
-                        <p>{mockData.address1}</p>
-                        <p>{mockData.address2}</p>
+                        <p>서울특별시 강남구</p>
+                        <p>역삼동 123-45</p>
                     </div>
+
+
 
                     {/* 선택된 반려동물 정보 표시 */}
                     <div className={styles.section}>

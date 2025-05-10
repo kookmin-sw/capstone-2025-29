@@ -4,18 +4,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   base: '/',
-  build: {
-    target: 'esnext',
-    outDir: 'dist',
-    assetsDir: 'assets',
-    sourcemap: false,
-    minify: 'terser',
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
-  },
   plugins: [
     react(),
     VitePWA({
@@ -83,7 +71,9 @@ export default defineConfig({
       '/api': {
         target: 'http://54.180.122.49:8080',
         changeOrigin: true,
-      }
-    }
+      },
+    },
   }
+
+
 })

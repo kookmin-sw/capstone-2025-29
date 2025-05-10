@@ -78,9 +78,13 @@ export default function AvailableTime() {
             return;
         }
 
+        if (selectedTypes.length === 0) {
+            alert("봉사 유형을 선택해주세요.");
+            return;
+        }
+
         // 선택된 요일들의 시간 정보 수집
         let schedules = [];
-        const availableTimes = {};  // 로컬 스토리지용 데이터
 
         for (const day of selectedDays) {
             const timeInfo = timeRanges[day];
@@ -107,12 +111,6 @@ export default function AvailableTime() {
                 dayOfWeek: dayOfWeek,
                 time: timeStr
             });
-
-            // 로컬 스토리지용 데이터
-            if (!availableTimes[dayOfWeek]) {
-                availableTimes[dayOfWeek] = [];
-            }
-            availableTimes[dayOfWeek].push(timeStr);
         }
 
         if (schedules.length === 0) {
@@ -120,14 +118,21 @@ export default function AvailableTime() {
             return;
         }
 
+        // 선택된 봉사 유형을 숫자로 변환하고 합산
+        const categoryMapping = {
+            medical: 1,   // 의료
+            culture: 2,   // 문화
+            education: 4, // 교육
+            housing: 8    // 주거
+        };
+        const category = selectedTypes.reduce((sum, type) => sum + categoryMapping[type], 0);
+
         try {
             // 서버에 봉사 가능 시간 전송
             const response = await setAvailableTimes({
                 schedules: schedules,
-                category: 1
+                category: category // 선택된 봉사 유형의 합산 값 전송
             });
-
-
 
             alert("신청이 완료되었습니다!");
             navigate('/volunteermain');

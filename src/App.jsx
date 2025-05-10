@@ -31,6 +31,7 @@ import ChatCenter from './pages/user/ChatCenter';
 import ChatPage from './pages/user/ChatPage';
 import NotificationPage from './pages/both/NotificationPage';
 
+
 /* 메인 App 컴포넌트 */
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
           <Route path="/setname" element={<SetName />} />
           <Route path="/chatcenter" element={<ChatCenter />} />
           <Route path="/chatpage" element={<ChatPage />} />
+
           {/* 404 페이지 - 정의되지 않은 경로로 접근 시 표시 */}
           <Route path="*" element={<div>not found</div>} />
         </Routes>
@@ -73,3 +75,4 @@ function App() {
 }
 
 export default App
+

@@ -115,3 +115,27 @@
     max-width: 300px;
     height: 6vh;
 }
+
+
+/* 토글 디자인 */
+.toggleWrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.toggleBtn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.active {
+    background-color: #6D57DE;
+    color: white;
+    border-color: #6D57DE;
+}

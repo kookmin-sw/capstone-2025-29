@@ -1,148 +1,215 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
 import styles from "./ChatPage.module.css";
-
-// 예시 채팅 데이터 - 초기 대화 내용을 정의
-const exampleMessages = [
-    {
-        id: 1,
-        sender: "ai",
-        content: "안녕하세요\n챗봇과 대화하며 마음을 나누고,\n감정을 분석해보세요.",
-        timestamp: "오전 10:30",
-        name: "홍길동"
-    },
-    {
-        id: 2,
-        sender: "user",
-        content: "안녕하세요",
-        timestamp: "오전 10:31"
-    },
-    {
-        id: 3,
-        sender: "ai",
-        content: "안녕하세요",
-        timestamp: "오전 10:31",
-        name: "홍길동"
-    },
-   
-];
+import { sendChatMessage } from "../../api/ChatApi";
 
 const ChatPage = () => {
-    // 라우터 관련 훅
     const navigate = useNavigate();
-    const { chatId } = useParams();
 
-    // 상태 관리
-    const [messages, setMessages] = useState(exampleMessages);  // 채팅 메시지 목록
-    const [input, setInput] = useState("");                     // 입력 중인 메시지
-    const messageEndRef = useRef(null);                         // 메시지 스크롤을 위한 ref
-    const lastMessageId = useRef(exampleMessages.length);  // 마지막 메시지 ID를 추적하기 위한 ref
-    const [isSending, setIsSending] = useState(false);  // 메시지 전송 중 상태 추가
+    const [messages, setMessages] = useState([]); // 전체 메시지
+    const [input, setInput] = useState(""); // 입력창 텍스트
+    const [isListening, setIsListening] = useState(false); // 🎤 마이크 상태
+    const [isSending, setIsSending] = useState(false); // 메시지 전송 중
+    const [userName, setUserName] = useState(""); // 사용자 이름
 
-    // 로컬 스토리지에서 사용자 이름 가져오기
-    const userName = localStorage.getItem('userName') || '홍길동';
+    const messageEndRef = useRef(null);
+    const lastMessageId = useRef(1);
+    const inputRef = useRef(null);
+    const accessToken = localStorage.getItem("accessToken");
 
-    // 메시지 전송 핸들러
-    const sendMessage = () => {
-        if (input.trim() === '' || isSending) return;  // 전송 중이거나 빈 메시지면 리턴
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = useRef(null);
+    const transcriptRef = useRef(""); // 인식 결과 저장용
 
-        setIsSending(true);  // 전송 시작
+    useEffect(() => {
+        recognition.current = new SpeechRecognition();
+        recognition.current.continuous = true;
+        recognition.current.interimResults = true;
+        recognition.current.lang = "ko-KR";
+    }, []);
 
-        const newMessageId = lastMessageId.current + 1;
-        const newMessage = {
-            id: newMessageId,
-            sender: "user",
-            content: input,
-            timestamp: new Date().toLocaleTimeString('ko-KR', { hour: 'numeric', minute: 'numeric', hour12: true })
-        };
+    const toggleListening = () => {
+        if (!recognition.current) return;
 
-        lastMessageId.current = newMessageId;
-        setMessages(prev => [...prev, newMessage]);
-        setInput("");
-
-        // AI 응답 시뮬레이션
-        setTimeout(() => {
-            const aiResponseId = lastMessageId.current + 1;
-            const aiResponse = {
-                id: aiResponseId,
-                sender: "ai",
-                content: "네, 말씀하신 내용에 대해 더 자세히\n이야기해주시겠어요?",
-                timestamp: new Date().toLocaleTimeString('ko-KR', { hour: 'numeric', minute: 'numeric', hour12: true }),
-                name: userName
+        if (isListening) {
+            recognition.current.stop();
+            recognition.current.onend = () => {
+                setIsListening(false);
+                transcriptRef.current = "";
             };
-            lastMessageId.current = aiResponseId;
-            setMessages(prev => [...prev, aiResponse]);
-            setIsSending(false);  // 전송 완료
-        }, 1000);
-    };
+        } else {
+            transcriptRef.current = "";
+            recognition.current.start();
+            setIsListening(true);
 
-    // 메시지 입력 필드 변경 핸들러
-    const handleInputChange = (e) => {
-        setInput(e.target.value);
-    };
+            recognition.current.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map((result) => result[0].transcript)
+                    .join("");
+                
+                transcriptRef.current = transcript;
+                setInput(transcript); // 입력창에만 표시
+            };
 
-    // Enter 키 입력 핸들러
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            if (!isSending) {  // 전송 중이 아닐 때만 메시지 전송
-                sendMessage();
-            }
+            recognition.current.onerror = (event) => {
+                console.error("음성 인식 오류:", event.error);
+                setIsListening(false);
+            };
         }
     };
 
-    // 새로운 메시지가 추가될 때마다 스크롤을 최신 메시지로 이동
     useEffect(() => {
-        messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        const storedUserName = localStorage.getItem("userName") || "사용자";
+        setUserName(storedUserName);
+
+        setMessages([
+            {
+                id: 1,
+                sender: "ai",
+                content: "안녕하세요\n챗봇과 대화하며 마음을 나누고,\n감정을 분석해보세요.",
+                timestamp: new Date().toLocaleTimeString("ko-KR", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                }),
+                name: storedUserName,
+            },
+        ]);
+    }, []);
+
+    const sendMessage = async () => {
+        if (input.trim() === "" || isSending) return;
+
+        if (isListening && recognition.current) {
+            recognition.current.stop();
+            recognition.current.onresult = null;
+            setIsListening(false);
+        }
+
+        setIsSending(true);
+
+        const userMessage = {
+            id: lastMessageId.current + 1,
+            sender: "user",
+            content: input,
+            timestamp: new Date().toLocaleTimeString("ko-KR", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+            }),
+            name: userName,
+        };
+        setMessages((prev) => [...prev, userMessage]);
+        lastMessageId.current += 1;
+
+        setInput("");
+        setTimeout(() => setInput(""), 0);
+
+        try {
+            const response = await sendChatMessage(input, accessToken);
+            const text = response.text;
+            const audio_path = response.audioUrl;
+
+            const aiMessage = {
+                id: lastMessageId.current + 1,
+                sender: "ai",
+                content: text,
+                audioPath: audio_path,
+                timestamp: new Date().toLocaleTimeString("ko-KR", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                }),
+                name: userName,
+            };
+            setMessages((prev) => [...prev, aiMessage]);
+            lastMessageId.current += 1;
+
+            const audio = new Audio(audio_path);
+            audio.play();
+        } catch (error) {
+            const errorMessage = {
+                id: lastMessageId.current + 1,
+                sender: "ai",
+                content: "죄송합니다. 현재 요청을 처리할 수 없습니다.",
+                timestamp: new Date().toLocaleTimeString("ko-KR", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                }),
+                name: userName,
+            };
+            setMessages((prev) => [...prev, errorMessage]);
+            lastMessageId.current += 1;
+        } finally {
+            setIsSending(false);
+        }
+    };
+
+    const handleInputChange = (e) => setInput(e.target.value);
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    };
+
+    useEffect(() => {
+        if (messageEndRef.current) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
     }, [messages]);
 
     return (
         <div className={styles.container}>
-            {/* 상단 네비게이션 바 */}
-            <Topbar title={userName} navigateTo ="/ChatCenter" />
+            <Topbar title="챗봇" navigateTo="/ChatCenter" />
 
-            {/* 채팅 메시지 컨테이너 */}
             <div className={styles.chatContainer}>
-                {/* 메시지 목록 */}
                 <div className={styles.messages}>
                     {messages.map((message) => (
                         <div
                             key={message.id}
-                            className={`${styles.messageRow} ${message.sender === 'user' ? styles.userMessageRow : styles.aiMessageRow}`}
+                            className={`${styles.messageRow} ${message.sender === "user" ? styles.userMessageRow : styles.aiMessageRow
+                                }`}
                         >
-                            {/* AI 메시지인 경우 프로필 섹션 표시 */}
-                            {message.sender === 'ai' && (
+                            {message.sender === "ai" && (
                                 <div className={styles.profileSection}>
                                     <div className={styles.profileImage}>
                                         <img src="/ai-icon.svg" alt="AI 프로필" />
                                     </div>
-                                    <span className={styles.profileName}>{userName}</span>
+                                    <span className={styles.profileName}>{message.name}</span>
                                 </div>
                             )}
-                            {/* 메시지 내용 */}
-                            <div className={`${styles.message} ${message.sender === 'user' ? styles.userMessage : styles.aiMessage}`}>
+                            <div
+                                className={`${styles.message} ${message.sender === "user" ? styles.userMessage : styles.aiMessage
+                                    }`}
+                            >
                                 <div className={styles.messageContent}>
                                     <p>{message.content}</p>
                                 </div>
                             </div>
                         </div>
                     ))}
-                    {/* 스크롤을 위한 빈 div */}
                     <div ref={messageEndRef} />
                 </div>
 
-                {/* 음성 입력 버튼 */}
+                {/* 🎤 마이크 버튼 */}
                 <div className={styles.centerMic}>
-                    <button className={styles.micButton}>
+                    <button
+                        className={`${styles.micButton} ${isListening ? styles.activeMic : ""}`}
+                        onClick={toggleListening}
+                    >
                         <img src="/mike-icon.svg" alt="음성 입력" />
                     </button>
                 </div>
 
-                {/* 메시지 입력 영역 */}
+                {/* 입력창 및 전송 버튼 */}
                 <div className={styles.inputContainer}>
                     <div className={styles.inputWrapper}>
                         <textarea
+                            ref={inputRef}
                             className={styles.input}
                             value={input}
                             onChange={handleInputChange}

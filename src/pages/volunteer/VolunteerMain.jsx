@@ -31,6 +31,12 @@ const formatTime = (time) => {
     return time;
 };
 
+// 날짜 형식 변환 함수
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월 ${String(date.getDate()).padStart(2, '0')}일`;
+};
+
 export default function VolunteerMain() {
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
@@ -41,7 +47,7 @@ export default function VolunteerMain() {
         const fetchUserInfo = async () => {
             try {
                 const data = await getUserInfo();
-                console.log('서버 응답:', data);
+                console.log("User Info:", data);
                 setUserInfo(data);
                 setError(null);
             } catch (err) {
@@ -55,7 +61,43 @@ export default function VolunteerMain() {
         };
 
         fetchUserInfo();
-    }, [navigate]);
+    }, []);
+
+    const renderButton = () => {
+        const { status, ...currentMatching } = userInfo.currentMatching;
+
+        if (status === 'PROGRESS') {
+            return (
+                <button
+                    className={styles.reviewBtn}
+                    onClick={() => navigate('/matchingdetail', { state: { matchId: currentMatching.matchingId } })}
+                >
+                    요청서 확인
+                </button>
+            );
+        } else if (status === 'REVIEWING') {
+            return (
+                <button
+                    className={styles.reviewBtn}
+                    onClick={() => navigate('/writereview', { state: { currentMatching } })}
+                >
+                    후기 작성
+                </button>
+            );
+        } else {
+            return (
+                <button
+                    className={styles.reviewBtn}
+                    onClick={() => navigate('/matchinglist')}
+                >
+                    매칭 내역
+                </button>
+            );
+        }
+    };
+
+    if (loading) return 
+    if (error) return 
 
     return (
         <div className={styles.container}>
@@ -76,10 +118,10 @@ export default function VolunteerMain() {
 
             {/* 프로필 카드 */}
             <div className={styles.profileCard}>
-                <img 
-                    src={userInfo?.volunteerInfo?.profileImage || "/profile.svg"} 
-                    className={styles.profileImage} 
-                    alt="Profile" 
+                <img
+                    src={userInfo?.volunteerInfo?.profileImage || "/profile.svg"}
+                    className={styles.profileImage}
+                    alt="Profile"
                 />
                 <div className={styles.profileInfo}>
                     <div className={styles.name}>{userInfo?.volunteerInfo?.name || '이름 없음'} 님</div>
@@ -110,7 +152,7 @@ export default function VolunteerMain() {
 
                         return (
                             <div className={styles.dayItem} key={day.id}>
-                                <div 
+                                <div
                                     className={`${styles.dayCircle} ${availableTime ? styles.active : styles.inactive}`}
                                 >
                                     {day.display}
@@ -130,8 +172,8 @@ export default function VolunteerMain() {
 
             {/* 매칭 정보 카드 */}
             <div className={styles.matchCard}>
-                {!userInfo?.currentMatching ? (
-                    // 매칭이 없는 경우
+                {!userInfo?.currentMatching || userInfo?.currentMatching.status === 'COMPLETED' ? (
+                    // 매칭이 없는 경우 또는 상태가 COMPLETE인 경우
                     <>
                         <p className={styles.matchName}>진행 중인 신청이 없습니다</p>
                         <button className={styles.reviewBtn} onClick={() => navigate('/matchinglist')}>
@@ -139,44 +181,19 @@ export default function VolunteerMain() {
                         </button>
                         <p className={styles.reviewInfo}>오늘의 일정은 더이상 없습니다.</p>
                     </>
-                ) : userInfo.currentMatching.status === 'REVIEWING' ? (
-                    // 매칭 검토 중인 경우
+                ) : (
+                    // 매칭이 있는 경우
                     <>
                         <p className={styles.matchName}>
                             <strong>{userInfo.currentMatching.otherName}</strong> 님과의 매칭
                         </p>
                         <p className={styles.matchTime}>
-                            {new Date(userInfo.currentMatching.startTime).toLocaleDateString()}  |  
+                            {formatDate(userInfo.currentMatching.startTime)} <span> | </span>
                             {new Date(userInfo.currentMatching.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
-                        <button 
-                            className={styles.reviewBtn}
-                            onClick={() => navigate('/review-request')}
-                        >
-                            요청서 확인
-                        </button>
+                        {renderButton()}
                         <p className={styles.reviewInfo}>
                             오늘의 일정! 한번 더 확인하고 방문해요!
-                        </p>
-                    </>
-                ) : (
-                    // 매칭이 완료된 경우
-                    <>
-                        <p className={styles.matchName}>
-                            <strong>{userInfo.currentMatching.otherName}</strong> 님과의 매칭
-                        </p>
-                        <p className={styles.matchTime}>
-                            {new Date(userInfo.currentMatching.startTime).toLocaleDateString()}  |  
-                            {new Date(userInfo.currentMatching.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </p>
-                        <button 
-                            className={styles.reviewBtn}
-                            onClick={() => navigate('/writereview')}
-                        >
-                            후기 작성
-                        </button>
-                        <p className={styles.reviewInfo}>
-                            후기를 완료 후 1시간 내에 작성해야 봉사시간이 인정됩니다.
                         </p>
                     </>
                 )}

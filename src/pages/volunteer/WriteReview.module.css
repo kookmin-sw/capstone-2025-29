@@ -25,7 +25,7 @@
 }
 
 .matchDate {
-    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    font-size: clamp(0rem, 0.85rem, 1.1rem);
     color: #666;
 }
 
@@ -66,7 +66,7 @@
     display: flex;
     overflow-x: auto;
     gap: 3vw;
-    padding: 0 0 2vh 0;
+    margin-bottom: 3vh;
 }
 
 .previewImage {
@@ -129,7 +129,7 @@
 
 /* 후기 작성 */
 .reviewSection {
-    margin-top: 2vh;
+
     width: 100%;
 }
 

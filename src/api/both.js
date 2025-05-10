@@ -1,32 +1,29 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  
 
 
-// 로그인 API
+// ✅ 로그인 API
 export const login = async (username, password, userType) => {
     try {
-
         const response = await axios.get('/api/login', {
             params: {
-                username : username,
-                password : password,
-                userType : userType
+                username: username,
+                password: password,
+                userType: userType
             },
         }, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            withCredentials: false 
+            withCredentials: false
         });
 
         if (!response.data?.accessToken) {
             throw { status: 400, message: '로그인 실패: 서버 응답에 토큰이 없습니다.' };
         }
 
-        // JWT 저장
         localStorage.setItem('accessToken', response.data.accessToken);
-
+        localStorage.setItem('userType', userType);
 
     } catch (error) {
         const errorMessage = error.response?.data?.message ||
@@ -40,7 +37,7 @@ export const login = async (username, password, userType) => {
     }
 };
 
-// 아이디 중복 확인 API
+// ✅ 아이디 중복 확인 API
 export const checkUsername = async (username, userType) => {
     try {
         const response = await axios.get('/api/user/username', {
@@ -63,7 +60,7 @@ export const checkUsername = async (username, userType) => {
     }
 };
 
-// 회원가입 API
+// ✅ 회원가입 API
 export const registerUser = async (userData) => {
     try {
         const response = await axios.post('/api/user', userData, {
@@ -85,3 +82,97 @@ export const registerUser = async (userData) => {
     }
 };
 
+// ✅ 유저 정보 불러오기 API
+export const fetchUserInfo = async (userType) => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+        const response = await axios.get('/api/user', {
+            params: { userType },
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || '유저 정보를 불러오는 데 실패했습니다.';
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};
+
+// ✅ 유저 정보 수정 API
+export const updateUserInfo = async (userData) => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+        const response = await axios.put('/api/user', userData, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || '유저 정보 수정에 실패했습니다.';
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};
+
+// ✅ 현재 비밀번호 확인 API
+export const checkPassword = async (password, userType) => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+        const response = await axios.get('/api/user/password', {
+            params: { password, userType },
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || '현재 비밀번호가 올바르지 않습니다.';
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};
+
+// ✅ 비밀번호 변경 API
+export const updatePassword = async (password, userType) => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+        const response = await axios.patch('/api/user', {
+            password,
+            userType
+        }, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || '비밀번호 변경에 실패했습니다.';
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};
