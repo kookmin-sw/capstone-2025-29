@@ -4,15 +4,10 @@
     {
       "source": "/api/(.*)",
       "destination": "http://54.180.122.49:8080/api/$1"
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
     },
     {
-      "src": "/.*",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
