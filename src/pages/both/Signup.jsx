@@ -55,7 +55,9 @@ export default function Signup() {
             return;
         }
         try {
-            await checkUsername(formValues.id, selectedRole);
+            const response = await checkUsername(formValues.id, selectedRole);
+            console.log('중복 확인 응답:', response);
+            
             setIdChecked(true);
             alert('사용 가능한 아이디입니다.');
         } catch (error) {

@@ -69,7 +69,7 @@ export const registerUser = async (userData) => {
             },
             withCredentials: false,
         });
-        return response.data;
+        return response;
     } catch (error) {
         const errorMessage = error.response?.data?.message ||
             (error.response ? '회원가입에 실패했습니다.' :
