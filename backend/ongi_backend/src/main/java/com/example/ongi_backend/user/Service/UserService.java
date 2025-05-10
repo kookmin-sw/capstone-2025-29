@@ -57,6 +57,7 @@ public class UserService implements UserDetailsService {
                     .fcmToken(userRegisterDto.getPhoneCode())
                     .username(userRegisterDto.getUsername())
                     .password(passwordEncoder.encode(userRegisterDto.getPassword()))
+                    .bio(userRegisterDto.getBio())
                     .build();
             volunteerRepository.save(volunteer);
         } else {

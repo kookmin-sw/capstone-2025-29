@@ -3,14 +3,14 @@ package com.example.ongi_backend.user.Service;
 import static com.example.ongi_backend.global.entity.VolunteerStatus.*;
 import static com.example.ongi_backend.global.exception.ErrorCode.*;
 
-import java.security.Principal;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import com.example.ongi_backend.chatBot.entity.ChatBot;
 import com.example.ongi_backend.chatBot.repository.ChatBotRepository;
-import com.example.ongi_backend.global.exception.ErrorCode;
 import com.example.ongi_backend.user.Dto.RequestModifyChatBot;
 import com.example.ongi_backend.user.Dto.ResponseChatBot;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,8 @@ import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.ResponseElderlyMainPage;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
+import com.example.ongi_backend.user.Dto.RecommendVolunteer;
+import com.example.ongi_backend.user.Dto.ResponseRecommend;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
@@ -62,10 +64,7 @@ public class ElderlyService {
 	@Transactional
 	public void cancelMatching(Long id, String username) {
 		VolunteerActivity findVolunteerActivity = volunteerActivityService.findById(id);
-		// TODO : 현재 로그인된 노인의 정보를 가져오는 방법이 따로 있으면 수정
-		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
-			() -> new CustomException(NOT_FOUND_USER_ERROR)
-		);
+		Elderly elderly = (Elderly)userService.findUserByUserName(username, "elderly");
 		if(!findVolunteerActivity.getElderly().equals(elderly)) {
 			throw new CustomException(ACCESS_DENIED_ERROR);
 		}
@@ -139,5 +138,18 @@ public class ElderlyService {
 				.name(chatBot.getName())
 				.profileImage(chatBot.getProfileImage())
 				.build();
+	}
+
+	@Transactional
+	public ResponseRecommend recommendVolunteer(RequestMatching request, String name) {
+		if(Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds() < 0L) {
+			throw new CustomException(POST_TIME_ERROR);
+		}
+		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
+
+		VolunteerActivity volunteerActivity = volunteerActivityService.addVolunteerActivity(request, elderly);
+
+		List<RecommendVolunteer> availableVolunteer = volunteerService.findAvailableVolunteer(request);
+		return ResponseRecommend.of(availableVolunteer, volunteerActivity.getId());
 	}
 }

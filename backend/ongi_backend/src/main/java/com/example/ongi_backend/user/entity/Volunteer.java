@@ -21,6 +21,7 @@ public class Volunteer extends BaseUser {
 	@OneToMany(mappedBy = "volunteer", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<WeeklyAvailableTime> weeklyAvailableTimes = new ArrayList<>();
 	private Integer volunteerCategory;
+	private String bio;
 	public void addWeeklyAvailableTime(List<WeeklyAvailableTime> weeklyAvailableTime) {
 		weeklyAvailableTimes.clear();
 		weeklyAvailableTimes.addAll(weeklyAvailableTime);

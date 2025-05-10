@@ -6,7 +6,6 @@ import static com.example.ongi_backend.global.exception.ErrorCode.*;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -22,10 +21,13 @@ import com.example.ongi_backend.global.entity.VolunteerInfo;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
+import com.example.ongi_backend.user.Dto.ResponseAvailableVolunteerDetail;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
+import com.example.ongi_backend.user.Dto.RecommendVolunteer;
 import com.example.ongi_backend.user.Dto.ResponseVolunteerMainPage;
 import com.example.ongi_backend.global.entity.Schedules;
 import com.example.ongi_backend.user.Repository.VolunteerRepository;
+import com.example.ongi_backend.user.entity.BaseUser;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
@@ -119,6 +121,32 @@ public class VolunteerService {
 		}
 	}
 
+	public List<RecommendVolunteer> findAvailableVolunteer(RequestMatching request) {
+		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
+		LocalTime startTime = request.getStartTime().toLocalTime();
+		LocalDate date = request.getStartTime().toLocalDate();
+		Integer category = VolunteerType.getCategory(request.getVolunteerType());
+
+		List<Long> list = volunteerRepository.findAllByWeeklyAvailableTime(dayOfWeek, startTime, date, category,
+			request.getAddress().getDistrict()).stream().map(BaseUser::getId).toList();
+		// TODO : fastAPI와 연결
+
+		return list.stream().map(
+			id ->
+			{
+				Volunteer volunteer = volunteerRepository.findById(id).orElseThrow(
+					() -> new CustomException(NOT_FOUND_USER_ERROR)
+				);
+				return RecommendVolunteer.of(
+					volunteer.getName(),
+					volunteer.getVolunteerActivities().size() * 3,
+					volunteer.getId(),
+					volunteer.getProfileImage()
+				);
+			}
+		).toList();
+	}
+
 	@Transactional
 	public ResponseMatchedUserInfo matchingIfDayOfWeekTimeMatched(RequestMatching request, Elderly elderly) {
 		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
@@ -184,5 +212,18 @@ public class VolunteerService {
 			).collect(Collectors.toList()), currentVa == null ? null : CurrentMatching.VolunteerOf(
 				currentVa
 			));
+	}
+
+	public ResponseAvailableVolunteerDetail getAvailableVolunteerDetail(Long volunteerId) {
+		Volunteer volunteer = volunteerRepository.findById(volunteerId).orElseThrow(
+			() -> new CustomException(NOT_FOUND_USER_ERROR)
+		);
+		return ResponseAvailableVolunteerDetail.of(
+			volunteer.getName(),
+			volunteer.getPhone(),
+			volunteer.getProfileImage(),
+			volunteer.getBio(),
+			volunteer.getVolunteerActivities().size() * 3
+		);
 	}
 }
