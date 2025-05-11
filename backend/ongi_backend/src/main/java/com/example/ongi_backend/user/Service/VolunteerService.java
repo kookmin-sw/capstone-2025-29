@@ -18,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.entity.CurrentMatching;
 import com.example.ongi_backend.global.entity.VolunteerInfo;
+import com.example.ongi_backend.global.entity.DistrictType;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
+import com.example.ongi_backend.user.Dto.RequestMatching;
 import com.example.ongi_backend.user.Dto.ResponseAvailableVolunteerDetail;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Dto.RecommendVolunteer;
@@ -30,7 +32,7 @@ import com.example.ongi_backend.user.Repository.VolunteerRepository;
 import com.example.ongi_backend.user.entity.BaseUser;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
-import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
+import com.example.ongi_backend.volunteerActivity.dto.RequestRecommend;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 import com.example.ongi_backend.weeklyAvailableTime.entity.WeeklyAvailableTime;
@@ -110,18 +112,14 @@ public class VolunteerService {
 			unMatchingService.saveUnMatching(
 				findVolunteerActivity.getId(),
 				findVolunteerActivity.getElderly().getId(),
-				findVolunteerActivity.getType(),
-				findVolunteerActivity.getStartTime(),
-				findVolunteerActivity.getAnimalType(),
-				findVolunteerActivity.getAddress(),
-				findVolunteerActivity.getAddDescription()
+				findVolunteerActivity
 			);
 		} else {
 			throw new CustomException(UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR);
 		}
 	}
 
-	public List<RecommendVolunteer> findAvailableVolunteer(RequestMatching request) {
+	public List<RecommendVolunteer> findAvailableVolunteer(RequestRecommend request) {
 		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
 		LocalTime startTime = request.getStartTime().toLocalTime();
 		LocalDate date = request.getStartTime().toLocalDate();
@@ -149,14 +147,20 @@ public class VolunteerService {
 
 	@Transactional
 	public ResponseMatchedUserInfo matchingIfDayOfWeekTimeMatched(RequestMatching request, Elderly elderly) {
-		DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
-		LocalTime startTime = request.getStartTime().toLocalTime();
-		LocalDate date = request.getStartTime().toLocalDate();
-		Integer category = VolunteerType.getCategory(request.getVolunteerType());
-		VolunteerActivity volunteerActivity = volunteerActivityService.addVolunteerActivity(request, elderly);
+		VolunteerActivity volunteerActivity = volunteerActivityService.findById(request.getMatchingId());
+		if(volunteerActivity.getVolunteer() != null){
+			throw new CustomException(ALREADY_MATCHING_ERROR);
+		}
+		if(volunteerActivity.getElderly() != elderly){
+			throw new CustomException(ACCESS_DENIED_ERROR);
+		}
+		DayOfWeek dayOfWeek = volunteerActivity.getStartTime().getDayOfWeek();
+		LocalTime startTime = volunteerActivity.getStartTime().toLocalTime();
+		LocalDate date = volunteerActivity.getStartTime().toLocalDate();
+		Integer category = volunteerActivity.getType().getCategory();
+		DistrictType district = volunteerActivity.getAddress().getDistrict();
 
-		return volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category,
-				request.getAddress().getDistrict())
+		return volunteerRepository.findByWeeklyAvailableTime(dayOfWeek, startTime, date, category, district)
 			.map(volunteer -> {
 				// 매칭 알림
 				awsSqsNotificationSender.matchingNotification(
@@ -190,11 +194,7 @@ public class VolunteerService {
 				unMatchingService.saveUnMatching(
 					volunteerActivity.getId(),
 					elderly.getId(),
-					request.getVolunteerType(),
-					request.getStartTime(),
-					request.getAnimalType(),
-					request.getAddress(),
-					request.getAddDescription()
+					volunteerActivity
 				);
 				return null; // 또는 throw new NoMatchingVolunteerException();
 			});

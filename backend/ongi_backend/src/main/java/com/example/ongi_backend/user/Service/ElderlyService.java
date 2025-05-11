@@ -21,13 +21,14 @@ import com.example.ongi_backend.global.entity.CurrentMatching;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.ResponseElderlyMainPage;
+import com.example.ongi_backend.user.Dto.RequestMatching;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Dto.RecommendVolunteer;
 import com.example.ongi_backend.user.Dto.ResponseRecommend;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
-import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
+import com.example.ongi_backend.volunteerActivity.dto.RequestRecommend;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 
@@ -47,14 +48,7 @@ public class ElderlyService {
 
 	@Transactional
 	public ResponseMatchedUserInfo matching(RequestMatching request, String name) {
-		if(Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), request.getStartTime()).getSeconds() < 0L) {
-			throw new CustomException(POST_TIME_ERROR);
-		}
-
 		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
-		if(volunteerActivityService.existVolunteerActivity(elderly, request.getStartTime().toLocalDate()) != null){
-			throw new CustomException(ALREADY_REGISTERED_ERROR);
-		}
 
 		return volunteerService.matchingIfDayOfWeekTimeMatched(request,
 			elderly);
@@ -141,7 +135,7 @@ public class ElderlyService {
 	}
 
 	@Transactional
-	public ResponseRecommend recommendVolunteer(RequestMatching request, String name) {
+	public ResponseRecommend recommendVolunteer(RequestRecommend request, String name) {
 		if(Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds() < 0L) {
 			throw new CustomException(POST_TIME_ERROR);
 		}

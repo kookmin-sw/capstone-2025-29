@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.ongi_backend.user.Dto.ResponseElderlyMainPage;
+import com.example.ongi_backend.user.Dto.RequestMatching;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Dto.ResponseRecommend;
 import com.example.ongi_backend.user.Service.ElderlyService;
-import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
+import com.example.ongi_backend.volunteerActivity.dto.RequestRecommend;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -31,16 +32,15 @@ public class ElderlyController {
 
 	@PostMapping("/matching")
 	@Operation(summary = "최종 신청 내역 / 읽기 전용", description = "봉사활동 매칭서 작성, 매칭되었을 때는 봉사자 정보, 없을때는 null 응답")
-	// TODO : 매칭 되었을 때 봉사자 정보 출력
 	public ResponseEntity<ResponseMatchedUserInfo> activityMatching(@RequestBody @Valid RequestMatching request, Principal principal) {
 		return ResponseEntity.ok(elderlyService.matching(request,
 			principal.getName()
 		));
 	}
 
-	@PostMapping("/matching/recommend")
+	@PostMapping("/recommend")
 	@Operation(summary = "봉사자 추천", description = "봉사자 추천")
-	public ResponseEntity<ResponseRecommend> recommendVolunteer(@RequestBody @Valid RequestMatching request, Principal principal) {
+	public ResponseEntity<ResponseRecommend> recommendVolunteer(@RequestBody @Valid RequestRecommend request, Principal principal) {
 		return ResponseEntity.ok(elderlyService.recommendVolunteer(request,
 			principal.getName()
 		));

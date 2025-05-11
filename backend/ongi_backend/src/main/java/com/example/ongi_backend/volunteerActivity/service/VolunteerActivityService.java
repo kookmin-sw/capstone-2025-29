@@ -19,7 +19,7 @@ import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
-import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
+import com.example.ongi_backend.volunteerActivity.dto.RequestRecommend;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseActivityDetail;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseCompletedActivity;
 import com.example.ongi_backend.volunteerActivity.dto.ResponseMatching;
@@ -110,7 +110,7 @@ public class VolunteerActivityService {
 	}
 
 	@Transactional
-	public VolunteerActivity addVolunteerActivity(RequestMatching request, Elderly elderly) {
+	public VolunteerActivity addVolunteerActivity(RequestRecommend request, Elderly elderly) {
 		VolunteerActivity volunteerActivity = VolunteerActivity.builder()
 			.elderly(elderly)
 			.volunteer(null)
