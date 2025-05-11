@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RequestMatching {
+public class RequestRecommend {
 	@Schema(description = "봉사 유형", example = "HEALTH")
 	@ValidEnum(enumClass = VolunteerType.class)
 	private VolunteerType volunteerType;

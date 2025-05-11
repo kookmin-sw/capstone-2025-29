@@ -13,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
+import com.example.ongi_backend.user.Dto.RequestMatching;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Dto.RecommendVolunteer;
 import com.example.ongi_backend.user.Dto.ResponseRecommend;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
 import com.example.ongi_backend.user.entity.Elderly;
 import com.example.ongi_backend.user.entity.Volunteer;
-import com.example.ongi_backend.volunteerActivity.dto.RequestMatching;
+import com.example.ongi_backend.volunteerActivity.dto.RequestRecommend;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
 import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 
@@ -38,15 +39,10 @@ public class ElderlyService {
 
 	@Transactional
 	public ResponseMatchedUserInfo matching(RequestMatching request, String name) {
-		if(Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds() < 0L) {
-			throw new CustomException(POST_TIME_ERROR);
-		}
-
 		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
 
-		ResponseMatchedUserInfo responseMatchedUserInfo = volunteerService.matchingIfDayOfWeekTimeMatched(request,
+		return volunteerService.matchingIfDayOfWeekTimeMatched(request,
 			elderly);
-		return responseMatchedUserInfo;
 
 	}
 
@@ -97,7 +93,7 @@ public class ElderlyService {
 	}
 
 	@Transactional
-	public ResponseRecommend recommendVolunteer(RequestMatching request, String name) {
+	public ResponseRecommend recommendVolunteer(RequestRecommend request, String name) {
 		if(Duration.between(LocalDateTime.now(), request.getStartTime()).getSeconds() < 0L) {
 			throw new CustomException(POST_TIME_ERROR);
 		}
