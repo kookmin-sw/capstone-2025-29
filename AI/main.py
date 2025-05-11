@@ -28,8 +28,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/test")
-async def test():
+@app.get("/healthcheck")
+def healthcheck():
     return {"status": "ok"}
 
 @app.get("/auth/check")
