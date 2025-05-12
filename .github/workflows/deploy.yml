@@ -4,8 +4,7 @@ on:
   push:
     branches: 
       - "master"
-      - "feat/60"
-      - "feat/99"
+      - "feat/101"
     paths:
       - "AI/**"
   workflow_dispatch:
