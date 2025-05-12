@@ -41,13 +41,8 @@ public class UserController {
         required = true,
         schema = @Schema(allowableValues = {"elderly", "volunteer"}, example = "elderly")
     ) @RequestParam String userType,
-        @Parameter(
-            name = "userId",
-            description = "유저 아이디",
-            required = true,
-            example = "1")
-        @RequestParam String userId) {
-        List<RedisNotificationTemplate> notifications = notificationRedisService.findNotification(userId, userType);
+        Principal principal) {
+        List<RedisNotificationTemplate> notifications = notificationRedisService.findNotification(principal.getName(), userType);
         return ResponseEntity.ok().body(notifications);
     }
 

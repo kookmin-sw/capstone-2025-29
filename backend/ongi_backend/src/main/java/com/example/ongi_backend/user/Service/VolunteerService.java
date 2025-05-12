@@ -23,6 +23,7 @@ import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.RequestMatching;
+import com.example.ongi_backend.user.Dto.RequestRecommendMatching;
 import com.example.ongi_backend.user.Dto.ResponseAvailableVolunteerDetail;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Dto.RecommendVolunteer;
@@ -46,8 +47,8 @@ public class VolunteerService {
 	private final VolunteerRepository volunteerRepository;
 	private final VolunteerActivityService volunteerActivityService;
 	private final UnMatchingService unMatchingService;
-	private final UserService userService;
 	private final AwsSqsNotificationSender awsSqsNotificationSender;
+	private final UserService userService;
 
 	@Transactional
 	public void updateSchedule(List<Schedules> schedules, int category, String username) {
@@ -198,6 +199,46 @@ public class VolunteerService {
 				);
 				return null; // 또는 throw new NoMatchingVolunteerException();
 			});
+	}
+
+	@Transactional
+	public ResponseMatchedUserInfo recommendMatching(RequestRecommendMatching request, Elderly elderly) {
+		VolunteerActivity volunteerActivity = volunteerActivityService.findById(request.getMatchingId());
+		if(volunteerActivity.getVolunteer() != null){
+			throw new CustomException(ALREADY_MATCHING_ERROR);
+		}
+		if(volunteerActivity.getElderly() != elderly){
+			throw new CustomException(ACCESS_DENIED_ERROR);
+		}
+		Volunteer volunteer = volunteerRepository.findById(request.getVolunteerId()).orElseThrow(
+			() -> new CustomException(NOT_FOUND_USER_ERROR)
+		);
+
+
+		volunteerActivity.updateStatus(PROGRESS);
+		volunteerActivity.updateVolunteer(volunteer);
+
+		//매칭 알림
+		awsSqsNotificationSender.matchingNotification(
+			volunteer.getFcmToken(), elderly.getName(), volunteer.getId(), "volunteer"
+		);
+		awsSqsNotificationSender.matchingNotification(
+			elderly.getFcmToken(), volunteer.getName(), elderly.getId(), "elderly"
+		);
+
+		// 일정 예약 알림
+		awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(volunteerActivity, elderly, volunteer,
+			"volunteer");
+		awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(volunteerActivity, elderly, volunteer,
+			"elderly");
+
+		// 응답 객체 생성
+		return ResponseMatchedUserInfo.of(
+			volunteer.getName(),
+			volunteer.getPhone(),
+			volunteer.getProfileImage(),
+			volunteer.getVolunteerActivities().size() * 3
+		);
 	}
 
 	public ResponseVolunteerMainPage getVolunteerMainPage(String name) {
