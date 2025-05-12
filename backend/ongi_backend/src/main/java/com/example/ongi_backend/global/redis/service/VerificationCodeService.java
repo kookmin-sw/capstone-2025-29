@@ -26,6 +26,10 @@ public class VerificationCodeService {
     }
 
     public void verifyVerificationCode(String phoneNumber, String verificationCode) {
+        if (phoneNumber == null || !phoneNumber.matches("^\\+8210\\d{8}$")) {
+            throw new CustomException(ErrorCode.INVALID_PHONE_NUMBER_FORMAT);
+        }
+
         VerificationCode savedVerificationCode = verificationCodeRepository.findById(phoneNumber).orElseThrow(
                 () -> new CustomException(ErrorCode.CERTIFICATION_NUMBER_NOT_FOUND_ERROR)
         );

@@ -67,7 +67,8 @@ public enum ErrorCode {
 	// TOO_MANY_REQUEST_ERROR(429, "MESSAGE-001", "너무 많은 인증 메시지를 요청했습니다. 24시간 후 요청해주세요."),
 	//
 	CERTIFICATION_NUMBER_NOT_FOUND_ERROR(404, "MESSAGE-001", "인증번호가 만료되었거나 존재하지 않습니다."),
-	CERTIFICATION_NUMBER_NOT_MATCH_ERROR(400, "MESSAGE-002", "인증 번호가 일치하지 않습니다.");
+	CERTIFICATION_NUMBER_NOT_MATCH_ERROR(400, "MESSAGE-002", "인증 번호가 일치하지 않습니다."),
+	INVALID_PHONE_NUMBER_FORMAT(400, "MESSAGE-003", "올바른 형식의 전화번호가 아닙니다. 예: +821012345678");
 	//
 	// //ouath
 	// OAUTH2_NOT_AUTHENTICATED_ERROR(401, "AUTH-004", "OAuth2 인증에 실패하였습니다."),
