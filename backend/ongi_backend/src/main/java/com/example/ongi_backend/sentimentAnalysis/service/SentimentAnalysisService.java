@@ -8,6 +8,7 @@ import com.example.ongi_backend.sentimentAnalysis.dto.ResponseSentimentAnalysis;
 import com.example.ongi_backend.sentimentAnalysis.entity.SentimentAnalysis;
 import com.example.ongi_backend.sentimentAnalysis.repository.SentimentAnalysisRepository;
 import com.example.ongi_backend.user.Repository.ElderlyRepository;
+import com.example.ongi_backend.user.Service.UserService;
 import com.example.ongi_backend.user.entity.Elderly;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SentimentAnalysisService {
     private final SentimentAnalysisRepository sentimentAnalysisRepository;
-    private final ElderlyRepository elderlyRepository;
+    private final UserService userService;
 
     @Transactional
     public void saveSentimentAnalysis(RequestSentimentAnalysis request) {
-        Elderly elderly = elderlyRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        Elderly elderly = (Elderly) userService.findUserByUserName(request.getUsername(), "elderly");
 
         SentimentAnalysis sentimentAnalysis = SentimentAnalysis.builder()
                 .elderly(elderly)
@@ -41,8 +41,7 @@ public class SentimentAnalysisService {
     }
 
     public ResponseSentimentAnalysis getSentimentAnalysis(String username) {
-        Elderly elderly = elderlyRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR));
+        Elderly elderly = (Elderly) userService.findUserByUserName(username, "elderly");
 
         LocalDate startDate = LocalDate.now().minusDays(30);
         List<SentimentAnalysis> analyses = sentimentAnalysisRepository.findRecentByUsername(username, startDate);
