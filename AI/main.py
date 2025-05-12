@@ -19,7 +19,7 @@ from modules.logger_module import log_to_s3
 from datetime import datetime
 
 
-#배포테스트
+#배포 테스트
 app = FastAPI()
 app.mount("/audio", StaticFiles(directory="tts_output"), name="audio")
 
