@@ -61,13 +61,13 @@ public enum ErrorCode {
 	//
 	//aws
 	AWS_S3_IMAGE_NOT_FOUND_ERROR(404, "AWS-001", "이미지를 찾을 수 없습니다."),
-	AWS_S3_IMAGE_EXTEND_ERROR(400, "AWS-002", "허용되지 않는 확장자입니다."),;
-	// //message
+	AWS_S3_IMAGE_EXTEND_ERROR(400, "AWS-002", "허용되지 않는 확장자입니다."),
+	//
+	// message
 	// TOO_MANY_REQUEST_ERROR(429, "MESSAGE-001", "너무 많은 인증 메시지를 요청했습니다. 24시간 후 요청해주세요."),
 	//
-	// CERTIFICATION_NUMBER_NOT_FOUND_ERROR(404, "MESSAGE-002", "인증 번호를 찾지 못하였습니다."),
-	//
-	// CERTIFICATION_NUMBER_NOT_MATCH_ERROR(400, "MESSAGE-003", "인증 번호가 일치하지 않습니다."),
+	CERTIFICATION_NUMBER_NOT_FOUND_ERROR(404, "MESSAGE-001", "인증번호가 만료되었거나 존재하지 않습니다."),
+	CERTIFICATION_NUMBER_NOT_MATCH_ERROR(400, "MESSAGE-002", "인증 번호가 일치하지 않습니다.");
 	//
 	// //ouath
 	// OAUTH2_NOT_AUTHENTICATED_ERROR(401, "AUTH-004", "OAuth2 인증에 실패하였습니다."),
