@@ -14,6 +14,7 @@ import com.example.ongi_backend.global.aws.AwsSqsNotificationSender;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.RequestMatching;
+import com.example.ongi_backend.user.Dto.RequestRecommendMatching;
 import com.example.ongi_backend.user.Dto.ResponseMatchedUserInfo;
 import com.example.ongi_backend.user.Dto.RecommendVolunteer;
 import com.example.ongi_backend.user.Dto.ResponseRecommend;
@@ -44,6 +45,11 @@ public class ElderlyService {
 		return volunteerService.matchingIfDayOfWeekTimeMatched(request,
 			elderly);
 
+	}
+	@Transactional
+	public ResponseMatchedUserInfo recommendMatching(RequestRecommendMatching request, String name) {
+		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
+		return volunteerService.recommendMatching(request, elderly);
 	}
 
 	@Transactional

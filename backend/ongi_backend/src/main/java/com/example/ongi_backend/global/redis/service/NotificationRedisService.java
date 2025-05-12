@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ongi_backend.global.redis.dto.RedisNotificationTemplate;
+import com.example.ongi_backend.user.Service.UserService;
+import com.example.ongi_backend.user.entity.BaseUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class NotificationRedisService {
 	private final RedisTemplate<String, String> redisTemplate;
 	private final ObjectMapper objectMapper;
+	private final UserService userService;
 	//TODO : 지금은 알림 10분 만료, 이후 시간 조정 필요시 수정
 	private static final Duration TTL = Duration.ofMinutes(10L);
 
@@ -67,8 +70,9 @@ public class NotificationRedisService {
 		redisTemplate.expire(key, TTL);
 	}
 
-	public List<RedisNotificationTemplate> findNotification(String userId, String userType) {
-		String key = String.format("notification:%s:%s:*", userType, userId);
+	public List<RedisNotificationTemplate> findNotification(String userName, String userType) {
+		BaseUser user = userService.findUserByUserName(userName, userType);
+		String key = String.format("notification:%s:%s:*", userType, user.getId());
 		Set<String> keys = redisTemplate.keys(key);
 		List<RedisNotificationTemplate> notifications = redisTemplate.opsForValue()
 			.multiGet(keys)
