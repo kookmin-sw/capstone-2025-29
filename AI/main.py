@@ -16,7 +16,7 @@ from modules.auth import get_current_user
 from modules.delete_audiofile import delete_file_after_delay
 
 
-#배포 테스트
+#배포테스트
 app = FastAPI()
 app.mount("/audio", StaticFiles(directory="tts_output"), name="audio")
 
@@ -28,8 +28,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/test")
-async def test():
+@app.get("/healthcheck")
+def healthcheck():
     return {"status": "ok"}
 
 @app.get("/auth/check")

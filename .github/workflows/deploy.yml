@@ -5,6 +5,7 @@ on:
     branches: 
       - "master"
       - "feat/60"
+      - "feat/99"
     paths:
       - "AI/**"
   workflow_dispatch:
@@ -39,10 +40,5 @@ jobs:
           docker run -d --restart always --name ai-server -p 8000:8000 \
             -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
             -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
-            -v ${{ github.workspace }}/AI/tts_output:/app/tts_output \
-            ai-server
-      - name: Run ai-server container
-        run: |
-          docker run -d --restart always --name ai-server -p 8000:8000 \
             -v ${{ github.workspace }}/AI/tts_output:/app/tts_output \
             ai-server
