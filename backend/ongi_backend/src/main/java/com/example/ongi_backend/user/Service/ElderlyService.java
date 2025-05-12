@@ -122,9 +122,7 @@ public class ElderlyService {
 
 	@Transactional
 	public void updateElderlyChatBot(String username, RequestModifyChatBot request) {
-		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
-				() -> new CustomException(NOT_FOUND_USER_ERROR)
-		);
+		Elderly elderly = (Elderly) userService.findUserByUserName(username, "elderly");
 		ChatBot chatBot = chatBotRepository.save(
 				ChatBot.builder()
 						.name(request.getName())
@@ -135,9 +133,7 @@ public class ElderlyService {
 	}
 
 	public ResponseChatBot getChatBot(String username) {
-		Elderly elderly = elderlyRepository.findByUsername(username).orElseThrow(
-				() -> new CustomException(NOT_FOUND_USER_ERROR)
-		);
+		Elderly elderly = (Elderly) userService.findUserByUserName(username, "elderly");
 		ChatBot chatBot = elderly.getChatBot();
 		return ResponseChatBot.builder()
 				.name(chatBot.getName())
