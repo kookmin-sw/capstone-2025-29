@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, BackgroundTasks, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -132,6 +132,34 @@ async def get_audio(
         return FileResponse(filename)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"오디오 파일 반환 중 오류: {str(e)}")
+    
+
+@app.get("/emotion/test")
+async def test_emotion_from_s3(
+    username: str = Query(...),
+    date: str = Query(...)
+):
+    try:
+        messages = load_logs_from_s3(username, date)
+
+        if not messages:
+            raise HTTPException(status_code=404, detail="해당 날짜에 대한 로그가 없습니다.")
+
+        history = []
+        for entry in messages:
+            history.append({"role": "user", "content": entry["user"]})
+            history.append({"role": "assistant", "content": entry["assistant"]})
+
+        emotion = analyze_emotion(history, ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
+
+        return {
+            "status": "success",
+            "username": username,
+            "emotion": emotion,
+            "date": date
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"테스트용 감정 분석 실패: {str(e)}")
 
 
 @app.post("/emotion/")
