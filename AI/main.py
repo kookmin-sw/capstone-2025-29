@@ -15,6 +15,7 @@ from modules.emotion_module import analyze_emotion
 from modules.auth import get_current_user
 from modules.delete_audiofile import delete_file_after_delay
 from modules.logger_module import load_logs_from_s3
+from modules.logger_module import log_to_s3
 from datetime import datetime
 
 
@@ -95,6 +96,8 @@ async def chat_with_text(
         add_user_message(text)
         gpt_response = get_chat_response()
         add_assistant_message(gpt_response)
+
+        log_to_s3(username, text, gpt_response)
 
         tts_path = synthesize(gpt_response)
 
