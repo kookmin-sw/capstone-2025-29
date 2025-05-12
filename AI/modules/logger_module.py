@@ -34,3 +34,14 @@ def log_to_s3(username: str, user_msg: str, assistant_msg: str):
     lines.append(json.dumps(record))
 
     s3.put_object(Bucket=BUCKET_NAME, Key=key, Body="\n".join(lines).encode("utf-8"))
+
+
+def load_logs_from_s3(username: str, date: str):
+    key = f"{username}/{date}.jsonl"
+    
+    try:
+        obj = s3.get_object(Bucket=BUCKET_NAME, Key=key)
+        lines = obj["Body"].read().decode("utf-8").splitlines()
+        return [json.loads(line) for line in lines]
+    except s3.exceptions.NoSuchKey:
+        return []
