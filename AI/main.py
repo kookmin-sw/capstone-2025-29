@@ -14,6 +14,8 @@ from modules.ttr_module import add_user_message, add_assistant_message, get_chat
 from modules.emotion_module import analyze_emotion
 from modules.auth import get_current_user
 from modules.delete_audiofile import delete_file_after_delay
+from modules.logger_module import load_logs_from_s3
+from datetime import datetime
 
 
 #배포테스트
@@ -135,24 +137,26 @@ async def emotion(
     username: str = Depends(get_current_user)
 ):
     try:
-        emotion = analyze_emotion(get_chat_history(), ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
+        today = datetime.now().strftime("%Y-%m-%d")
+        messages = load_logs_from_s3(username, today)
+
+        history = []
+        for entry in messages:
+            history.append({"role": "user", "content": entry["user"]})
+            history.append({"role": "assistant", "content": entry["assistant"]})
+
+        emotion = analyze_emotion(history, ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
 
         async with httpx.AsyncClient() as client:
             await client.post(
                 backend_url,
                 json={
+                    "username": username,
                     "emotion": emotion,
-                    "chat_history": get_chat_history(),
-                    "username": username
+                    "date": today
                 }
             )
 
-        return {
-            "status": "success",
-            "username": username,
-            "data": {
-                "emotion": emotion
-            }
-        }
+        return {"status": "success", "emotion": emotion}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"감정 분석 또는 백엔드 전송 중 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"감정 분석 실패: {str(e)}")
