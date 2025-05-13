@@ -18,11 +18,13 @@ const colorMap = {
 
 // 서버에서 받은 데이터 (예시)
 const serverData = [
-    { label: '기쁨', value: 40 },
+    { label: '기쁨', value: 25 },
     { label: '슬픔', value: 25 },
     { label: '분노', value: 15 },
     { label: '불안', value: 10 },
     { label: '놀람', value: 10 },
+    { label: '행복', value: 10 },
+    { label: '기절', value: 10 },
 ];
 
 // colorMap을 기준으로 색상 추가

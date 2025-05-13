@@ -1,11 +1,11 @@
 import axios from "axios";
 
-// 봉사활동 매칭 신청 API (토큰을 localStorage에서 직접 가져옴)
-export const requestElderlyMatching = async (data) => {
+// 봉사활동 추천x 매칭 신청 API 
+export const requestElderlyMatching = async (matchingId) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios.post("/api/elderly/matching", data,
+        const response = await axios.post("/api/elderly/matching", matchingId,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -146,6 +146,32 @@ export const cancelMatching = async (matchingId) => {
                 : error.request
                     ? "서버와의 통신에 실패했습니다."
                     : "요청 중 오류가 발생했습니다.");
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage,
+        };
+    }
+};
+
+// 추천 봉사자 API
+export const fetchRecommendedVolunteers = async (data) => {
+    try {
+        const accessToken = localStorage.getItem("accessToken"); // 로컬스토리지에서 토큰 가져오기
+        const response = await axios.post("/api/elderly/recommend", data, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 추가
+            },
+        });
+        return response.data; // 추천 봉사자 데이터 반환
+    } catch (error) {
+        const errorMessage =
+            error.response?.data?.message ||
+            (error.response
+                ? "추천 봉사자 데이터를 가져오는 데 실패했습니다."
+                : error.request
+                ? "서버와의 통신에 실패했습니다."
+                : "요청 중 오류가 발생했습니다.");
         throw {
             status: error.response?.status || 0,
             message: errorMessage,

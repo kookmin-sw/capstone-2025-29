@@ -55,13 +55,17 @@ export default function MatchingList() {
     return (
         <div className={styles.container}>
             <Topbar title="매칭내역" />
-            {matchData.map((match) => (
-                <MatchCard
-                    key={match.id}
-                    {...match}
-                    onClick={() => navigate("/matchingdetail", { state: { matchId: match.id } })} // match.id를 state로 전달
-                />
-            ))}
+            {matchData.length === 0 ? (
+                <div className={styles.noData}>매칭 내역이 없습니다</div>
+            ) : (
+                matchData.map((match) => (
+                    <MatchCard
+                        key={match.id}
+                        {...match}
+                        onClick={() => navigate("/matchingdetail", { state: { matchId: match.id } })}
+                    />
+                ))
+            )}
         </div>
     );
 }

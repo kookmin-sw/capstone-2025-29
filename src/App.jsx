@@ -30,7 +30,10 @@ import SetName from './pages/user/SetName';
 import ChatCenter from './pages/user/ChatCenter';
 import ChatPage from './pages/user/ChatPage';
 import NotificationPage from './pages/both/NotificationPage';
+import VolunteerRecommend from './pages/user/VolunteerRecommend';
 
+
+import LoadingModalTest from './components/LoadingModalTest';
 
 /* 메인 App 컴포넌트 */
 function App() {
@@ -65,7 +68,13 @@ function App() {
           <Route path="/setname" element={<SetName />} />
           <Route path="/chatcenter" element={<ChatCenter />} />
           <Route path="/chatpage" element={<ChatPage />} />
+          <Route path="/VolunteerRecommend" element={<VolunteerRecommend />} />
 
+          
+          <Route path="/loadingmodaltest" element={<LoadingModalTest />} />
+
+
+          
           {/* 404 페이지 - 정의되지 않은 경로로 접근 시 표시 */}
           <Route path="*" element={<div>not found</div>} />
         </Routes>

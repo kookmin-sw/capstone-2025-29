@@ -60,7 +60,11 @@ export const checkUsername = async (username, userType) => {
 
 // ✅ 회원가입 API
 export const registerUser = async (userData) => {
+
+    
     try {
+        console.log("회원가입 API 호출", userData);
+        
         const response = await axios.post(`${API_BASE}/api/user`, userData, {
             headers: {
                 'Content-Type': 'application/json',

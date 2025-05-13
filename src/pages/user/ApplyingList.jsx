@@ -7,7 +7,7 @@ import { fetchApplyingList } from "../../api/UserApi"; // API 호출 함수 가�
 
 export default function ApplyingList() {
     const navigate = useNavigate();
-    const [matchData, setMatchData] = useState([]); // 신청 내역 데이터 상태
+    const [matchData, setMatchData] = useState([]); //ㄹ 신청 내역 데이터 상태
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 에러 상태
 
@@ -46,16 +46,22 @@ export default function ApplyingList() {
     console.log("matchData", matchData);
     return (
         <div className={styles.container}>
-            <Topbar title="나의 신청내역" />
-            {matchData
-                .filter((match) => match.name !== null) // name이 null이 아닌 데이터만 필터링
-                .map((match) => (
-                    <MatchCard
-                        key={match.id}
-                        {...match}
-                        onClick={() => navigate("/applyingdetail", { state: { matchId: match.id } })} // match.id를 state로 전달
-                    />
-                ))}
+            <Topbar title="나의 매칭내역" />
+
+            {matchData.filter((match) => match.name !== null).length === 0 ? (
+                <p className={styles.message}>매칭 내역이 없습니다</p>
+            ) : (
+                matchData
+                    .filter((match) => match.name !== null)
+                    .map((match) => (
+                        <MatchCard
+                            key={match.id}
+                            {...match}
+                            onClick={() => navigate("/applyingdetail", { state: { matchId: match.id } })}
+                        />
+                    ))
+            )}
         </div>
     );
+
 }

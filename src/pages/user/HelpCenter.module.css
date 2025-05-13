@@ -67,7 +67,7 @@
 
 /* 매칭 이름 텍스트 스타일 */
 .matchName {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     margin: 0;
 }
@@ -102,7 +102,7 @@
 
 /* 매칭 정보 설명 텍스트 스타일 */
 .reviewInfo {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: #333;
     margin: 0;
 }

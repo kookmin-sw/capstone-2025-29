@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./RequestForm.module.css";
 import Topbar from "../../components/Topbar";
 import MatchCard from "../../components/MatchCard";
-import { requestElderlyMatching } from "../../api/UserApi";
+import { requestElderlyMatching, fetchRecommendedVolunteers } from "../../api/UserApi";
 /**
  * 도움 요청 폼 컴포넌트
  * 4단계로 구성된 폼을 통해 사용자의 도움 요청 정보를 수집
@@ -12,6 +12,7 @@ export default function RequestForm() {
     const navigate = useNavigate();
     const [currentDate, setCurrentDate] = useState('');
     const [currentTime, setCurrentTime] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
     useEffect(() => {
         const updateDateTime = () => {
@@ -150,15 +151,17 @@ export default function RequestForm() {
                 return;
             }
         }
-        console.log(requestBody)
         try {
-            const response = await requestElderlyMatching(requestBody);
+            setIsLoading(true); // 로딩 시작
+            const recommendedVolunteers = await fetchRecommendedVolunteers(requestBody); // 추천 봉사자 데이터 가져오기
+            setIsLoading(false); // 로딩 종료
+            
+            console.log("추천 봉사자 데이터:", recommendedVolunteers);
 
-            console.log('requestform', response)
-
-            alert("신청이 완료되었습니다!");
-            navigate('/HelpCenter');
+            alert("신청서가 제출되었습니다.");
+            navigate("/volunteerRecommend", { state: { volunteersData: recommendedVolunteers } }); // 데이터와 함께 페이지 이동
         } catch (error) {
+            setIsLoading(false); // 로딩 종료
             console.error("신청 에러 상세:", error);
             if (error.message) {
                 console.error("에러 메시지:", error.message);

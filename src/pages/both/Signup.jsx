@@ -119,10 +119,11 @@ export default function Signup() {
                 district: formValues.region || "",
                 detail: formValues.detailAddress || ""
             },
-            phoneCode: formValues.phoneCode || "1234",
-            userType: selectedRole || "volunteer"
+            phoneCode: formValues.phoneCode,
+            userType: selectedRole || "volunteer",
+            bio: selectedRole === "volunteer" ? formValues.introduction || "" : ""
         };
-
+        
         try {
             await registerUser(formData);
             alert('회원가입이 완료되었습니다.');

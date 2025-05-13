@@ -84,8 +84,8 @@ function HelpCenter() {
                     <span>새 신청</span>
                 </div>
                 <div onClick={() => navigate('/ApplyingList')} className={`${styles.actionBtn} ${styles.squareBtn}`}>
-                    <img src="/icon-list.svg" alt="신청내역" className={styles.iconImage} />
-                    <span>신청내역</span>
+                    <img src="/icon-list.svg" alt="매칭내역" className={styles.iconImage} />
+                    <span>매칭내역</span>
                 </div>
             </div>
 
@@ -109,10 +109,19 @@ function HelpCenter() {
                 )}
                 {volunteerStatus === 'COMPLETED' && (
                     <>
-                        <p className={styles.matchName}>진행 중인 신청이 없습니다</p>
+                        <p className={styles.matchName}>오늘 봉사가 완료됐습니다.</p>
                         <button className={styles.reviewBtn} onClick={() => navigate("/ApplyingList")}>신청내역</button>
                         <p className={styles.reviewInfo}>오늘의 일정은 더이상 없습니다.</p>
                     </>
+                )}
+                {volunteerStatus === 'NOT_MATCHING' && (
+                    <>
+                        <p className={styles.matchName}>매칭 진행중입니다</p>
+                        <button className={styles.reviewBtn} onClick={() => navigate("/ApplyingList")}>신청내역</button>
+                        <p className={styles.reviewInfo}>
+                            {matchDate} 봉사 신청
+                        </p>
+                    </> 
                 )}
                 {volunteerStatus === null && (
                     <>
@@ -121,6 +130,7 @@ function HelpCenter() {
                         <p className={styles.reviewInfo}>오늘의 일정은 더이상 없습니다.</p>
                     </>
                 )}
+
             </div>
 
             {/* 사용 방법 가이드 섹션 */}

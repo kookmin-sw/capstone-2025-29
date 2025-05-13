@@ -36,8 +36,8 @@ export default function AvailableTime() {
     ];
 
     // 영어 요일 / 한국어 요일
-    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const korDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const weekDays = [ "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"];
+    const korDays = [ "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"];
 
     // 선택된 봉사 유형
     const [selectedTypes, setSelectedTypes] = useState([]);
