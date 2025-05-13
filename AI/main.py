@@ -136,11 +136,14 @@ async def get_audio(
         raise HTTPException(status_code=500, detail=f"오디오 파일 반환 중 오류: {str(e)}")
     
 
+from fastapi import HTTPException
+import httpx
+
 @app.post("/emotion/test")
 async def test_emotion_from_s3_and_send(
     username: str = Query(...),
     date: str = Query(...),
-    backend_url: str = Query("https://coffeesuppliers.shop/api/sentimentAnalysis")
+    backend_url: str = Query("https://coffeesupliers.shop/api/sentimentAnalysis")
 ):
     try:
         messages = load_logs_from_s3(username, date)
@@ -153,17 +156,24 @@ async def test_emotion_from_s3_and_send(
             history.append({"role": "user", "content": entry["user"]})
             history.append({"role": "assistant", "content": entry["assistant"]})
 
-        emotion = analyze_emotion(history, ["Joy", "Sad", "Loneliness", "Fear", "Clam", "Anticipation", "Excitement", "Angry"])
+        emotion = analyze_emotion(history,  [
+            "JOY", "SAD", "LONELINESS", "FEAR", "CLAM", "ANTICIPATION", "EXCITEMENT", "ANGRY"
+        ])
+
+        payload = {
+            "username": username,
+            "analysis": emotion,
+            "analysisDate": date
+        }
 
         async with httpx.AsyncClient() as client:
-            res = await client.post(
-                backend_url,
-                json={
-                    "username": username,
-                    "analysis": emotion,
-                    "analysisDate": date
-                }
-            )
+            res = await client.post(backend_url, json=payload)
+
+        # 응답 본문 확인
+        try:
+            backend_response = res.json()
+        except Exception:
+            backend_response = res.text  # JSON이 아니면 텍스트로 반환
 
         return {
             "status": "success",
@@ -171,38 +181,65 @@ async def test_emotion_from_s3_and_send(
             "username": username,
             "date": date,
             "backend_status_code": res.status_code,
-            "backend_response": res.json()
+            "backend_response": backend_response
         }
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"감정 분석 및 백엔드 전송 실패: {str(e)}")
 
 
 @app.post("/emotion/")
 async def emotion(
-    backend_url = "https://coffeesuppliers.shop/api/sentimentAnalysis",
+    backend_url: str = "https://coffeesupliers.shop/api/sentimentAnalysis",
     username: str = Depends(get_current_user)
 ):
     try:
         today = datetime.now().strftime("%Y-%m-%d")
         messages = load_logs_from_s3(username, today)
 
+        if not messages:
+            raise HTTPException(status_code=404, detail="오늘 날짜에 대한 대화 로그가 없습니다.")
+
         history = []
         for entry in messages:
             history.append({"role": "user", "content": entry["user"]})
             history.append({"role": "assistant", "content": entry["assistant"]})
 
-        emotion = analyze_emotion(history, ["Joy", "Sad", "Loneliness", "Fear", "Clam", "Anticipation", "Excitement", "Angry"])
+        emotion = analyze_emotion(
+            history,
+            ["JOY", "SAD", "LONELINESS", "FEAR", "CLAM", "ANTICIPATION", "EXCITEMENT", "ANGRY"]
+        )
+
+        payload = {
+            "username": username,
+            "analysis": emotion,
+            "analysisDate": today
+        }
+
+        print(f"백엔드로 전송할 감정 분석 데이터: {payload}")
 
         async with httpx.AsyncClient() as client:
-            await client.post(
+            res = await client.post(
                 backend_url,
-                json={
-                    "username": username,
-                    "analysis": emotion,
-                    "analysisDate": today
-                }
+                json=payload,
+                headers={"Content-Type": "application/json"}
             )
 
-        return {"status": "success", "emotion": emotion}
+        # 응답 처리 (JSON 응답이 아닐 경우 대비)
+        try:
+            backend_response = res.json()
+        except Exception:
+            backend_response = res.text
+
+        print(f"백엔드 응답 코드: {res.status_code}")
+        print(f"백엔드 응답 본문: {backend_response}")
+
+        return {
+            "status": "success",
+            "emotion": emotion,
+            "backend_response_code": res.status_code,
+            "backend_response_body": backend_response
+        }
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"감정 분석 실패: {str(e)}")
