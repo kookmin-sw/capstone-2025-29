@@ -11,6 +11,7 @@ service UserRecommendationService {
 // 요청 메시지: 사용자 ID 리스트
 message RecommendationRequest {
   repeated int64 userIds = 1;
+  string elderlyDetail = 2;
 }
 
 // 응답 메시지: 추천된 사용자 ID 리스트

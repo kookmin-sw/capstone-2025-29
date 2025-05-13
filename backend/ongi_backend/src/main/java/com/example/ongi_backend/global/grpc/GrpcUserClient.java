@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import recommendation.UserRecommendation;
+import recommendation.UserRecommendation.RecommendationRequest;
 import recommendation.UserRecommendation.RecommendationResponse;
 
 @Component
 public class GrpcUserClient {
-	public List<Long> getRecommendedUsers(List<Long> userIds) {
+	public List<Long> getRecommendedUsers(List<Long> userIds, String addDescription) {
 		// gRPC 서버와 연결을 위한 채널 생성
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051)
 				.usePlaintext()
@@ -21,8 +21,9 @@ public class GrpcUserClient {
 
 		UserRecommendationServiceBlockingStub stub = newBlockingStub(channel);
 
-		UserRecommendation.RecommendationRequest request = UserRecommendation.RecommendationRequest.newBuilder()
+		RecommendationRequest request = RecommendationRequest.newBuilder()
 				.addAllUserIds(userIds)
+				.setElderlyDetail(addDescription)
 				.build();
 
 		RecommendationResponse response = stub.getRecommendedUsers(request);

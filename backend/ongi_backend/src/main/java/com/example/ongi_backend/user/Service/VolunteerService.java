@@ -21,6 +21,7 @@ import com.example.ongi_backend.global.entity.VolunteerInfo;
 import com.example.ongi_backend.global.entity.DistrictType;
 import com.example.ongi_backend.global.entity.VolunteerType;
 import com.example.ongi_backend.global.exception.CustomException;
+import com.example.ongi_backend.global.grpc.GrpcUserClient;
 import com.example.ongi_backend.global.redis.service.UnMatchingService;
 import com.example.ongi_backend.user.Dto.RequestMatching;
 import com.example.ongi_backend.user.Dto.RequestRecommendMatching;
@@ -49,6 +50,7 @@ public class VolunteerService {
 	private final UnMatchingService unMatchingService;
 	private final AwsSqsNotificationSender awsSqsNotificationSender;
 	private final UserService userService;
+	private final GrpcUserClient grpcUserClient;
 
 	@Transactional
 	public void updateSchedule(List<Schedules> schedules, int category, String username) {
@@ -128,7 +130,9 @@ public class VolunteerService {
 
 		List<Long> list = volunteerRepository.findAllByWeeklyAvailableTime(dayOfWeek, startTime, date, category,
 			request.getAddress().getDistrict()).stream().map(BaseUser::getId).toList();
-		// TODO : fastAPI와 연결
+
+		// // 추천 메소드 grpc 연결
+		// List<Long> recommendedUsers = grpcUserClient.getRecommendedUsers(list, request.getAddDescription());
 
 		return list.stream().map(
 			id ->

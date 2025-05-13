@@ -33,8 +33,7 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long> {
         + "and w.availableStartTime = :availableStartTime "
         + "and bitand(v.volunteerCategory, :category) = :category "
         + "and v.address.district = :district "
-        + "and not exists (select 1 from VolunteerActivity va where va.volunteer = v and date_format(va.startTime, '%Y-%m-%d') = :date) "
-        + "order by function('RAND') limit 4")
+        + "and not exists (select 1 from VolunteerActivity va where va.volunteer = v and date_format(va.startTime, '%Y-%m-%d') = :date)")
     List<Volunteer> findAllByWeeklyAvailableTime(DayOfWeek dayOfWeek, LocalTime availableStartTime, LocalDate date, int category, DistrictType district);
 
 
