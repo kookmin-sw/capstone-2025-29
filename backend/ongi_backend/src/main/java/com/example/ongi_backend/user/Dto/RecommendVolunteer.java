@@ -15,12 +15,15 @@ public class RecommendVolunteer {
 	private Long volunteerId;
 	@Schema(description = "봉사자 프로필 사진 URL", example = "profile/123-456-789")
 	private String profileImageUrl;
-	public static RecommendVolunteer of(String name, Integer volunteerActivityTime, Long volunteerId, String profileImageUrl) {
+	@Schema(description = "봉사자 자기소개", example = "산책을 좋아합니다")
+	private String bio;
+	public static RecommendVolunteer of(String name, Integer volunteerActivityTime, Long volunteerId, String profileImageUrl, String bio) {
 		return RecommendVolunteer.builder()
 			.name(name)
 			.volunteerActivityTime(volunteerActivityTime)
 			.volunteerId(volunteerId)
 			.profileImageUrl(profileImageUrl)
+			.bio(bio)
 			.build();
 	}
 }

@@ -140,7 +140,8 @@ public class VolunteerService {
 					volunteer.getName(),
 					volunteer.getVolunteerActivities().size() * 3,
 					volunteer.getId(),
-					volunteer.getProfileImage()
+					volunteer.getProfileImage(),
+					volunteer.getBio()
 				);
 			}
 		).toList();
