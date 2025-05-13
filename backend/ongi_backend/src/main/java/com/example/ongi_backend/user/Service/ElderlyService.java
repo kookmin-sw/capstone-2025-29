@@ -147,6 +147,13 @@ public class ElderlyService {
 		}
 		Elderly elderly = (Elderly)userService.findUserByUserName(name, "elderly");
 
+		//이미 오늘 봉사를 신청했을 때
+		elderly.getVolunteerActivities().stream().filter(volunteerActivity ->
+			volunteerActivity.getStartTime().toLocalDate().isEqual(request.getStartTime().toLocalDate())
+		).findAny().ifPresent(volunteerActivity -> {
+			throw new CustomException(ALREADY_REGISTERED_ERROR);
+		});
+
 		VolunteerActivity volunteerActivity = volunteerActivityService.addVolunteerActivity(request, elderly);
 
 		List<RecommendVolunteer> availableVolunteer = volunteerService.findAvailableVolunteer(request);
