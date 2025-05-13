@@ -9,4 +9,5 @@ public class UserLoginResponseDto {
     String accessToken;
     String refreshToken;
     String userType;
+    String name;
 }

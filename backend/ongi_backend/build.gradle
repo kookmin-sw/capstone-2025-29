@@ -41,6 +41,10 @@ dependencies {
     implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
 
+    //sns
+    implementation platform('software.amazon.awssdk:bom:2.25.26')
+    implementation 'software.amazon.awssdk:sns'
+
     //aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
