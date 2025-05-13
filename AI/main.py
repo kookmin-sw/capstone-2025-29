@@ -118,6 +118,8 @@ async def chat_with_text(
             }
         }
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"텍스트 채팅 처리 중 오류: {str(e)}")
 
 
@@ -150,7 +152,7 @@ async def test_emotion_from_s3(
             history.append({"role": "user", "content": entry["user"]})
             history.append({"role": "assistant", "content": entry["assistant"]})
 
-        emotion = analyze_emotion(history, ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
+        emotion = analyze_emotion(history, ["Joy", "Sad", "Loneliness", "Fear", "Clam", "Anticipation", "Excitement", "Angry"])
 
         return {
             "status": "success",
@@ -176,7 +178,7 @@ async def emotion(
             history.append({"role": "user", "content": entry["user"]})
             history.append({"role": "assistant", "content": entry["assistant"]})
 
-        emotion = analyze_emotion(history, ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
+        emotion = analyze_emotion(history, ["Joy", "Sad", "Loneliness", "Fear", "Clam", "Anticipation", "Excitement", "Angry"])
 
         async with httpx.AsyncClient() as client:
             await client.post(
