@@ -62,7 +62,7 @@ cloud:
     s3:
       bucket: ${AWS_S3_BUCKET}
     sns:
-      region: ${AWS_SNS_REGION}
+      region: ap-northeast-1
 
 springdoc:
   override-with-generic-response: false
