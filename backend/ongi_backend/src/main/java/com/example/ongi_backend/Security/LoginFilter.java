@@ -49,6 +49,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .userType(baseUser.getClass().getSimpleName())
+                        .name(baseUser.getName())
                         .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
