@@ -131,10 +131,10 @@ public class VolunteerService {
 		List<Long> list = volunteerRepository.findAllByWeeklyAvailableTime(dayOfWeek, startTime, date, category,
 			request.getAddress().getDistrict()).stream().map(BaseUser::getId).toList();
 
-		// // 추천 메소드 grpc 연결
-		// List<Long> recommendedUsers = grpcUserClient.getRecommendedUsers(list, request.getAddDescription());
+		// 추천 메소드 grpc 연결
+		List<Long> recommendedUsers = grpcUserClient.getRecommendedUsers(list, request.getAddDescription());
 
-		return list.stream().map(
+		return recommendedUsers.stream().map(
 			id ->
 			{
 				Volunteer volunteer = volunteerRepository.findById(id).orElseThrow(
