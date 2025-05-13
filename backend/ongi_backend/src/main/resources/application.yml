@@ -64,3 +64,9 @@ cloud:
 
 springdoc:
   override-with-generic-response: false
+
+grpc:
+  client:
+    userRecommendationService:
+      address: "static://localhost:50051"
+      negotiationType: plaintext
