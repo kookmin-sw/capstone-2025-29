@@ -15,7 +15,7 @@ import recommendation.UserRecommendation.RecommendationResponse;
 public class GrpcUserClient {
 	public List<Long> getRecommendedUsers(List<Long> userIds, String addDescription) {
 		// gRPC 서버와 연결을 위한 채널 생성
-		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+		ManagedChannel channel = ManagedChannelBuilder.forAddress("recommend", 50051)
 				.usePlaintext()
 				.build();
 

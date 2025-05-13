@@ -70,5 +70,7 @@ springdoc:
 grpc:
   client:
     userRecommendationService:
-      address: "static://localhost:50051"
+      address: "static://recommend:50051"
       negotiationType: plaintext
+  server:
+    host: localhost
