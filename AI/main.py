@@ -136,10 +136,11 @@ async def get_audio(
         raise HTTPException(status_code=500, detail=f"오디오 파일 반환 중 오류: {str(e)}")
     
 
-@app.get("/emotion/test")
-async def test_emotion_from_s3(
+@app.post("/emotion/test")
+async def test_emotion_from_s3_and_send(
     username: str = Query(...),
-    date: str = Query(...)
+    date: str = Query(...),
+    backend_url: str = Query("https://coffeesuppliers.shop/api/sentimentAnalysis")
 ):
     try:
         messages = load_logs_from_s3(username, date)
@@ -154,19 +155,31 @@ async def test_emotion_from_s3(
 
         emotion = analyze_emotion(history, ["Joy", "Sad", "Loneliness", "Fear", "Clam", "Anticipation", "Excitement", "Angry"])
 
+        async with httpx.AsyncClient() as client:
+            res = await client.post(
+                backend_url,
+                json={
+                    "username": username,
+                    "analysis": emotion,
+                    "analysisDate": date
+                }
+            )
+
         return {
             "status": "success",
-            "username": username,
             "emotion": emotion,
-            "date": date
+            "username": username,
+            "date": date,
+            "backend_status_code": res.status_code,
+            "backend_response": res.json()
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"테스트용 감정 분석 실패: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"감정 분석 및 백엔드 전송 실패: {str(e)}")
 
 
 @app.post("/emotion/")
 async def emotion(
-    backend_url: str,
+    backend_url = "https://coffeesuppliers.shop/api/sentimentAnalysis",
     username: str = Depends(get_current_user)
 ):
     try:
@@ -185,8 +198,8 @@ async def emotion(
                 backend_url,
                 json={
                     "username": username,
-                    "emotion": emotion,
-                    "date": today
+                    "analysis": emotion,
+                    "analysisDate": today
                 }
             )
 
