@@ -7,6 +7,8 @@ export const requestFCMToken = async () => {
             vapidKey: "BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw"
         });
 
+        localStorage.setItem('fcmToken', currentToken); // 토큰을 로컬 스토리지에 저장
+        
         console.log('currentToken:', currentToken);
         // if (currentToken) {
 

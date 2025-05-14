@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./HelpCenter.module.css";
 import Topbar from "../../components/Topbar";
-import { fetchElderlyMatching, completeMatching } from "../../api/UserApi"; // API 호출 함수 가져오기
+import { fetchElderlyMatching, completeMatching, cancelMatching } from "../../api/UserApi";
+
 
 function HelpCenter() {
     const navigate = useNavigate();
@@ -72,6 +73,22 @@ function HelpCenter() {
         navigate("/applyingdetail", { state: { matchId: matchingId } }); // matchId를 state로 전달
     };
 
+    // 매칭 취소 버튼 클릭 핸들러
+    const handleCancel = async () => {
+        if (!matchingId) return;
+
+        try {
+            await cancelMatching(matchingId);
+            alert("신청이 취소되었습니다.");
+            setVolunteerStatus(null);
+        } catch (error) {
+            console.error("Failed to cancel matching:", error);
+            alert(error.message || "신청 취소에 실패했습니다.");
+        }
+    };
+
+
+
     return (
         <div className={styles.container}>
             {/* 상단 네비게이션 바 */}
@@ -85,7 +102,7 @@ function HelpCenter() {
                 </div>
                 <div onClick={() => navigate('/ApplyingList')} className={`${styles.actionBtn} ${styles.squareBtn}`}>
                     <img src="/icon-list.svg" alt="매칭내역" className={styles.iconImage} />
-                    <span>매칭내역</span>
+                    <span>신청내역</span>
                 </div>
             </div>
 
@@ -117,12 +134,18 @@ function HelpCenter() {
                 {volunteerStatus === 'NOT_MATCHING' && (
                     <>
                         <p className={styles.matchName}>매칭 진행중입니다</p>
-                        <button className={styles.reviewBtn} onClick={() => navigate("/ApplyingList")}>신청내역</button>
+                        <button className={styles.reviewBtn} onClick={() => {
+                            const confirmCancel = window.confirm("매칭을 취소하시겠습니까?");
+                            if (confirmCancel) {
+                                handleCancel(); // ✅ 반드시 함수 호출해야 합니다
+                            }
+                        }}>신청 취소</button>
                         <p className={styles.reviewInfo}>
                             {matchDate} 봉사 신청
                         </p>
-                    </> 
+                    </>
                 )}
+
                 {volunteerStatus === null && (
                     <>
                         <p className={styles.matchName}>오늘의 일정이 없습니다.</p>

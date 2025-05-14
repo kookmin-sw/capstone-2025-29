@@ -138,12 +138,13 @@ export default function Signup() {
                 district: formValues.region,
                 detail: formValues.detailAddress || ""
             },
-            phoneCode: formValues.phoneCode,
+            phoneCode: localStorage.getItem('fcmToken') || "",
             userType: selectedRole || "volunteer",
             bio: selectedRole === "volunteer" ? formValues.introduction : ""
         };
 
         try {
+            console.log("회원가입 데이터:", formData);
             await registerUser(formData);
             alert('회원가입이 완료되었습니다.');
             navigate('/login');
@@ -196,7 +197,7 @@ export default function Signup() {
             <div className={styles.inputGroup}>
                 <label>지역구</label>
                 <select name="region" value={formValues.region} onChange={handleInputChange}>
-                    <option value="">선택</option>
+                    <option value="">지역구 선택</option>
                     {districts.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
                 </select>
             </div>
