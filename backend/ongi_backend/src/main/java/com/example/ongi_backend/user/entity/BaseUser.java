@@ -53,4 +53,8 @@ public abstract class BaseUser {
 	public void updatePassword(String password) {
 		Optional.ofNullable(password).ifPresent(updatedPassword -> this.password = updatedPassword);
 	}
+
+	public void updateFcmToken(String fcmToken) {
+		Optional.ofNullable(fcmToken).ifPresent(updatedFcmToken -> this.fcmToken = updatedFcmToken);
+	}
 }
