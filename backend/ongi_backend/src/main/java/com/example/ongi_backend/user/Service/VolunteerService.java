@@ -102,25 +102,25 @@ public class VolunteerService {
 				"elderly"
 			);
 
-			volunteerActivityService.deleteActivity(id);
+			// volunteerActivityService.deleteActivity(id);
 
 			// 봉사자가 취소했을 때 그냥 봉사가 삭제되도록
-			// findVolunteerActivity.updateVolunteer(null);
-			// findVolunteerActivity.updateStatus(MATCHING);
-			// if (Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
-			// 	awsSqsNotificationSender.expireNotification(
-			// 		elderly.getFcmToken(),
-			// 		elderly.getId()
-			// 	);
-			// 	volunteerActivityService.deleteActivity(id);
-			// 	return;
-			// }
-			//
-			// unMatchingService.saveUnMatching(
-			// 	findVolunteerActivity.getId(),
-			// 	findVolunteerActivity.getElderly().getId(),
-			// 	findVolunteerActivity
-			// );
+			findVolunteerActivity.updateVolunteer(null);
+			findVolunteerActivity.updateStatus(MATCHING);
+			if (Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
+				awsSqsNotificationSender.expireNotification(
+					elderly.getFcmToken(),
+					elderly.getId()
+				);
+				volunteerActivityService.deleteActivity(id);
+				return;
+			}
+
+			unMatchingService.saveUnMatching(
+				findVolunteerActivity.getId(),
+				findVolunteerActivity.getElderly().getId(),
+				findVolunteerActivity
+			);
 		} else {
 			throw new CustomException(UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR);
 		}
