@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, BackgroundTasks, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -14,6 +14,9 @@ from modules.ttr_module import add_user_message, add_assistant_message, get_chat
 from modules.emotion_module import analyze_emotion
 from modules.auth import get_current_user
 from modules.delete_audiofile import delete_file_after_delay
+from modules.logger_module import load_logs_from_s3
+from modules.logger_module import log_to_s3
+from datetime import datetime
 
 
 #배포테스트
@@ -94,6 +97,8 @@ async def chat_with_text(
         gpt_response = get_chat_response()
         add_assistant_message(gpt_response)
 
+        log_to_s3(username, text, gpt_response)
+
         tts_path = synthesize(gpt_response)
 
         background_tasks.add_task(delete_file_after_delay, tts_path)
@@ -113,6 +118,8 @@ async def chat_with_text(
             }
         }
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"텍스트 채팅 처리 중 오류: {str(e)}")
 
 
@@ -127,32 +134,112 @@ async def get_audio(
         return FileResponse(filename)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"오디오 파일 반환 중 오류: {str(e)}")
+    
+
+from fastapi import HTTPException
+import httpx
+
+@app.post("/emotion/test")
+async def test_emotion_from_s3_and_send(
+    username: str = Query(...),
+    date: str = Query(...),
+    backend_url: str = Query("https://coffeesupliers.shop/api/sentimentAnalysis")
+):
+    try:
+        messages = load_logs_from_s3(username, date)
+
+        if not messages:
+            raise HTTPException(status_code=404, detail="해당 날짜에 대한 로그가 없습니다.")
+
+        history = []
+        for entry in messages:
+            history.append({"role": "user", "content": entry["user"]})
+            history.append({"role": "assistant", "content": entry["assistant"]})
+
+        emotion = analyze_emotion(history,  [
+            "JOY", "SAD", "LONELINESS", "FEAR", "CLAM", "ANTICIPATION", "EXCITEMENT", "ANGRY"
+        ])
+
+        payload = {
+            "username": username,
+            "analysis": emotion,
+            "analysisDate": date
+        }
+
+        async with httpx.AsyncClient() as client:
+            res = await client.post(backend_url, json=payload)
+
+        # 응답 본문 확인
+        try:
+            backend_response = res.json()
+        except Exception:
+            backend_response = res.text  # JSON이 아니면 텍스트로 반환
+
+        return {
+            "status": "success",
+            "emotion": emotion,
+            "username": username,
+            "date": date,
+            "backend_status_code": res.status_code,
+            "backend_response": backend_response
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"감정 분석 및 백엔드 전송 실패: {str(e)}")
 
 
 @app.post("/emotion/")
 async def emotion(
-    backend_url: str,
+    backend_url: str = "https://coffeesupliers.shop/api/sentimentAnalysis",
     username: str = Depends(get_current_user)
 ):
     try:
-        emotion = analyze_emotion(get_chat_history(), ["기쁨", "슬픔", "외로움", "두려움", "평온", "설렘", "신남", "분노"])
+        today = datetime.now().strftime("%Y-%m-%d")
+        messages = load_logs_from_s3(username, today)
+
+        if not messages:
+            raise HTTPException(status_code=404, detail="오늘 날짜에 대한 대화 로그가 없습니다.")
+
+        history = []
+        for entry in messages:
+            history.append({"role": "user", "content": entry["user"]})
+            history.append({"role": "assistant", "content": entry["assistant"]})
+
+        emotion = analyze_emotion(
+            history,
+            ["JOY", "SAD", "LONELINESS", "FEAR", "CLAM", "ANTICIPATION", "EXCITEMENT", "ANGRY"]
+        )
+
+        payload = {
+            "username": username,
+            "analysis": emotion,
+            "analysisDate": today
+        }
+
+        print(f"백엔드로 전송할 감정 분석 데이터: {payload}")
 
         async with httpx.AsyncClient() as client:
-            await client.post(
+            res = await client.post(
                 backend_url,
-                json={
-                    "emotion": emotion,
-                    "chat_history": get_chat_history(),
-                    "username": username
-                }
+                json=payload,
+                headers={"Content-Type": "application/json"}
             )
+
+        # 응답 처리 (JSON 응답이 아닐 경우 대비)
+        try:
+            backend_response = res.json()
+        except Exception:
+            backend_response = res.text
+
+        print(f"백엔드 응답 코드: {res.status_code}")
+        print(f"백엔드 응답 본문: {backend_response}")
 
         return {
             "status": "success",
-            "username": username,
-            "data": {
-                "emotion": emotion
-            }
+            "emotion": emotion,
+            "backend_response_code": res.status_code,
+            "backend_response_body": backend_response
         }
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"감정 분석 또는 백엔드 전송 중 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"감정 분석 실패: {str(e)}")

@@ -1,7 +1,8 @@
 from gradio_client import Client
 import uuid, os, shutil
 
-GRADIO_URL = "http://43.202.0.116:8888"
+# GRADIO_URL = "http://52.78.135.32:8888/"
+GRADIO_URL = "https://b197-1-209-175-113.ngrok-free.app"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "..", "tts_output")  
@@ -22,9 +23,9 @@ def synthesize(text: str, output_dir=OUTPUT_DIR) -> str:
         filename = f"tts_{uuid.uuid4().hex[:8]}.wav"
         final_path = os.path.join(output_dir, filename)
 
-        print(f"[DEBUG] Gradio로부터 받은 임시 파일 경로: {result}")
-        print(f"[DEBUG] 최종 저장될 위치: {final_path}")
-        print(f"[DEBUG] 현재 작업 디렉토리: {os.getcwd()}")
+        print(f"Gradio로부터 받은 임시 파일 경로: {result}")
+        print(f"최종 저장될 위치: {final_path}")
+        print(f"현재 작업 디렉토리: {os.getcwd()}")
 
         shutil.move(result, final_path)
         return final_path
