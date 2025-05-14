@@ -5,7 +5,7 @@ import Topbar from "../../components/Topbar";
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import styles from "./ChatCenter.module.css";
-import { fetchSentimentAnalysis } from "../../api/chatApi"; // API 호출 함수
+import { fetchSentimentAnalysis } from "../../api/ChatApi"; // API 호출 함수
 
  
 // API 호출 함수
