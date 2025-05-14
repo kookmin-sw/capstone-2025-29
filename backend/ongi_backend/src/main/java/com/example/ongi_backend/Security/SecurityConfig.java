@@ -5,7 +5,9 @@ import com.example.ongi_backend.Security.Jwt.JwtFilter;
 import com.example.ongi_backend.Security.Jwt.JwtProvider;
 import com.example.ongi_backend.Security.oauth.OAuth2SuccessHandler;
 import com.example.ongi_backend.Security.oauth.OAuth2UserService;
+import com.example.ongi_backend.user.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,6 +30,7 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final ObjectProvider<UserService> userServiceProvider;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -41,7 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public LoginFilter loginFilter() throws Exception {
-        LoginFilter loginFilter = new LoginFilter(jwtProvider);
+        LoginFilter loginFilter = new LoginFilter(jwtProvider, userServiceProvider);
         loginFilter.setAuthenticationManager(this.authenticationManager(authenticationConfiguration));
         loginFilter.setFilterProcessesUrl("/api/login");  // 필터가 "/login" 요청을 처리하도록 설정
         return loginFilter;
