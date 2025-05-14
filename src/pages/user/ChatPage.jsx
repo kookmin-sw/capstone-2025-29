@@ -1,17 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
+import LoadingModal from "../../components/LoadingModal"; // ✅ 여기 추가
 import styles from "./ChatPage.module.css";
 import { sendChatMessage } from "../../api/ChatApi";
 
 const ChatPage = () => {
     const navigate = useNavigate();
 
-    const [messages, setMessages] = useState([]); // 전체 메시지
-    const [input, setInput] = useState(""); // 입력창 텍스트
-    const [isListening, setIsListening] = useState(false); // 🎤 마이크 상태
-    const [isSending, setIsSending] = useState(false); // 메시지 전송 중
-    const [userName, setUserName] = useState(""); // 사용자 이름
+    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState("");
+    const [isListening, setIsListening] = useState(false);
+    const [isSending, setIsSending] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [userName, setUserName] = useState("");
+    const [chatBotName, setChatBotName] = useState("AI");
+    const [chatBotProfileImage, setChatBotProfileImage] = useState("/ai-icon.svg");
 
     const messageEndRef = useRef(null);
     const lastMessageId = useRef(1);
@@ -20,7 +24,7 @@ const ChatPage = () => {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = useRef(null);
-    const transcriptRef = useRef(""); // 인식 결과 저장용
+    const transcriptRef = useRef("");
 
     useEffect(() => {
         recognition.current = new SpeechRecognition();
@@ -49,7 +53,7 @@ const ChatPage = () => {
                     .join("");
                 
                 transcriptRef.current = transcript;
-                setInput(transcript); // 입력창에만 표시
+                setInput(transcript);
             };
 
             recognition.current.onerror = (event) => {
@@ -61,19 +65,21 @@ const ChatPage = () => {
 
     useEffect(() => {
         const storedUserName = localStorage.getItem("userName") || "사용자";
+        const storedBotName = localStorage.getItem("chatBotName") || "AI";
+        const storedBotImage = localStorage.getItem("chatBotProfileImage") || "/ai-icon.svg";
+
         setUserName(storedUserName);
+        setChatBotName(storedBotName);
+        setChatBotProfileImage(storedBotImage);
 
         setMessages([
             {
                 id: 1,
                 sender: "ai",
                 content: "안녕하세요\n챗봇과 대화하며 마음을 나누고,\n감정을 분석해보세요.",
-                timestamp: new Date().toLocaleTimeString("ko-KR", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                }),
-                name: storedUserName,
+                timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
+                name: storedBotName,
+                profileImage: storedBotImage
             },
         ]);
     }, []);
@@ -88,16 +94,13 @@ const ChatPage = () => {
         }
 
         setIsSending(true);
+        setIsLoading(true); 
 
         const userMessage = {
             id: lastMessageId.current + 1,
             sender: "user",
             content: input,
-            timestamp: new Date().toLocaleTimeString("ko-KR", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: true,
-            }),
+            timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
             name: userName,
         };
         setMessages((prev) => [...prev, userMessage]);
@@ -116,12 +119,9 @@ const ChatPage = () => {
                 sender: "ai",
                 content: text,
                 audioPath: audio_path,
-                timestamp: new Date().toLocaleTimeString("ko-KR", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                }),
-                name: userName,
+                timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
+                name: chatBotName,
+                profileImage: chatBotProfileImage
             };
             setMessages((prev) => [...prev, aiMessage]);
             lastMessageId.current += 1;
@@ -133,17 +133,15 @@ const ChatPage = () => {
                 id: lastMessageId.current + 1,
                 sender: "ai",
                 content: "죄송합니다. 현재 요청을 처리할 수 없습니다.",
-                timestamp: new Date().toLocaleTimeString("ko-KR", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                }),
-                name: userName,
+                timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
+                name: chatBotName,
+                profileImage: chatBotProfileImage
             };
             setMessages((prev) => [...prev, errorMessage]);
             lastMessageId.current += 1;
         } finally {
             setIsSending(false);
+            setIsLoading(false); // ✅ 로딩 모달 끄기
         }
     };
 
@@ -171,20 +169,18 @@ const ChatPage = () => {
                     {messages.map((message) => (
                         <div
                             key={message.id}
-                            className={`${styles.messageRow} ${message.sender === "user" ? styles.userMessageRow : styles.aiMessageRow
-                                }`}
+                            className={`${styles.messageRow} ${message.sender === "user" ? styles.userMessageRow : styles.aiMessageRow}`}
                         >
                             {message.sender === "ai" && (
                                 <div className={styles.profileSection}>
                                     <div className={styles.profileImage}>
-                                        <img src="/ai-icon.svg" alt="AI 프로필" />
+                                        <img src={message.profileImage} alt="AI 프로필" />
                                     </div>
                                     <span className={styles.profileName}>{message.name}</span>
                                 </div>
                             )}
                             <div
-                                className={`${styles.message} ${message.sender === "user" ? styles.userMessage : styles.aiMessage
-                                    }`}
+                                className={`${styles.message} ${message.sender === "user" ? styles.userMessage : styles.aiMessage}`}
                             >
                                 <div className={styles.messageContent}>
                                     <p>{message.content}</p>
@@ -195,7 +191,6 @@ const ChatPage = () => {
                     <div ref={messageEndRef} />
                 </div>
 
-                {/* 🎤 마이크 버튼 */}
                 <div className={styles.centerMic}>
                     <button
                         className={`${styles.micButton} ${isListening ? styles.activeMic : ""}`}
@@ -205,7 +200,6 @@ const ChatPage = () => {
                     </button>
                 </div>
 
-                {/* 입력창 및 전송 버튼 */}
                 <div className={styles.inputContainer}>
                     <div className={styles.inputWrapper}>
                         <textarea
@@ -223,6 +217,9 @@ const ChatPage = () => {
                     </div>
                 </div>
             </div>
+
+            <LoadingModal isOpen={isLoading} message="답변을 생성 중입니다..." />
+
         </div>
     );
 };

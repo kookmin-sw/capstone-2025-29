@@ -18,7 +18,7 @@ export default function Topbar({ title, navigateTo, handleBack: customHandleBack
 
     return (
         <div className={styles.topBar}>
-            <button className={styles.backBtn} onClick={handleBack}>
+            <button type="button" className={styles.backBtn} onClick={handleBack}>
                 <img src='/backarrow.svg' alt="뒤로가기" className={styles.icon} />
             </button>
             <h1 className={styles.title}>{title}</h1>

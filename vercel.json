@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "http://54.180.122.49:8080/api/$1"
+      "destination": "https://coffeesupliers.shop/api/$1"
     },
     {
       "source": "/chatapi/(.*)",
-      "destination": "https://aiserver.store/"
+      "destination": "https://aiserver.store/$1"
     },
     {
       "source": "/(.*)",

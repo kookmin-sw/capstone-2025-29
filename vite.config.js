@@ -66,13 +66,14 @@ export default defineConfig({
     })
   ],
   server: {
-    port: 5174,
+    port:5174,
     proxy: {
       '/api': {
-        target: 'http://54.180.122.49:8080',
+        target: 'https://coffeesupliers.shop',
         changeOrigin: true,
-      },
-    },
-  },
+        secure: false, // 로컬 HTTPS 인증서 오류 무시용
+      }
+    }
+  }
 
 })

@@ -3,12 +3,10 @@ import styles from "./MatchCard.module.css";
 
 export default function MatchCard({ icon, name, date, time, tags, onClick }) {
     const tagMap = {
-        // 유형 매핑
         HEALTH: "의료",
         HOUSING: "주거",
         CULTURE: "문화",
         EDUCATION: "교육",
-        // 자치구 매핑
         GANGNAM: "강남구", GANGDONG: "강동구", GANGBUK: "강북구", GANGSEO: "강서구",
         GWANAK: "관악구", GWANGJIN: "광진구", GURO: "구로구", GEUMCHEON: "금천구",
         NOWON: "노원구", DOBONG: "도봉구", DONGDAEMUN: "동대문구", DONGJAK: "동작구",
@@ -22,7 +20,11 @@ export default function MatchCard({ icon, name, date, time, tags, onClick }) {
             <div className={styles.top}>
                 <img src={icon} className={styles.icon} alt="icon" />
                 <div>
-                    <div className={styles.name}><strong>{name}</strong> 님과의 매칭</div>
+                    <div className={styles.name}>
+                        <strong>
+                            {name ? `${name}님과의 매칭` : "매칭 진행 중 입니다."}
+                        </strong>
+                    </div>
                     <div className={styles.date}>{date} | {time}</div>
                 </div>
             </div>

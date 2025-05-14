@@ -134,8 +134,8 @@ export default function VolunteerMain() {
                 {volunteerStatus === "COMPLETED" && (
                     <>
                         <p className={styles.matchName}>오늘 봉사가 완료됐습니다.</p>
-                        <button className={styles.reviewBtn} onClick={() => navigate("/matchinglist")}>
-                            매칭내역
+                        <button className={styles.reviewBtn} onClick={() => navigate("/completereview")}>
+                            후기 확인
                         </button>
                         <p className={styles.reviewInfo}>오늘의 일정은 더이상 없습니다.</p>
                     </>

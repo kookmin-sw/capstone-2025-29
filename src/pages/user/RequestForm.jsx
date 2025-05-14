@@ -14,6 +14,19 @@ export default function RequestForm() {
     const [currentTime, setCurrentTime] = useState('');
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
+    const userName = localStorage.getItem('userName') || "이름 없음";
+    const userAddress = JSON.parse(localStorage.getItem('userAddress')) || { district: "", detail: "" };
+
+    const districtMap = {
+        GANGNAM: "강남구", GANGDONG: "강동구", GANGBUK: "강북구", GANGSEO: "강서구",
+        GWANAK: "관악구", GWANGJIN: "광진구", GURO: "구로구", GEUMCHEON: "금천구",
+        NOWON: "노원구", DOBONG: "도봉구", DONGDAEMUN: "동대문구", DONGJAK: "동작구",
+        MAPO: "마포구", SEODAEMUN: "서대문구", SEOCHO: "서초구", SEONGDONG: "성동구",
+        SEONGBUK: "성북구", SONGPA: "송파구", YANGCHEON: "양천구", YEONGDEUNGPO: "영등포구",
+        YONGSAN: "용산구", EUNPYEONG: "은평구", JONGNO: "종로구"
+    };
+
+
     useEffect(() => {
         const updateDateTime = () => {
             const now = new Date();
@@ -48,18 +61,6 @@ export default function RequestForm() {
         pet: ["없음"],     // 반려동물 정보 (기본값으로 '없음' 선택)
         requestText: "",   // 추가 요청사항
     });
-
-    // 임시 매칭 데이터 (실제로는 서버에서 받아올 데이터)
-    const mockData = {
-        id: 1,
-        name: "홍길동",
-        date: "2025년 10월 11일",
-        time: "14:30",
-        tags: ['의료', "강남구"],
-        icon: "/book.svg",
-        address1: "서울 성북구 정릉로 77 국민대학교",
-        address2: "서울 성북구 정릉동 861-1",
-    };
 
     /**
      * 뒤로가기 버튼 핸들러
@@ -127,8 +128,8 @@ export default function RequestForm() {
                     : formData.pet.includes("기타") ? "etc"
                         : "none",
             address: {
-                district: "GANGNAM", // 실제 주소 데이터로 교체 필요
-                detail: "역삼동 123-45", // 실제 주소 데이터로 교체 필요
+                district: userAddress.district || "구역 없음", 
+                detail: userAddress.detail || "상세 주소 없음"
             }
         };
         // 시간 유효성 검사
@@ -273,7 +274,7 @@ export default function RequestForm() {
                                 alt={formData.category}
                             />
                             <div>
-                                <div className={styles.name}><strong>김춘배</strong>님의 신청</div>
+                                <div className={styles.name}><strong>{userName}</strong>님의 신청</div>
                                 <div className={styles.dateTime}>
                                     <span>
                                         {
@@ -291,13 +292,17 @@ export default function RequestForm() {
                             {formData.category && (
                                 <span className={styles.tag}>{formData.category}</span>
                             )}
+                            {userAddress.district && (
+                                <span className={styles.tag}>{districtMap[userAddress.district]}</span>
+                            )}
                         </div>
+
                     </div>
 
-                    {/* 주소 하드코딩 */}
+                    {/* 주소 */}
                     <div className={styles.address}>
-                        <p>서울특별시 강남구</p>
-                        <p>역삼동 123-45</p>
+                        <p>서울특별시 {districtMap[userAddress.district]}</p>
+                        <p>{userAddress.detail}</p>
                     </div>
 
 
@@ -315,11 +320,6 @@ export default function RequestForm() {
                                 </div>
                             ))}
                         </div>
-                        {/* <div className={styles.tags}>
-                            {tags.map((tag, idx) => (
-                                <span key={idx} className={styles.tag}>{tag}</span>
-                            ))}
-                        </div> */}
                     </div>
 
                     {/* 추가 요청사항 입력 */}

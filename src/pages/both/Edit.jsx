@@ -25,8 +25,6 @@ export default function Edit() {
         Object.entries(districtMap).map(([key, value]) => [value, key])
     );
 
-
-
     const [formData, setFormData] = useState({
         name: "",
         age: "",
@@ -34,7 +32,8 @@ export default function Edit() {
         phone: "",
         district: "",
         detail: "",
-        profileImage: ""
+        profileImage: "",
+        introduction: ""
     });
 
     const [passwordInput, setPasswordInput] = useState("");
@@ -56,7 +55,8 @@ export default function Edit() {
                     phone: data.phone || "",
                     district: districtMap[data.address?.district] || "",
                     detail: data.address?.detail || "",
-                    profileImage: data.profileImage || ""
+                    profileImage: data.profileImage || "",
+                    introduction: data.introduction || ""
                 });
             } catch (error) {
                 alert("유저 정보 불러오기 실패: " + error.message);
@@ -87,11 +87,14 @@ export default function Edit() {
                 detail: formData.detail
             },
             profileImage: formData.profileImage,
+            introduction: formData.introduction,
             userType
         };
 
         try {
             await updateUserInfo(updatePayload);
+
+            localStorage.setItem("userName", formData.name);
             alert("기본 정보가 수정되었습니다.");
             navigate(userType === "volunteer" ? "/volunteermain" : "/usermain");
         } catch (error) {
@@ -103,17 +106,14 @@ export default function Edit() {
         e.preventDefault();
 
         try {
-            // 현재 비밀번호 확인
             await checkPassword(passwordInput, userType);
             setPasswordError(false);
 
-            // 새 비밀번호 / 비밀번호 확인 공란 체크
             if (newPassword.trim() === "" || confirmPassword.trim() === "") {
                 alert("새 비밀번호를 입력해주세요.");
                 return;
             }
 
-            // 새 비밀번호 일치 여부 체크
             if (newPassword !== confirmPassword) {
                 setMatchError(true);
                 return;
@@ -121,7 +121,6 @@ export default function Edit() {
                 setMatchError(false);
             }
 
-            // 비밀번호 변경 진행
             await updatePassword(newPassword, userType);
             alert("비밀번호가 성공적으로 변경되었습니다!");
             navigate(userType === "volunteer" ? "/volunteermain" : "/usermain");
@@ -186,6 +185,22 @@ export default function Edit() {
                     <label>지역(상세)</label>
                     <input name="detail" type="text" value={formData.detail} onChange={handleInputChange} />
                 </div>
+
+                {/* ✅ 자기소개 입력란 (봉사자만) */}
+                {userType === "volunteer" && (
+                    <div className={styles.inputGroup}>
+                        <label>자기소개</label>
+                        <textarea
+                            name="introduction"
+                            value={formData.introduction}
+                            onChange={handleInputChange}
+                            placeholder="소개를 잘 작성하시면 매칭에 도움이 됩니다."
+                            maxLength={100}
+                            rows={10}
+                            className={styles.introduction}
+                        />
+                    </div>
+                )}
 
                 <button type="submit" className={styles.submitBtn}>수정하기</button>
             </form>

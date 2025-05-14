@@ -12,6 +12,7 @@ export default function WriteReview() {
     const [reviewText, setReviewText] = useState("");
     const [images, setImages] = useState([]); // 이미지 URL 배열
 
+    console.log("currentMatching:", currentMatching);
     const handleAttachClick = () => {
         setShowModal(true);
     };
@@ -37,7 +38,7 @@ export default function WriteReview() {
             const response = await submitReview(reviewData);
             console.log("후기 작성 성공:", response);
             // 성공 메시지 출력
-            console.log("후기가 성공적으로 작성되었습니다.");
+            alert("후기가 성공적으로 작성되었습니다.");
             navigate("/volunteermain"); // VolunteerMain 페이지로 이동
         } catch (error) {
             console.error("후기 작성 실패:", error);
@@ -52,7 +53,7 @@ export default function WriteReview() {
 
             {/* 매칭 정보 */}
             <div className={styles.matchInfo}>
-                <img src="/book.svg" className={styles.matchIcon} />
+                <img src="/check.svg" className={styles.matchIcon} />
                 <div>
                     <div className={styles.matchText}>
                         <strong>{currentMatching?.otherName || "이름 없음"}</strong> 님과의 매칭
@@ -76,14 +77,7 @@ export default function WriteReview() {
                 </div>
             </div>
 
-            {/* 태그 목록 */}
-            <div className={styles.tagList}>
-                {["의료", "강남구", "의료", "강남구", "의료"].map((tag, idx) => (
-                    <span key={idx} className={styles.tag}>
-                        {tag}
-                    </span>
-                ))}
-            </div>
+          
 
             {/* 사진/동영상 첨부 */}
             <button className={styles.attachBtn} onClick={handleAttachClick}>

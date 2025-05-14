@@ -142,7 +142,7 @@ function HelpCenter() {
                             }
                         }}>신청 취소</button>
                         <p className={styles.reviewInfo}>
-                            {matchDate} 봉사 신청
+                            {matchDate} {matchTime} 신청
                         </p>
                     </>
                 )}

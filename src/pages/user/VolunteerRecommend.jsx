@@ -19,16 +19,6 @@ export default function VolunteerRecommend() {
 
     const isConfirmed = useRef(false);
 
-    // 최초 진입 시 봉사자 없으면 매칭 취소
-    // useEffect(() => {
-    //     if (volunteers.length === 0 && matchingId) {
-    //         cancelMatching(matchingId)
-    //             .then(() => console.log("매칭 취소 완료 (봉사자 없음, 최초 진입시)"))
-    //             .catch((error) => console.error("매칭 취소 실패:", error));
-    //     }
-    // }, [volunteers.length, matchingId]);
-
-    // 새로고침, 앱 종료 시 keepalive로 매칭 취소 요청
     useEffect(() => {
         const cancelMatchingKeepalive = () => {
             if (volunteers.length > 0 && matchingId && !isConfirmed.current) {
@@ -99,6 +89,22 @@ export default function VolunteerRecommend() {
         setIsModalOpen(false);
     };
 
+
+    // ✅ 매칭 취소 핸들러 (뒤로가기용)
+    const handleBack = async () => {
+        const confirmCancel = window.confirm("매칭을 취소하시겠습니까?");
+        if (confirmCancel && matchingId) {
+            try {
+                await cancelMatching(matchingId);
+                alert("매칭이 취소되었습니다.");
+                navigate('/helpcenter'); // 이전 페이지로 이동
+            } catch (error) {
+                console.error("매칭 취소 실패:", error);
+                alert(error.message || "매칭 취소에 실패했습니다.");
+            }
+        }
+    };
+
     // '아니요, 괜찮습니다' → 랜덤 매칭
     const handleBottomButtonClick = async () => {
         if (volunteers.length === 0) {
@@ -119,7 +125,8 @@ export default function VolunteerRecommend() {
 
     return (
         <div className={styles.container}>
-            <Topbar title="" />
+            <Topbar title="" handleBack={handleBack} />
+
 
             {volunteers.length > 0 ? (
                 <>
@@ -167,7 +174,7 @@ export default function VolunteerRecommend() {
                 className={styles.bottomButton}
                 onClick={handleBottomButtonClick}
             >
-                {volunteers.length === 0 ? "홈으로 돌아가기" : "아니요, 괜찮습니다"}
+                {volunteers.length === 0 ? "매칭 기다리기" : "아니요, 괜찮습니다"}
             </button>
         </div>
     );

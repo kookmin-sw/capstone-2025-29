@@ -1,10 +1,14 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Topbar from "../../components/Topbar";
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import styles from "./ChatCenter.module.css";
+import { fetchSentimentAnalysis } from "../../api/chatApi"; // API 호출 함수
 
+ 
+// API 호출 함수
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 // 감정별 색상 매핑
@@ -44,8 +48,37 @@ const pieData = {
 
 const ChatCenter = () => {
     const navigate = useNavigate();
-    // 로컬 스토리지에서 사용자 이름 가져오기
-    const userName = localStorage.getItem('userName') || '홍길동';
+    const [emotionData, setEmotionData] = useState([]);
+    const [feedback, setFeedback] = useState('');
+    const [chatBotName, setChatBotName] = useState('');
+
+    const userName = localStorage.getItem('chatBotName') || '홍길동';
+
+    // 감정 분석 데이터 불러오기
+    useEffect(() => {
+        const loadSentimentData = async () => {
+            try {
+                const data = await fetchSentimentAnalysis();
+
+                const mappedData = Object.entries(data.sentimentPercentages).map(([label, value]) => ({
+                    label,
+                    value,
+                    color: colorMap[label] || '#999999'
+                }));
+
+                setEmotionData(mappedData);
+                setFeedback(data.feedback);
+                setChatBotName(data.chatBotName);
+            } catch (error) {
+                console.error(error.message);
+            }
+        };
+
+        loadSentimentData();
+    }, []);
+
+
+    console.log("감정 분석 데이터:", emotionData);
 
     const handleChatClick = () => {
         navigate('/ChatPage');

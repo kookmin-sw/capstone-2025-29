@@ -26,7 +26,6 @@
 }
 
 .name strong{
-
     font-size: 1.2;
 }
 
@@ -47,5 +46,5 @@
     color: #333;
     border-radius: 20px;
     font-size: 0.8rem;
-    padding: 1vh 5vw;
+    padding: 1vh 4vw;
 }

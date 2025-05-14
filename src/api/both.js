@@ -1,34 +1,26 @@
 import axios from 'axios';
 
-// ✅ 환경에 따라 API_BASE 설정
-const API_BASE = import.meta.env.MODE === 'production'
-    ? import.meta.env.VITE_API_URL
-    : ''; // 로컬에서는 프록시 사용을 위해 빈 문자열
-
 // ✅ 로그인 API
 export const login = async (username, password, userType) => {
     try {
-        const response = await axios.get(`${API_BASE}/api/login`, {
+        const response = await axios.get(`/api/login`, {
             params: { username, password, userType },
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            },
-            withCredentials: false
+            }
         });
 
-        console.log("로그인 API 호출", response);
         if (!response.data?.accessToken) {
             throw { status: 400, message: '로그인 실패: 서버 응답에 토큰이 없습니다.' };
         }
 
         localStorage.setItem('accessToken', response.data.accessToken);
         localStorage.setItem('userType', userType);
+
+        return response.data;
     } catch (error) {
-        const errorMessage = error.response?.data?.message ||
-            (error.response ? '로그인에 실패했습니다.' :
-                (error.request ? '서버와의 통신에 실패했습니다.' :
-                    '로그인 요청 중 오류가 발생했습니다.'));
+        const errorMessage = error.response?.data?.message || '로그인에 실패했습니다.';
         throw {
             status: error.response?.status || 0,
             message: errorMessage
@@ -39,7 +31,7 @@ export const login = async (username, password, userType) => {
 // ✅ 아이디 중복 확인 API
 export const checkUsername = async (username, userType) => {
     try {
-        const response = await axios.get(`${API_BASE}/api/user/username`, {
+        const response = await axios.get(`/api/user/username`, {
             params: { username, userType },
             headers: {
                 'Content-Type': 'application/json',
@@ -48,10 +40,7 @@ export const checkUsername = async (username, userType) => {
         });
         return response;
     } catch (error) {
-        const errorMessage = error.response?.data?.message ||
-            (error.response ? '아이디 중복 확인에 실패했습니다.' :
-                (error.request ? '서버와의 통신에 실패했습니다.' :
-                    '요청 중 오류가 발생했습니다.'));
+        const errorMessage = error.response?.data?.message || '아이디 중복 확인에 실패했습니다.';
         throw {
             status: error.response?.status || 0,
             message: errorMessage
@@ -61,23 +50,15 @@ export const checkUsername = async (username, userType) => {
 
 // ✅ 회원가입 API
 export const registerUser = async (userData) => {
-
-    
     try {
-        console.log("회원가입 API 호출", userData);
-        
-        const response = await axios.post(`${API_BASE}/api/user`, userData, {
+        const response = await axios.post(`/api/user`, userData, {
             headers: {
-                'Content-Type': 'application/json',
-            },
-            withCredentials: false,
+                'Content-Type': 'application/json'
+            }
         });
         return response;
     } catch (error) {
-        const errorMessage = error.response?.data?.message ||
-            (error.response ? '회원가입에 실패했습니다.' :
-                (error.request ? '서버와의 통신에 실패했습니다.' :
-                    '요청 중 오류가 발생했습니다.'));
+        const errorMessage = error.response?.data?.message || '회원가입에 실패했습니다.';
         throw {
             status: error.response?.status || 0,
             message: errorMessage
@@ -90,12 +71,12 @@ export const fetchUserInfo = async (userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.get(`${API_BASE}/api/user`, {
+        const response = await axios.get(`/api/user`, {
             params: { userType },
             headers: {
+                'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Accept': 'application/json'
             }
         });
 
@@ -114,10 +95,10 @@ export const updateUserInfo = async (userData) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.put(`${API_BASE}/api/user`, userData, {
+        const response = await axios.put(`/api/user`, userData, {
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
             }
         });
 
@@ -136,7 +117,7 @@ export const checkPassword = async (password, userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.get(`${API_BASE}/api/user/password`, {
+        const response = await axios.get(`/api/user/password`, {
             params: { password, userType },
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -159,7 +140,7 @@ export const updatePassword = async (password, userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.patch(`${API_BASE}/api/user`, {
+        const response = await axios.patch(`/api/user`, {
             password,
             userType
         }, {
@@ -180,13 +161,12 @@ export const updatePassword = async (password, userType) => {
     }
 };
 
-
 // ✅ 유저 알림 목록 가져오기 API
 export const fetchUserNotifications = async (userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.get(`${API_BASE}/api/user/notification`, {
+        const response = await axios.get(`/api/user/notification`, {
             params: { userType },
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

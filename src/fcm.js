@@ -9,7 +9,7 @@ export const requestFCMToken = async () => {
 
         localStorage.setItem('fcmToken', currentToken); // 토큰을 로컬 스토리지에 저장
         
-        console.log('currentToken:', currentToken);
+
         // if (currentToken) {
 
         //     // ✅ 서버에 토큰 전송 (예시)

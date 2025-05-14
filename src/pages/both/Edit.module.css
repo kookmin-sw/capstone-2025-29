@@ -65,6 +65,19 @@
     margin-top: 1vh;
 }
 
+/* 자기소개 textarea 공통 스타일 (선택적 적용) */
+.introduction {
+    padding: 2vh 4vw;
+    background-color: #EEEEEE;
+    border: none;
+    border-radius: 5px;
+    font-size: clamp(0.95rem, 2vw, 1rem);
+    resize: none;
+    margin-top: 1vh;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* 에러 메시지 */
 .errorText {
     color: red;

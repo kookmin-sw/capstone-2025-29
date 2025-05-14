@@ -24,7 +24,12 @@ export default function Login() {
 
     const handleLogin = async () => {
         try {
-            await login(formValues.username, formValues.password, userType);
+            const requestData = await login(formValues.username, formValues.password, userType);
+
+            console.log('로그인 성공:', requestData);
+             // ✅ 유저 정보 저장
+            localStorage.setItem('userName', requestData.name);
+            localStorage.setItem('userAddress', JSON.stringify(requestData.address));
 
             // 사용자 타입에 따라 다른 페이지로 이동
             if (userType === 'volunteer') {
@@ -45,7 +50,7 @@ export default function Login() {
             </div>
 
             <div className={styles.bottomHalf}>
-                
+
                 {/* 사용자 타입 선택 토글 */}
                 <div className={styles.toggleWrapper}>
                     <button
