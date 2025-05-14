@@ -23,6 +23,8 @@ public class ResponseSentimentAnalysis {
         }
     """)
     private Map<String, Long> sentimentPercentages;
+    @Schema(description = "감정분석 피드백", example = "우울감이 너무 높습니다. 병원 방문 부탁드립니다.")
+    private String feedback;
     @Schema(description = "사용자의 챗봇 이름", example = "홍길동")
     private String chatBotName;
 }

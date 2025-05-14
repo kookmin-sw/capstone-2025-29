@@ -3,6 +3,7 @@ package com.example.ongi_backend.sentimentAnalysis.service;
 import com.example.ongi_backend.global.entity.Analysis;
 import com.example.ongi_backend.global.exception.CustomException;
 import com.example.ongi_backend.global.exception.ErrorCode;
+import com.example.ongi_backend.global.gpt.ChatGptService;
 import com.example.ongi_backend.sentimentAnalysis.dto.RequestSentimentAnalysis;
 import com.example.ongi_backend.sentimentAnalysis.dto.ResponseSentimentAnalysis;
 import com.example.ongi_backend.sentimentAnalysis.entity.SentimentAnalysis;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class SentimentAnalysisService {
     private final SentimentAnalysisRepository sentimentAnalysisRepository;
     private final UserService userService;
+    private final ChatGptService chatGptService;
 
     @Transactional
     public void saveSentimentAnalysis(RequestSentimentAnalysis request) {
@@ -51,6 +53,7 @@ public class SentimentAnalysisService {
         return ResponseSentimentAnalysis.builder()
                 .sentimentPercentages(percentageMap)
                 .chatBotName(elderly.getChatBot().getName())
+                .feedback(chatGptService.getChatGptAnswer(percentageMap))
                 .build();
     }
 
