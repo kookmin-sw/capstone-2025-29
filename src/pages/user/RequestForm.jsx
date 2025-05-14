@@ -96,21 +96,10 @@ export default function RequestForm() {
      */
     const handleChange = (key, value) => {
         if (key === "pet") {
-            setFormData(prev => {
-                const isSelected = prev.pet.includes(value);
-                let newPets;
-
-                if (value === "없음") {
-                    // '없음'을 선택하면 다른 모든 선택을 해제하고 '없음'만 선택
-                    newPets = ["없음"];
-                } else {
-                    // 다른 옵션을 선택하면 '없음'을 제거하고 선택된 옵션을 토글
-                    newPets = isSelected
-                        ? prev.pet.filter(p => p !== value)
-                        : [...prev.pet.filter(p => p !== "없음"), value];
-                }
-                return { ...prev, pet: newPets };
-            });
+            setFormData(prev => ({
+                ...prev,
+                pet: [value] // 다중 선택 대신 선택한 값만 배열로 유지
+            }));
         } else {
             setFormData(prev => ({ ...prev, [key]: value }));
         }
@@ -155,7 +144,7 @@ export default function RequestForm() {
             setIsLoading(true); // 로딩 시작
             const recommendedVolunteers = await fetchRecommendedVolunteers(requestBody); // 추천 봉사자 데이터 가져오기
             setIsLoading(false); // 로딩 종료
-            
+
             console.log("추천 봉사자 데이터:", recommendedVolunteers);
 
             alert("신청서가 제출되었습니다.");

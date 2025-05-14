@@ -38,6 +38,18 @@
     margin-bottom: 3vh;
 }
 
+/* 지역구 select 전용 스타일 */
+.inputGroup select {
+    padding: 1.4vh 2vw;
+    border: none;
+    background-color: #EEEEEE;
+    border-radius: 5px;
+    font-size: clamp(0.95rem, 2vw, 1rem);
+    color: #333;
+    margin-top: 1vh;
+    width: 100%;
+}
+
 .inputGroup label {
     font-size: clamp(1rem, 2.5vw, 1.1rem);
     font-weight: 600;

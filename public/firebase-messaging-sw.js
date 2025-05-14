@@ -1,5 +1,6 @@
-importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js");
+importScripts('https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.10.0/firebase-messaging-compat.js');
+
 
 firebase.initializeApp({
     apiKey: "AIzaSyACl_ax4pP-L974aZaxEQUMVI69rymj8O0",
@@ -13,13 +14,13 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function (payload) {
+messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
-        icon: '/icon-192x192.png', // 앱 아이콘 경로
+        icon: '/firebase-logo.png'
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);

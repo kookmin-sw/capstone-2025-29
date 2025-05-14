@@ -125,9 +125,9 @@ function HelpCenter() {
                 )}
                 {volunteerStatus === null && (
                     <>
-                        <p className={styles.matchName}>진행 중인 신청이 없습니다</p>
-                        <button className={styles.reviewBtn} onClick={() => navigate("/ApplyingList")}>신청내역</button>
-                        <p className={styles.reviewInfo}>오늘의 일정은 더이상 없습니다.</p>
+                        <p className={styles.matchName}>오늘의 일정이 없습니다.</p>
+                        <button className={styles.reviewBtn} onClick={() => navigate("/ApplyingList")}>매칭내역</button>
+                        <p className={styles.reviewInfo}>매칭내역을 확인해주세요.</p>
                     </>
                 )}
 

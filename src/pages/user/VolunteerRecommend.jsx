@@ -2,15 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
 import VolunteerModal from "../../components/VolunteerModal";
-import { cancelMatching, requestElderlyMatching } from "../../api/UserApi";
+import { cancelMatching, requestElderlyMatching, recommendVolunteerMatching } from "../../api/UserApi";
 import styles from "./VolunteerRecommend.module.css";
 
 export default function VolunteerRecommend() {
     const location = useLocation();
     const navigate = useNavigate();
     const volunteersData = location.state;
-
-    console.log("봉사자 추천 데이터:", volunteersData);
 
     const matchingId = volunteersData?.volunteersData?.matchingId;
     const volunteers = volunteersData?.volunteersData?.recommendVolunteers || [];
@@ -20,18 +18,8 @@ export default function VolunteerRecommend() {
     const [activeVolunteerId, setActiveVolunteerId] = useState(null);
 
     const isConfirmed = useRef(false);
-    const isUnmounting = useRef(false);
 
-    console.log(volunteers);
-    // ✅ Mock 데이터
-    // const volunteers = [
-    //     { id: 1, name: "김철수", hours: 123, phone: "010-1234-5678", introduction: "안녕하세요. 자기소개입니다.", icon: "/volunteer-icon.svg" },
-    //     { id: 2, name: "이영희", hours: 98, phone: "010-9876-5432", introduction: "안녕하세요. 자기소개입니다.", icon: "/volunteer-icon.svg" },
-    //     { id: 3, name: "박민수", hours: 150, phone: "010-5678-1234", introduction: "안녕하세요. 자기소개입니다.", icon: "/volunteer-icon.svg" },
-    //     { id: 4, name: "최지우", hours: 75, phone: "010-4321-8765", introduction: "안녕하세요. 자기소개입니다.", icon: "/volunteer-icon.svg" },
-    // ];
-
-    // ✅ 봉사자가 없으면 최초 진입 시 매칭 취소
+    // 최초 진입 시 봉사자 없으면 매칭 취소
     useEffect(() => {
         if (volunteers.length === 0 && matchingId) {
             cancelMatching(matchingId)
@@ -40,48 +28,84 @@ export default function VolunteerRecommend() {
         }
     }, [volunteers.length, matchingId]);
 
-    // ✅ 앱 나갈 때 매칭 취소 (확정 안 했을 경우만)
+    // 새로고침, 앱 종료 시 keepalive로 매칭 취소 요청
     useEffect(() => {
-        return () => {
-            if (isUnmounting.current) {
-                if (volunteers.length > 0 && matchingId && !isConfirmed.current) {
-                    cancelMatching(matchingId)
-                        .then(() => console.log("매칭 취소 완료 (앱 나갈 때)"))
-                        .catch((error) => console.error("매칭 취소 실패:", error));
-                }
+        const cancelMatchingKeepalive = () => {
+            if (volunteers.length > 0 && matchingId && !isConfirmed.current) {
+                console.log("🚨 매칭 취소 요청 (keepalive)");
+
+                fetch(`${import.meta.env.VITE_API_URL}/api/elderly/matching/${matchingId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    keepalive: true,
+                }).then(() => {
+                    console.log("✅ 매칭 취소 성공 (keepalive)");
+                }).catch(err => {
+                    console.error("❌ 매칭 취소 실패 (keepalive):", err);
+                });
             }
+        };
+
+        const handleBeforeUnload = (e) => {
+            cancelMatchingKeepalive();
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                cancelMatchingKeepalive();
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
     }, [volunteers.length, matchingId]);
 
-    // ✅ 진짜 언마운트 시점에만 isUnmounting = true 설정
-    useEffect(() => {
-        return () => {
-            isUnmounting.current = true;
-        };
-    }, []);
-
+    // 카드 클릭 → 상세 모달
     const handleCardClick = (id) => {
         const volunteer = volunteers.find((v) => v.id === id);
         setSelectedVolunteer(volunteer);
         setIsModalOpen(true);
     };
 
-    const handleSelectButtonClick = (id) => {
-        setActiveVolunteerId(id);
+    const handleSelectButtonClick = async (id) => {
+        if (activeVolunteerId === id) {
+            const confirmSelect = window.confirm('해당 봉사자를 선택하시겠습니까?');
+            if (confirmSelect) {
+                try {
+                    await recommendVolunteerMatching({ volunteerId: id, matchingId });
+                    isConfirmed.current = true;
+
+                    alert("봉사자 선택이 완료되었습니다.");
+                    navigate("/helpcenter");
+                } catch (error) {
+                    console.error("추천 봉사자 선택 실패:", error);
+                    alert(error.message || "추천 봉사자 선택에 실패했습니다.");
+                }
+            }
+        } else {
+            setActiveVolunteerId(id);
+        }
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
 
-    // ✅ '아니요, 괜찮습니다' 클릭 시 매칭 신청 API 호출
+    // '아니요, 괜찮습니다' → 랜덤 매칭
     const handleBottomButtonClick = async () => {
         if (volunteers.length === 0) {
             navigate("/helpcenter");
         } else {
             try {
                 await requestElderlyMatching({ matchingId });
-                console.log("매칭 신청 완료");
                 isConfirmed.current = true;
 
                 alert("매칭 신청이 완료되었습니다.");
@@ -105,8 +129,12 @@ export default function VolunteerRecommend() {
                     </div>
 
                     <div className={styles.cardGrid}>
-                        {volunteers.map((volunteer) => (
-                            <div key={volunteer.id} className={styles.card} onClick={() => handleCardClick(volunteer.id)}>
+                        {volunteers.map((volunteer, index) => (
+                            <div
+                                key={volunteer.volunteerId || `volunteer-${index}`}
+                                className={styles.card}
+                                onClick={() => handleCardClick(volunteer.id)}
+                            >
                                 <div className={styles.imageWrapper}>
                                     <img src={volunteer.icon} alt={volunteer.name} className={styles.icon} />
                                 </div>
@@ -115,10 +143,10 @@ export default function VolunteerRecommend() {
                                     <p className={styles.hours}>{volunteer.volunteerActivityTime}시간</p>
                                 </div>
                                 <button
-                                    className={`${styles.selectButton} ${activeVolunteerId === volunteer.id ? styles.selected : ""}`}
+                                    className={`${styles.selectButton} ${activeVolunteerId === volunteer.volunteerId ? styles.selected : ""}`}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        handleSelectButtonClick(volunteer.id);
+                                        handleSelectButtonClick(volunteer.volunteerId);
                                     }}
                                 >
                                     선택

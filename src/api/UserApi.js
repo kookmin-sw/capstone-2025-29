@@ -179,3 +179,35 @@ export const fetchRecommendedVolunteers = async (data) => {
     }
 };
 
+
+// 추천된 봉사자 선택 API
+export const recommendVolunteerMatching = async ({ volunteerId, matchingId }) => {
+    try {
+        console.log('봉사자 ID:', volunteerId);
+        console.log('매칭 ID:', matchingId);
+        const accessToken = localStorage.getItem('accessToken');
+
+        const response = await axios.post(
+            "/api/elderly/recommend/matching",
+            { volunteerId, matchingId },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+        console.log('추천 봉사자 매칭 API 응답', response);
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message ||
+            (error.response ? '추천 봉사자 매칭에 실패했습니다.' :
+                (error.request ? '서버와의 통신에 실패했습니다.' :
+                    '요청 중 오류가 발생했습니다.'));
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};

@@ -9,6 +9,31 @@ export default function Signup() {
     const location = useLocation();
     const navigate = useNavigate();
     const selectedRole = location.state?.role || "";
+    const districts = [
+        { value: "GANGNAM", label: "강남구" },
+        { value: "GANGDONG", label: "강동구" },
+        { value: "GANGBUK", label: "강북구" },
+        { value: "GANGSEO", label: "강서구" },
+        { value: "GWANAK", label: "관악구" },
+        { value: "GWANGJIN", label: "광진구" },
+        { value: "GURO", label: "구로구" },
+        { value: "GEUMCHEON", label: "금천구" },
+        { value: "NOWON", label: "노원구" },
+        { value: "DOBONG", label: "도봉구" },
+        { value: "DONGDAEMUN", label: "동대문구" },
+        { value: "DONGJAK", label: "동작구" },
+        { value: "MAPO", label: "마포구" },
+        { value: "SEODAEMUN", label: "서대문구" },
+        { value: "SEOCHO", label: "서초구" },
+        { value: "SEONGDONG", label: "성동구" },
+        { value: "SEONGBUK", label: "성북구" },
+        { value: "SONGPA", label: "송파구" },
+        { value: "YANGCHEON", label: "양천구" },
+        { value: "YEONGDEUNGPO", label: "영등포구" },
+        { value: "YONGSAN", label: "용산구" },
+        { value: "EUNPYEONG", label: "은평구" },
+        { value: "JONGNO", label: "종로구" }
+    ];
 
     const [formValues, setFormValues] = useState({
         id: "",
@@ -21,8 +46,12 @@ export default function Signup() {
         birthMonth: "",
         birthDay: "",
         phone: "",
-        authCode: ""
+        authCode: "",
+        gender: "male",               // ✅ 추가
+        introduction: ""              // ✅ 추가 (volunteer 자기소개용)
     });
+
+
 
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isPasswordValid, setIsPasswordValid] = useState(true);
@@ -57,7 +86,7 @@ export default function Signup() {
         try {
             const response = await checkUsername(formValues.id, selectedRole);
             console.log('중복 확인 응답:', response);
-            
+
             setIdChecked(true);
             alert('사용 가능한 아이디입니다.');
         } catch (error) {
@@ -123,7 +152,11 @@ export default function Signup() {
             userType: selectedRole || "volunteer",
             bio: selectedRole === "volunteer" ? formValues.introduction || "" : ""
         };
-        
+
+
+        useEffect(() => {
+            setIsPasswordValid(formValues.password === confirmPassword);
+        }, [formValues.password, confirmPassword]);
         try {
             await registerUser(formData);
             alert('회원가입이 완료되었습니다.');
@@ -162,14 +195,25 @@ export default function Signup() {
                 <input type="text" name="name" value={formValues.name} onChange={handleInputChange} placeholder="이름 입력" />
             </div>
 
+
+            <div className={styles.inputGroup}>
+                <label>성별</label>
+                <select name="gender" value={formValues.gender} onChange={handleInputChange}>
+
+                    <option value="male">남성</option>
+                    <option value="female">여성</option>
+                </select>
+            </div>
+
             <div className={styles.inputGroup}>
                 <label>지역구</label>
-                <select name="region" value={formValues.region} onChange={handleInputChange} defaultValue="">
-                    <option value="" disabled>지역구 선택</option>
-                    <option value="GANGNAM">강남구</option>
-                    <option value="SEOCHO">서초구</option>
-                    <option value="MAPO">마포구</option>
-                    <option value="JONGNO">종로구</option>
+                <select name="region" value={formValues.region} onChange={handleInputChange}>
+
+                    {districts.map((district) => (
+                        <option key={district.value} value={district.value}>
+                            {district.label}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -209,7 +253,7 @@ export default function Signup() {
                 <button type="button" className={styles.checkBtn} onClick={() => { alert('인증번호가 확인되었습니다.'); setAuthCodeVerified(true); }}>인증번호 확인</button>
             </div>
 
-            
+
             {/* 자기소개 입력란 */}
             {selectedRole === "volunteer" && (
                 <div className={styles.inputGroup}>

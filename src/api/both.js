@@ -17,6 +17,7 @@ export const login = async (username, password, userType) => {
             withCredentials: false
         });
 
+        console.log("로그인 API 호출", response);
         if (!response.data?.accessToken) {
             throw { status: 400, message: '로그인 실패: 서버 응답에 토큰이 없습니다.' };
         }
