@@ -5,6 +5,7 @@ on:
     branches: 
       - "master"
       - "feat/101"
+      - "feat/106"
     paths:
       - "AI/**"
   workflow_dispatch:
