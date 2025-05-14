@@ -74,3 +74,9 @@ grpc:
       negotiationType: plaintext
   server:
     host: localhost
+
+
+openai:
+  model: gpt-4o
+  url: "https://api.openai.com/v1/chat/completions"
+  secret-key: ${GPT_KEY}

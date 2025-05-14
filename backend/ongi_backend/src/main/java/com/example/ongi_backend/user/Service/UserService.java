@@ -141,4 +141,10 @@ public class UserService implements UserDetailsService {
         }
         throw new UsernameNotFoundException("유저가 존재하지 않습니다.");
     }
+
+    @Transactional
+    public void modifyFcmToken(BaseUser baseUser, String userType, String fcmToken) {
+        BaseUser user = findUserByUserName(baseUser.getUsername(), userType);
+        user.updateFcmToken(fcmToken);
+    }
 }
