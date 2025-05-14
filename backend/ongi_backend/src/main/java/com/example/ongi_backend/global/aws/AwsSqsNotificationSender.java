@@ -71,15 +71,15 @@ public class AwsSqsNotificationSender implements NotificationSender {
 	}
 
 	public void matchingNotification(String fcmToken, String otherUserName, Long userId, String userType){
-		sendNotification(makeNotification(fcmToken, "새로운 봉사 일정이 생겼어요!", otherUserName + "님과의 일정"));
+		sendNotification(makeNotification(fcmToken, "새로운 봉사 일정이 생겼어요!", otherUserName + "님과의 일정이 생겼어요! 지금 확인해 보세요."));
 		notificationRedisService.matchingNotificationInRedis(userId, userType, otherUserName);
 	}
 	public void cancelNotification(String fcmToken, String otherUserName, Long userId, String userType){
-		sendNotification(makeNotification(fcmToken, "매칭이 취소되었습니다!", otherUserName + "님과의 매칭 취소"));
+		sendNotification(makeNotification(fcmToken, "매칭이 취소되었습니다!", "매칭이 취소되었습니다. 다시 매칭해드릴게요!"));
 		notificationRedisService.cancelNotificationInRedis(userId, userType, otherUserName);
 	}
 	public void reviewNotification(String fcmToken, String otherUserName, Long userId){
-		sendNotification(makeNotification(fcmToken, "이번 봉사는 어떠셨나요?", otherUserName + "님과의 봉사 리뷰를 작성해주세요"));
+		sendNotification(makeNotification(fcmToken, "이번 봉사는 어떠셨나요?", "일정이 완료되었나요? 후기를 작성해 주세요."));
 		notificationRedisService.reviewNotificationInRedis(userId, "volunteer", otherUserName);
 	}
 	public void scheduleNotification(Long vaId, Elderly elderly, Volunteer volunteer, String userType) {
@@ -94,7 +94,7 @@ public class AwsSqsNotificationSender implements NotificationSender {
 				if(va.getStatus().equals(MATCHING)) return ;
 				// 봉사자가 취소해서 없거나, 다른 봉사자가 매칭되어 있을 때
 				if(va.getVolunteer() == null || !va.getVolunteer().getId().equals(userId)) return ;
-				sendNotification(makeNotification(fcmToken, "봉사 시작까지 얼마남지 않았아요!", otherUserName + "님과의 봉사 한 시간 전입니다"));
+				sendNotification(makeNotification(fcmToken, "봉사 시작까지 얼마남지 않았아요!", "곧 " + otherUserName  + "님과의 일정이 있어요."));
 				notificationRedisService.scheduleNotificationInRedis(userId, userType, otherUserName);
 			},
 			() -> {
@@ -103,11 +103,11 @@ public class AwsSqsNotificationSender implements NotificationSender {
 		);
 	}
 	public void unMatchingNotification(String fcmToken, Long userId) {
-		sendNotification(makeNotification(fcmToken, "봉사자 매칭 중", "봉사자가 매칭되면 알림을 보내드리겠습니다!"));
+		sendNotification(makeNotification(fcmToken, "봉사자 매칭 중", "잠시만 기다려주세요. 최대한 빨리 매칭해드릴게요."));
 		notificationRedisService.unMatchingNotificationInRedis(userId, "elderly");
 	}
 	public void expireNotification(String fcmToken, Long userId) {
-		sendNotification(makeNotification(fcmToken, "봉사 일정이 만료되었습니다!", "봉사자가 매칭되지 않았습니다"));
+		sendNotification(makeNotification(fcmToken, "봉사 일정이 만료되었습니다!", "해당 시간은 매칭이 어려워 취소되었습니다. 다시 신청해 주세요."));
 		notificationRedisService.ExpireNotificationInRedis(userId);
 	}
 
