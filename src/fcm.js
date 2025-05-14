@@ -7,6 +7,7 @@ export const requestFCMToken = async () => {
             vapidKey: "BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw"
         });
 
+        console.log('currentToken:', currentToken);
         // if (currentToken) {
 
         //     // ✅ 서버에 토큰 전송 (예시)

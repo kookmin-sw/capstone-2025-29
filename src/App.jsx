@@ -40,11 +40,8 @@ import LoadingModalTest from './components/LoadingModalTest';
 
 /* 메인 App 컴포넌트 */
 function App() {
-
-  // ✅ 1. 알림 권한 요청 & FCM 토큰 발급
   useEffect(() => {
     Notification.requestPermission().then(permission => {
-
       if (permission === 'granted') {
         requestFCMToken();
       } else {
@@ -54,34 +51,13 @@ function App() {
   }, []);
 
   // ✅ 2. 포그라운드 알림 수신 처리
-  // ✅ 포그라운드 알림 수신 처리 (봉사 신청 알림 필터링 포함)
-useEffect(() => {
-  onMessage(messaging, (payload) => {
-    console.log('📩 전체 메시지 수신:', payload);
-
-    if (payload.notification) {
-      const { title, body } = payload.notification;
-
-      // ✅ 모든 알림은 콘솔에 찍음
-
-      
-
-      console.log(`🔔 알림 제목: ${title}`);
-      
-      console.log(`📝 알림 내용: ${body}`);
-
-      alert(`📢 알림 수신: ${title} - ${body}`);
-
-      // ✅ 봉사 신청 관련 알림만 골라서 표시 (예: 제목에 '봉사 신청' 포함시)
-      if (title.includes('봉사 신청') || body.includes('봉사 신청')) {
-        console.log('✅ [봉사 신청 알림] 감지됨');
-        console.log('➡️ payload data:', payload.data);  // 추가 데이터도 확인
-        alert(`📢 봉사 신청 알림: ${title} - ${body}`);
-      }
-    }
-  });
-}, []);
-
+  useEffect(() => {
+    onMessage(messaging, (payload) => {
+      console.log('Message received. ', payload);
+      // ✅ 여기서 사용자에게 보여줄 알림 처리 (예: toast, alert 등)
+      alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
+    });
+  }, []);
 
   return (
     <>
