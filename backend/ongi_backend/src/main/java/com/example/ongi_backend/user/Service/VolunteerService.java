@@ -102,25 +102,58 @@ public class VolunteerService {
 				"elderly"
 			);
 
-			// volunteerActivityService.deleteActivity(id);
-
-			// 봉사자가 취소했을 때 그냥 봉사가 삭제되도록
-			findVolunteerActivity.updateVolunteer(null);
-			findVolunteerActivity.updateStatus(MATCHING);
+			// 이미 시간이 지난 봉사 이면 삭제
 			if (Duration.between(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime(), findVolunteerActivity.getStartTime()).getSeconds() < 0L) {
 				awsSqsNotificationSender.expireNotification(
 					elderly.getFcmToken(),
 					elderly.getId()
 				);
 				volunteerActivityService.deleteActivity(id);
-				return;
+				return ;
 			}
 
-			unMatchingService.saveUnMatching(
-				findVolunteerActivity.getId(),
-				findVolunteerActivity.getElderly().getId(),
-				findVolunteerActivity
-			);
+			// 새로운 봉사자가 있는지 검색
+			DayOfWeek dayOfWeek = findVolunteerActivity.getStartTime().getDayOfWeek();
+			LocalTime startTime = findVolunteerActivity.getStartTime().toLocalTime();
+			LocalDate date = findVolunteerActivity.getStartTime().toLocalDate();
+			Integer category = findVolunteerActivity.getType().getCategory();
+			DistrictType district = findVolunteerActivity.getAddress().getDistrict();
+
+			volunteerRepository.findByWeeklyAvailableTimeAndNotVolunteer(dayOfWeek, startTime, date, category, district, volunteer)
+				.map(v -> {
+					// 매칭 알림
+					awsSqsNotificationSender.matchingNotification(
+						v.getFcmToken(), elderly.getName(), v.getId(), "volunteer"
+					);
+					awsSqsNotificationSender.matchingNotification(
+						elderly.getFcmToken(), v.getName(), elderly.getId(), "elderly"
+					);
+
+					// 일정 예약 메시지
+					awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(findVolunteerActivity, elderly, v,
+						"volunteer");
+					awsSqsNotificationSender.setSchedulingMessageWithTaskScheduler(findVolunteerActivity, elderly, v,
+						"elderly");
+
+					// 상태 업데이트
+					findVolunteerActivity.updateStatus(PROGRESS);
+					findVolunteerActivity.updateVolunteer(v);
+
+					return null;
+				})
+				.orElseGet(() -> {
+					// 매칭 실패 처리
+
+					findVolunteerActivity.updateVolunteer(null);
+					findVolunteerActivity.updateStatus(MATCHING);
+
+					unMatchingService.saveUnMatching(
+						findVolunteerActivity.getId(),
+						findVolunteerActivity.getElderly().getId(),
+						findVolunteerActivity
+					);
+					return null; // 또는 throw new NoMatchingVolunteerException();
+				});
 		} else {
 			throw new CustomException(UNAVAILABLE_CANCLE_VOLUNTEER_ACTIVITY_ERROR);
 		}
