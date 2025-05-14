@@ -153,12 +153,11 @@ export default function RequestForm() {
             setIsLoading(false); // 로딩 종료
             console.error("신청 에러 상세:", error);
             if (error.message) {
-                console.error("에러 메시지:", error.message);
+                alert(error.message);
             }
             if (error.status) {
                 console.error("에러 상태코드:", error.status);
             }
-            alert("신청에 실패했습니다. 다시 시도해주세요.\n" + (error.message || ""));
         }
     };
 

@@ -2,7 +2,7 @@ import axios from "axios";
 
 // ✅ 채팅 API 서버 전용 프록시 경로
 //const CHAT_API_BASE = import.meta.env.MODE === "production" ? "/chatapi" : "";
-const CHAT_API_BASE = 'https://aiserver.store/docs';
+const CHAT_API_BASE = 'https://aiserver.store';
 
 // 채팅 요청
 export const sendChatMessage = async (text, accessToken) => {

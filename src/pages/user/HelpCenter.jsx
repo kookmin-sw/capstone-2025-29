@@ -74,6 +74,7 @@ function HelpCenter() {
     };
 
     // 매칭 취소 버튼 클릭 핸들러
+
     const handleCancel = async () => {
         if (!matchingId) return;
 

@@ -2,66 +2,69 @@ import React, { useState, useEffect } from "react";
 import Topbar from "../../components/Topbar";
 import NotificationCard from "../../components/NotificationCard";
 import styles from "./NotificationPage.module.css";
+import { fetchUserNotifications } from "../../api/both"; // API 호출 함수 가져오기 
 
 export default function NotificationPage() {
-    const [notifications, setNotifications] = useState([
-        {
-            id: 1,
-            icon: "/medical.svg",
-            title: "새로운 봉사 일정이 생겼어요!",
-            date: "2025년 12월 42일 00:00",
-            subtitle: "고길동님과의 일정",
-            timeAgo: "3분전"
-        },
-        {
-            id: 2,
-            icon: "/housing.svg",
-            title: "새로운 봉사 일정이 생겼어요!",
-            date: "2025년 12월 42일 00:00",
-            subtitle: "고길동님과의 일정",
-            timeAgo: "3분전"
-        },
-        {
-            id: 3,
-            icon: "/book.svg",
-            title: "새로운 봉사 일정이 생겼어요!",
-            date: "2025년 12월 42일 00:00",
-            subtitle: "고길동님과의 일정",
-            timeAgo: "3분전"
-        }
-    ]);
+    const [notifications, setNotifications] = useState([]);
 
-    // useEffect(() => {
-    //     // WebSocket 연결 설정
-    //     const ws = new WebSocket('ws://your-backend-url/notifications');
-        
-    //     // 메시지 수신 시 처리
-    //     ws.onmessage = (event) => {
-    //         const newNotification = JSON.parse(event.data);
-    //         setNotifications(prev => [newNotification, ...prev]);
-    //     };
+    useEffect(() => {
+        const loadNotifications = async () => {
+            try {
+                const userType = localStorage.getItem('userType') || 'elderly';
+                const data = await fetchUserNotifications(userType);
 
-    //     // 연결 에러 처리
-    //     ws.onerror = (error) => {
-    //         console.error('WebSocket error:', error);
-    //     };
+                console.log("알림 데이터:", data); // 응답 데이터 로그
 
-    //     // 컴포넌트 언마운트 시 연결 종료
-    //     return () => {
-    //         ws.close();
-    //     };
-    // }, []);
+                // ✅ data가 배열이므로 바로 map 처리
+                const formattedNotifications = data.map((item, index) => ({
+                    id: item.id || index,
+                    icon: "/alarm.svg", // ✅ 고정 아이콘 사용
+                    title: item.title || "알림 제목 없음",
+                    date: new Date(item.createdAt).toLocaleString('ko-KR', {
+                        year: 'numeric', month: 'long', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    }),
+                    subtitle: item.body || "",
+                    timeAgo: getTimeAgo(item.createdAt)
+                }));
+
+                setNotifications(formattedNotifications);
+            } catch (error) {
+                console.error("알림 불러오기 실패:", error);
+            }
+        };
+
+        loadNotifications();
+    }, []);
+
+    const getTimeAgo = (dateString) => {
+        const now = new Date();
+        const past = new Date(dateString);
+        const diffMs = now - past;
+
+        const diffMinutes = Math.floor(diffMs / 1000 / 60);
+        if (diffMinutes < 1) return "방금 전";
+        if (diffMinutes < 60) return `${diffMinutes}분 전`;
+        const diffHours = Math.floor(diffMinutes / 60);
+        if (diffHours < 24) return `${diffHours}시간 전`;
+        const diffDays = Math.floor(diffHours / 24);
+        return `${diffDays}일 전`;
+    };
 
     return (
         <div className={styles.container}>
             <Topbar title="알림" />
             <div className={styles.notificationList}>
-                {notifications.map((notification) => (
-                    <NotificationCard
-                        key={notification.id}
-                        {...notification}
-                    />
-                ))}
+                {notifications.length === 0 ? (
+                    <p className={styles.noData}>알림이 없습니다.</p>
+                ) : (
+                    notifications.map((notification) => (
+                        <NotificationCard
+                            key={`${notification.id}-${notification.date}`}
+                            {...notification}
+                        />
+                    ))
+                )}
             </div>
         </div>
     );

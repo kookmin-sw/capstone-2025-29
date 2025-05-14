@@ -179,3 +179,28 @@ export const updatePassword = async (password, userType) => {
         };
     }
 };
+
+
+// ✅ 유저 알림 목록 가져오기 API
+export const fetchUserNotifications = async (userType) => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+        const response = await axios.get(`${API_BASE}/api/user/notification`, {
+            params: { userType },
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || '알림을 불러오는 데 실패했습니다.';
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};
