@@ -10,6 +10,8 @@ export default function Signup() {
     const navigate = useNavigate();
     const selectedRole = location.state?.role || "";
 
+
+    
     const districts = [
         { value: "GANGNAM", label: "강남구" },
         { value: "GANGDONG", label: "강동구" },
