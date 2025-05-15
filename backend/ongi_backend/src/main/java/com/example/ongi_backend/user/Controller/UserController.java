@@ -2,10 +2,7 @@ package com.example.ongi_backend.user.Controller;
 
 import com.example.ongi_backend.global.redis.dto.RedisNotificationTemplate;
 import com.example.ongi_backend.global.redis.service.NotificationRedisService;
-import com.example.ongi_backend.user.Dto.RequestModify;
-import com.example.ongi_backend.user.Dto.RequestModifyPassword;
-import com.example.ongi_backend.user.Dto.ResponseUserInfo;
-import com.example.ongi_backend.user.Dto.UserRegisterDto;
+import com.example.ongi_backend.user.Dto.*;
 import com.example.ongi_backend.user.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -83,6 +80,13 @@ public class UserController {
     @Operation(summary = "비밀번호 수정", description = "수정 페이지 비밀번호 수정")
     public ResponseEntity<?> modifyPassword(Principal principal, @RequestBody RequestModifyPassword requestModifyPassword) {
         userService.modifyPassword(principal.getName(), requestModifyPassword);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/fcmToken")
+    @Operation(summary = "fcmToken 수정", description = "카카오 로그인 시 fcmToken 갱신, 저장")
+    public ResponseEntity<?> modifyFcmToken(Principal principal, @RequestBody RequestModifyFcmToken requestModifyFcmToken) {
+        userService.modifyFcmToken(principal.getName(), requestModifyFcmToken.getUserType(), requestModifyFcmToken.getFcmToken());
         return ResponseEntity.ok().build();
     }
 }
