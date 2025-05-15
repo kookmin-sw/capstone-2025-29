@@ -36,6 +36,7 @@
     border-radius: 10px;
     display: flex;
     align-items: center;
+    justify-content: space-around;
     padding: 3vh 2vw;
     margin: 4vh 0;
 }
@@ -43,16 +44,17 @@
 .profileImage {
     width: 50%;
     height: 110px;
+    width: 110px;
     border-radius: 50%;
-
+    margin-left: 5vw;
 }
 
 .profileInfo {
-    width: 50%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     gap: 0.5vh;
-    margin-left: 3vw;
+
 }
 
 .name {
@@ -128,7 +130,7 @@
     border-radius: 12px;
     padding: 2vh 3vw;
     text-align: center;
-    margin:4vh 0;
+    margin: 4vh 0;
 }
 
 .matchName {

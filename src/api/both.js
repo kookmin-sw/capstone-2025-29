@@ -185,3 +185,17 @@ export const fetchUserNotifications = async (userType) => {
     }
 };
 
+
+// ✅ 카카오 로그인 API
+export const kakaoLogin = async () => {
+    try {
+        const response = await axios.get('/api/oauth2/authorization/kakao');
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || '카카오 로그인에 실패했습니다.';
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};
