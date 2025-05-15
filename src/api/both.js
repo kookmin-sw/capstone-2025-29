@@ -243,3 +243,28 @@ export const updateFcmToken = async (userType, accessToken) => {
         };
     }
 };
+
+
+// ✅ 인증번호 확인 API
+export const verifyAuthCode = async (phoneNumber, verificationCode) => {
+    try {
+        const response = await axios.get('/api/auth', {
+            params: { phoneNumber, verificationCode }
+        });
+        return response;
+    } catch (error) {
+        const message = error.response?.data?.message || '인증번호 확인 실패';
+        throw new Error(message);
+    }
+};
+
+// ✅ 인증번호 발송 API (전화번호는 +8210xxxx 형태로 넘김)
+export const sendAuthCode = async (phoneNumber) => {
+    try {
+        const response = await axios.post('/api/auth', { phoneNumber });
+        return response;
+    } catch (error) {
+        const message = error.response?.data?.message || '인증번호 발송 실패';
+        throw new Error(message);
+    }
+};

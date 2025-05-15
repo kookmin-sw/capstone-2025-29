@@ -3,13 +3,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Signup.module.css";
 import Topbar from "../../components/Topbar";
 import ongi from '../../assets/ongi.svg';
-import { checkUsername, registerUser } from '../../api/both';
+import { checkUsername, registerUser, sendAuthCode, verifyAuthCode } from '../../api/both';
 
 export default function Signup() {
     const location = useLocation();
     const navigate = useNavigate();
     const selectedRole = location.state?.role || "";
     const userInfo = location.state?.userInfo || {};
+
+    // 전화번호 포맷 변환 (+8210 형태로)
+    const formatToInternational = (phone) => {
+        const cleaned = phone.replace(/\D/g, '');
+        if (cleaned.startsWith('010')) {
+            return `+82${cleaned.slice(1)}`;
+        }
+        return phone.startsWith('+82') ? phone : `+82${cleaned}`;
+    };
+
 
     const formatPhoneNumber = (phone) => {
         if (phone.startsWith('+82')) {
@@ -216,7 +226,15 @@ export default function Signup() {
 
             <div className={styles.inputGroup}>
                 <label>이름</label>
-                <input type="text" name="name" value={formValues.name} onChange={handleInputChange} placeholder="이름 입력" disabled={!userInfo.name} />
+                <input
+                    type="text"
+                    name="name"
+                    value={formValues.name}
+                    onChange={handleInputChange}
+                    placeholder="이름 입력"
+                    disabled={!!userInfo.username} // ✅ 카카오에서 온 경우만 비활성화
+                    className={styles.input} // 원래 쓰고 있던 스타일 유지
+                />
             </div>
 
             <div className={styles.inputGroup}>
@@ -263,11 +281,62 @@ export default function Signup() {
             <div className={styles.inputGroup}>
                 <label>휴대전화</label>
                 <div className={styles.inputWithButton}>
-                    <input type="text" name="phone" value={formValues.phone} onChange={handleInputChange} placeholder="전화번호 입력" disabled={!userInfo.phone} />
-                    <button type="button" className={styles.checkBtn}>인증번호 받기</button>
+                    <input
+                        type="text"
+                        name="phone"
+                        value={formValues.phone}
+                        onChange={handleInputChange}
+                        placeholder="전화번호 입력"
+                        disabled={!!userInfo.username} // ✅ 카카오에서 온 경우만 비활성화
+                        className={styles.input}
+                    />
+                    <button
+                        type="button"
+                        className={styles.checkBtn}
+                        onClick={async () => {
+                            const intlPhone = formatToInternational(formValues.phone);
+
+                            console.log("인증번호 발송 전화번호:", intlPhone);
+                            try {
+                                const response = await sendAuthCode(intlPhone);
+                                
+                                console.log("인증번호 발송 응답:", response);
+                                alert('인증번호가 발송되었습니다.');
+                            } catch (err) {
+                                alert(err.message);
+                            }
+                        }}
+                    >
+                        인증번호 받기
+                    </button>
+
                 </div>
-                <input type="text" name="authCode" value={formValues.authCode} onChange={handleInputChange} placeholder="인증번호 입력" />
-                <button type="button" className={styles.checkBtn} onClick={() => { alert('인증번호가 확인되었습니다.'); setAuthCodeVerified(true); }}>인증번호 확인</button>
+                <input
+                    type="text"
+                    name="authCode"
+                    value={formValues.authCode}
+                    onChange={handleInputChange}
+                    placeholder="인증번호 입력"
+                    className={styles.input}
+                />
+                <button
+                    type="button"
+                    className={styles.checkBtn}
+                    onClick={async () => {
+                        const intlPhone = formatToInternational(formValues.phone);
+                        try {
+                            await verifyAuthCode(intlPhone, formValues.authCode);
+                            alert('인증번호가 확인되었습니다.');
+                            setAuthCodeVerified(true);
+                        } catch (err) {
+                            alert(err.message);
+                            setAuthCodeVerified(false);
+                        }
+                    }}
+                >
+                    인증번호 확인
+                </button>
+
             </div>
 
             {selectedRole === "volunteer" && (
