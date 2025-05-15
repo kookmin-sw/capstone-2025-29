@@ -11,6 +11,7 @@ export default function Signup() {
     const selectedRole = location.state?.role || "";
     const userInfo = location.state?.userInfo || {};
 
+    console.log(userInfo)
     const districts = [
         { value: "GANGNAM", label: "강남구" }, { value: "GANGDONG", label: "강동구" },
         { value: "GANGBUK", label: "강북구" }, { value: "GANGSEO", label: "강서구" },
