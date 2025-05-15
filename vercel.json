@@ -8,10 +8,10 @@
     {
       "source": "/oauth2/(.*)",
       "destination": "https://coffeesupliers.shop/oauth2/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "fallback": {
-    "source": "/(.*)",
-    "destination": "/index.html"
-  }
+  ]
 }
