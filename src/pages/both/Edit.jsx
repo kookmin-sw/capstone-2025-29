@@ -78,10 +78,19 @@ export default function Edit() {
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
-        input.capture = "environment";
-        input.onchange = handleFileChange;
+
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const localUrl = URL.createObjectURL(file);
+
+            setFormData((prev) => ({ ...prev, profileImage: localUrl }));
+            setSelectedFile(file);
+        };
         input.click();
     };
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
