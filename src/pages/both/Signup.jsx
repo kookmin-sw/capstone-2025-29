@@ -164,8 +164,27 @@ export default function Signup() {
             <div className={styles.inputGroup}>
                 <label>아이디</label>
                 <div className={styles.inputWithButton}>
-                    <input type="text" name="id" value={formValues.id} onChange={handleInputChange} placeholder="아이디 입력" disabled={idChecked} />
-                    <button type="button" className={styles.checkBtn} onClick={handleCheckId} disabled={idChecked} style={{ backgroundColor: idChecked ? "#E6E6FA" : "#6D57DE", color: idChecked ? "#6D57DE" : "#fff" }}>중복확인</button>
+                    <input
+                        type="text"
+                        name="id"
+                        value={formValues.id}
+                        onChange={handleInputChange}
+                        placeholder="아이디 입력"
+                        disabled={idChecked || !!userInfo.username} // ✅ userInfo.username 이 있으면 비활성화
+                    />
+                    <button
+                        type="button"
+                        className={styles.checkBtn}
+                        onClick={handleCheckId}
+                        disabled={idChecked || !!userInfo.username} // ✅ userInfo.username 이 있으면 비활성화
+                        style={{
+                            backgroundColor: (idChecked || !!userInfo.username) ? "#E6E6FA" : "#6D57DE",
+                            color: (idChecked || !!userInfo.username) ? "#6D57DE" : "#fff"
+                        }}
+                    >
+                        중복확인
+                    </button>
+
                 </div>
             </div>
 
