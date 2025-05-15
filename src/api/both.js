@@ -184,3 +184,4 @@ export const fetchUserNotifications = async (userType) => {
         };
     }
 };
+

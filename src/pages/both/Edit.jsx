@@ -7,6 +7,8 @@ import {
     checkPassword,
     updatePassword,
 } from "../../api/both";
+import { getPreSignedUrl } from "../../api/ImgApi";
+import axios from "axios";
 import styles from "./Edit.module.css";
 
 export default function Edit() {
@@ -36,6 +38,7 @@ export default function Edit() {
         introduction: ""
     });
 
+    const [selectedFile, setSelectedFile] = useState(null);
     const [passwordInput, setPasswordInput] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -68,14 +71,54 @@ export default function Edit() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleImageClick = () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.capture = "environment";
+        input.onchange = handleFileChange;
+        input.click();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const localUrl = URL.createObjectURL(file);
+        setFormData((prev) => ({ ...prev, profileImage: localUrl }));
+        setSelectedFile(file);
     };
 
     const handleInfoSubmit = async (e) => {
         e.preventDefault();
+
+        let finalImageUrl = formData.profileImage;
+
+        if (selectedFile) {
+            try {
+                const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
+
+
+                const contentType = selectedFile.type === 'image/svg+xml'
+                    ? 'image/svg+xml'
+                    : (selectedFile.type || 'application/octet-stream');
+
+                await axios.put(preSignedUrl, selectedFile, {
+                    headers: { 'Content-Type': contentType }
+                });
+
+                const fileUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
+                finalImageUrl = fileUrl;
+
+
+            } catch (error) {
+                alert("프로필 이미지 업로드 실패: " + error.message);
+                return;
+            }
+        }
 
         const updatePayload = {
             name: formData.name,
@@ -86,16 +129,15 @@ export default function Edit() {
                 district: reverseDistrictMap[formData.district] || "",
                 detail: formData.detail
             },
-            profileImage: formData.profileImage,
+            profileImage: finalImageUrl,
             introduction: formData.introduction,
             userType
         };
 
         try {
             await updateUserInfo(updatePayload);
-
             localStorage.setItem("userName", formData.name);
-            alert("기본 정보가 수정되었습니다.");
+            alert("정보가 수정되었습니다.");
             navigate(userType === "volunteer" ? "/volunteermain" : "/usermain");
         } catch (error) {
             alert("정보 수정 실패: " + error.message);
@@ -109,7 +151,7 @@ export default function Edit() {
             await checkPassword(passwordInput, userType);
             setPasswordError(false);
 
-            if (newPassword.trim() === "" || confirmPassword.trim() === "") {
+            if (!newPassword || !confirmPassword) {
                 alert("새 비밀번호를 입력해주세요.");
                 return;
             }
@@ -122,7 +164,7 @@ export default function Edit() {
             }
 
             await updatePassword(newPassword, userType);
-            alert("비밀번호가 성공적으로 변경되었습니다!");
+            alert("비밀번호가 변경되었습니다.");
             navigate(userType === "volunteer" ? "/volunteermain" : "/usermain");
         } catch (error) {
             if (error.status === 401 || error.message.includes("비밀번호")) {
@@ -137,9 +179,8 @@ export default function Edit() {
         <div className={styles.container}>
             <Topbar title="프로필 수정" />
 
-            {/* 기본 정보 수정 폼 */}
             <form className={styles.form} onSubmit={handleInfoSubmit}>
-                <div className={styles.profileImageWrapper}>
+                <div className={styles.profileImageWrapper} onClick={handleImageClick}>
                     <img
                         className={styles.profileImage}
                         src={formData.profileImage || "/profile.svg"}
@@ -159,11 +200,7 @@ export default function Edit() {
 
                 <div className={styles.inputGroup}>
                     <label>성별</label>
-                    <input
-                        type="text"
-                        value={formData.gender === 'male' ? '남성' : formData.gender === 'female' ? '여성' : '정보 없음'}
-                        readOnly
-                    />
+                    <input type="text" value={formData.gender === 'male' ? '남성' : formData.gender === 'female' ? '여성' : '정보 없음'} readOnly />
                 </div>
 
                 <div className={styles.inputGroup}>
@@ -182,64 +219,39 @@ export default function Edit() {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label>지역(상세)</label>
+                    <label>상세주소</label>
                     <input name="detail" type="text" value={formData.detail} onChange={handleInputChange} />
                 </div>
 
-                {/* ✅ 자기소개 입력란 (봉사자만) */}
                 {userType === "volunteer" && (
                     <div className={styles.inputGroup}>
                         <label>자기소개</label>
-                        <textarea
-                            name="introduction"
-                            value={formData.introduction}
-                            onChange={handleInputChange}
-                            placeholder="소개를 잘 작성하시면 매칭에 도움이 됩니다."
-                            maxLength={100}
-                            rows={10}
-                            className={styles.introduction}
-                        />
+                        <textarea name="introduction" value={formData.introduction} onChange={handleInputChange} placeholder="소개를 잘 작성하시면 매칭에 도움이 됩니다." maxLength={100} rows={10} className={styles.introduction} />
                     </div>
                 )}
 
                 <button type="submit" className={styles.submitBtn}>수정하기</button>
             </form>
 
-            {/* 비밀번호 변경 폼 */}
             <form className={styles.form} onSubmit={handlePasswordSubmit}>
                 <div className={styles.inputGroup}>
                     <label>현재 비밀번호</label>
-                    <input
-                        type="password"
-                        value={passwordInput}
-                        onChange={(e) => setPasswordInput(e.target.value)}
-                        placeholder="현재 비밀번호를 입력해주세요"
-                    />
+                    <input type="password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} placeholder="현재 비밀번호" />
                     {passwordError && <span className={styles.errorText}>* 비밀번호를 확인해주세요.</span>}
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label>새 비밀번호</label>
-                    <input
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder="새 비밀번호를 입력해 주세요."
-                    />
+                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="새 비밀번호" />
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label>새 비밀번호 확인</label>
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="새 비밀번호를 한번 더 입력해 주세요."
-                    />
+                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="새 비밀번호 확인" />
                     {matchError && <span className={styles.errorText}>* 새 비밀번호를 확인해주세요.</span>}
                 </div>
 
-                <button type="submit" className={styles.submitBtn}>변경하기</button>
+                <button type="submit" className={styles.submitBtn}>비밀번호 변경</button>
             </form>
         </div>
     );
