@@ -9,32 +9,27 @@ export default function RoleSelect() {
 
     const [selectedRole, setSelectedRole] = useState("");
 
-    
-    useEffect(() => {
-        console.log(location)
-        if (location.search) {
-            const params = new URLSearchParams(location.search);
-            
-            const username = params.get("username");
-            const name = params.get("name");
-            const gender = params.get("gender");
-            const phone = params.get("phone");
-            const age = params.get("age");
-
-            console.log("=== Query Params ===");
-            console.log("username:", username);
-            console.log("name:", name);
-            console.log("gender:", gender);
-            console.log("phone:", phone);
-            console.log("age:", age);
-        } else {
-            console.log("location.search is empty:", location.search);
-        }
-    }, []);
+    const params = new URLSearchParams(location.search);
+    const userInfo = {
+        username: params.get("username"),
+        name: params.get("name"),
+        gender: params.get("gender"),
+        phone: params.get("phone"),
+        age: params.get("age")
+    };
 
     const handleSelect = (role) => {
         setSelectedRole(role);
     };
+
+    const handleNext = () => {
+        if (selectedRole) {
+            navigate('/signup', { state: { role: selectedRole, userInfo } });
+        } else {
+            alert("가입 유형을 선택해주세요.");
+        }
+    };
+
 
     return (
         <div className={styles.container}>

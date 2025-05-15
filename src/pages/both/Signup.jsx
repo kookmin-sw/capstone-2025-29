@@ -9,32 +9,20 @@ export default function Signup() {
     const location = useLocation();
     const navigate = useNavigate();
     const selectedRole = location.state?.role || "";
+    const userInfo = location.state?.userInfo || {};
 
-
-    
     const districts = [
-        { value: "GANGNAM", label: "강남구" },
-        { value: "GANGDONG", label: "강동구" },
-        { value: "GANGBUK", label: "강북구" },
-        { value: "GANGSEO", label: "강서구" },
-        { value: "GWANAK", label: "관악구" },
-        { value: "GWANGJIN", label: "광진구" },
-        { value: "GURO", label: "구로구" },
-        { value: "GEUMCHEON", label: "금천구" },
-        { value: "NOWON", label: "노원구" },
-        { value: "DOBONG", label: "도봉구" },
-        { value: "DONGDAEMUN", label: "동대문구" },
-        { value: "DONGJAK", label: "동작구" },
-        { value: "MAPO", label: "마포구" },
-        { value: "SEODAEMUN", label: "서대문구" },
-        { value: "SEOCHO", label: "서초구" },
-        { value: "SEONGDONG", label: "성동구" },
-        { value: "SEONGBUK", label: "성북구" },
-        { value: "SONGPA", label: "송파구" },
-        { value: "YANGCHEON", label: "양천구" },
-        { value: "YEONGDEUNGPO", label: "영등포구" },
-        { value: "YONGSAN", label: "용산구" },
-        { value: "EUNPYEONG", label: "은평구" },
+        { value: "GANGNAM", label: "강남구" }, { value: "GANGDONG", label: "강동구" },
+        { value: "GANGBUK", label: "강북구" }, { value: "GANGSEO", label: "강서구" },
+        { value: "GWANAK", label: "관악구" }, { value: "GWANGJIN", label: "광진구" },
+        { value: "GURO", label: "구로구" }, { value: "GEUMCHEON", label: "금천구" },
+        { value: "NOWON", label: "노원구" }, { value: "DOBONG", label: "도봉구" },
+        { value: "DONGDAEMUN", label: "동대문구" }, { value: "DONGJAK", label: "동작구" },
+        { value: "MAPO", label: "마포구" }, { value: "SEODAEMUN", label: "서대문구" },
+        { value: "SEOCHO", label: "서초구" }, { value: "SEONGDONG", label: "성동구" },
+        { value: "SEONGBUK", label: "성북구" }, { value: "SONGPA", label: "송파구" },
+        { value: "YANGCHEON", label: "양천구" }, { value: "YEONGDEUNGPO", label: "영등포구" },
+        { value: "YONGSAN", label: "용산구" }, { value: "EUNPYEONG", label: "은평구" },
         { value: "JONGNO", label: "종로구" }
     ];
 
@@ -62,6 +50,18 @@ export default function Signup() {
     const [agreements, setAgreements] = useState({ terms: false, privacy: false, marketing: false });
 
     useEffect(() => {
+        if (userInfo) {
+            setFormValues((prev) => ({
+                ...prev,
+                id: userInfo.username || "",
+                name: userInfo.name || "",
+                gender: userInfo.gender || "male",
+                phone: userInfo.phone || "",
+            }));
+        }
+    }, [userInfo]);
+
+    useEffect(() => {
         const allChecked = Object.values(agreements).every(Boolean);
         setAgreeAll(allChecked);
     }, [agreements]);
@@ -69,8 +69,6 @@ export default function Signup() {
     useEffect(() => {
         setIsPasswordValid(formValues.password === confirmPassword);
     }, [formValues.password, confirmPassword]);
-
-    const isRequiredTermsAgreed = agreements.terms && agreements.privacy;
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -105,6 +103,7 @@ export default function Signup() {
     };
 
     const birthDateComplete = formValues.birthYear && formValues.birthMonth && formValues.birthDay;
+    const isRequiredTermsAgreed = agreements.terms && agreements.privacy;
 
     const isRequiredFieldsFilled =
         formValues.id.trim() &&
@@ -123,7 +122,6 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (isSubmitDisabled) {
             alert("모든 필수 항목을 입력하고 인증을 완료해주세요.");
             return;
@@ -162,7 +160,6 @@ export default function Signup() {
                 <img className={styles.LogoImage} src={ongi} alt="로고" />
             </div>
 
-            {/* 아이디 입력 */}
             <div className={styles.inputGroup}>
                 <label>아이디</label>
                 <div className={styles.inputWithButton}>
@@ -171,7 +168,6 @@ export default function Signup() {
                 </div>
             </div>
 
-            {/* 비밀번호 입력 */}
             <div className={styles.inputGroup}>
                 <label>비밀번호</label>
                 <input type="password" name="password" value={formValues.password} onChange={handleInputChange} placeholder="비밀번호 입력" />
@@ -182,7 +178,6 @@ export default function Signup() {
                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="비밀번호 다시 입력" />
             </div>
 
-            {/* 이름, 성별, 지역 */}
             <div className={styles.inputGroup}>
                 <label>이름</label>
                 <input type="text" name="name" value={formValues.name} onChange={handleInputChange} placeholder="이름 입력" />
@@ -209,7 +204,6 @@ export default function Signup() {
                 <input type="text" name="detailAddress" value={formValues.detailAddress} onChange={handleInputChange} placeholder="상세주소 입력" />
             </div>
 
-            {/* 생년월일 */}
             <div className={styles.inputGroup}>
                 <label>생년월일</label>
                 <div className={styles.dateSelect}>
@@ -231,7 +225,6 @@ export default function Signup() {
                 </div>
             </div>
 
-            {/* 휴대전화 인증 */}
             <div className={styles.inputGroup}>
                 <label>휴대전화</label>
                 <div className={styles.inputWithButton}>
@@ -242,7 +235,6 @@ export default function Signup() {
                 <button type="button" className={styles.checkBtn} onClick={() => { alert('인증번호가 확인되었습니다.'); setAuthCodeVerified(true); }}>인증번호 확인</button>
             </div>
 
-            {/* 자기소개 (봉사자만) */}
             {selectedRole === "volunteer" && (
                 <div className={styles.inputGroup}>
                     <label>자기소개 (100자 내외)</label>
@@ -250,7 +242,6 @@ export default function Signup() {
                 </div>
             )}
 
-            {/* 약관 동의 */}
             <div className={styles.agreement}>
                 <label><input type="checkbox" checked={agreeAll} onChange={(e) => handleAllAgreeChange(e.target.checked)} /> 약관 전체동의</label>
                 <div className={styles.termsList}>
