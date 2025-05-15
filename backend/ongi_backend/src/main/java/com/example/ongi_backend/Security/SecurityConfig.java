@@ -79,7 +79,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/login", "/api/user/username").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/login", "/api/user/username", "/healthCheck").permitAll()
                 // .anyRequest().authenticated()
                 .anyRequest().permitAll()
 

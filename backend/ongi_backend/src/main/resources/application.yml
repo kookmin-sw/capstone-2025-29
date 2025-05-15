@@ -67,6 +67,15 @@ cloud:
 springdoc:
   override-with-generic-response: false
 
+grpc:
+  client:
+    userRecommendationService:
+      address: "static://recommend:50051"
+      negotiationType: plaintext
+  server:
+    host: localhost
+
+
 openai:
   model: gpt-4o
   url: "https://api.openai.com/v1/chat/completions"

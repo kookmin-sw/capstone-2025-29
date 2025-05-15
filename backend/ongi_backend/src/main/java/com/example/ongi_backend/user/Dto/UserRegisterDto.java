@@ -15,4 +15,5 @@ public class UserRegisterDto {
     private Address address;
     private String phoneCode;
     private String userType;
+    private String bio;
 }
