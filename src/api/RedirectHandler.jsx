@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { updateFcmToken } from './both'; // FCM 토큰 등록 API
 
 export default function RedirectHandler() {
     const navigate = useNavigate();
@@ -28,6 +29,20 @@ export default function RedirectHandler() {
         console.log('userType:', userType);
         console.log('userInfo:', userInfo);
 
+        // ✅ FCM 토큰 등록 API 호출
+        const registerFcmToken = async () => {
+            try {
+                await updateFcmToken(userType, accessToken);
+                console.log('✅ FCM 토큰 등록 성공');
+            } catch (error) {
+                console.error('❌ FCM 토큰 등록 실패:', error.message);
+            }
+        };
+
+        if (accessToken && userType) {
+            registerFcmToken();
+        }
+
         // ✅ navigate 시 userInfo를 state로 전달
         if (userType === 'elderly') {
             navigate('/usermain', { state: { from: 'redirect', userInfo } });
@@ -36,5 +51,5 @@ export default function RedirectHandler() {
         }
     }, [location.search, navigate]);
 
-    return null;
+    return <div>로그인 중입니다...</div>;
 }

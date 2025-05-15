@@ -202,3 +202,45 @@ export const kakaoLogin = async () => {
         };
     }
 };
+
+
+
+// ✅ FCM 토큰 등록 API
+export const updateFcmToken = async (userType, accessToken) => {
+    const fcmToken = localStorage.getItem("fcmToken");
+
+    if (!accessToken) {
+        throw new Error("AccessToken이 없습니다.");
+    }
+
+    if (!fcmToken) {
+        throw new Error("fcmToken이 없습니다.");
+    }
+
+    try {
+        const response = await axios.patch(
+            `/api/user/fcmToken`,
+            {
+                fcmToken: fcmToken,
+                userType: userType
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }
+        );
+
+        console.log("✅ FCM 토큰 등록 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || 'FCM 토큰 등록에 실패했습니다.';
+        console.error("❌ FCM 토큰 등록 실패:", errorMessage);
+        throw {
+            status: error.response?.status || 0,
+            message: errorMessage
+        };
+    }
+};
