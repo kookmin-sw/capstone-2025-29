@@ -1,5 +1,4 @@
 {
-  "version": 2,
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -10,8 +9,8 @@
       "destination": "https://coffeesupliers.shop/oauth2/$1"
     },
     {
-      "source": "/(.*\\..*)",
-      "destination": "/$1"
+      "source": "/static/(.*)",
+      "destination": "/static/$1"
     },
     {
       "source": "/(.*)",

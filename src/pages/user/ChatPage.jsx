@@ -141,7 +141,7 @@ const ChatPage = () => {
             lastMessageId.current += 1;
         } finally {
             setIsSending(false);
-            setIsLoading(false); // ✅ 로딩 모달 끄기
+        setIsLoading(false);
         }
     };
 

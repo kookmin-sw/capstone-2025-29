@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
+import LoadingModal from "../../components/LoadingModal";
 import {
     fetchUserInfo,
     updateUserInfo,
@@ -44,11 +45,13 @@ export default function Edit() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState(false);
     const [matchError, setMatchError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const userType = localStorage.getItem("userType") || "volunteer";
 
     useEffect(() => {
         const loadUserInfo = async () => {
+            setIsLoading(true);
             try {
                 const data = await fetchUserInfo(userType);
                 setFormData({
@@ -63,9 +66,10 @@ export default function Edit() {
                 });
             } catch (error) {
                 alert("유저 정보 불러오기 실패: " + error.message);
+            } finally {
+                setIsLoading(false);
             }
         };
-
         loadUserInfo();
     }, [userType]);
 
@@ -78,53 +82,35 @@ export default function Edit() {
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
-
         input.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const localUrl = URL.createObjectURL(file);
-
             setFormData((prev) => ({ ...prev, profileImage: localUrl }));
             setSelectedFile(file);
         };
         input.click();
     };
 
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const localUrl = URL.createObjectURL(file);
-        setFormData((prev) => ({ ...prev, profileImage: localUrl }));
-        setSelectedFile(file);
-    };
-
     const handleInfoSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         let finalImageUrl = formData.profileImage;
 
         if (selectedFile) {
             try {
                 const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
-
-
-                const contentType = selectedFile.type === 'image/svg+xml'
-                    ? 'image/svg+xml'
-                    : (selectedFile.type || 'application/octet-stream');
+                const contentType = selectedFile.type || 'application/octet-stream';
 
                 await axios.put(preSignedUrl, selectedFile, {
                     headers: { 'Content-Type': contentType }
                 });
 
-                const fileUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
-                finalImageUrl = fileUrl;
-
-
+                finalImageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
             } catch (error) {
                 alert("프로필 이미지 업로드 실패: " + error.message);
+                setIsLoading(false);
                 return;
             }
         }
@@ -147,15 +133,24 @@ export default function Edit() {
             await updateUserInfo(updatePayload);
             localStorage.setItem("userName", formData.name);
             alert("정보가 수정되었습니다.");
-            navigate(userType === "volunteer" ? "/volunteermain" : "/usermain");
+
+            // ✅ userType 에 따라 navigate, 이미지 리프레시를 위한 from: 'edit' 상태 전달
+            if (userType === "volunteer") {
+                navigate("/volunteermain", { state: { from: 'edit' } });
+            } else {
+                navigate("/usermain", { state: { from: 'edit' } });
+            }
+
         } catch (error) {
             alert("정보 수정 실패: " + error.message);
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
-
         try {
             await checkPassword(passwordInput, userType);
             setPasswordError(false);
@@ -168,8 +163,6 @@ export default function Edit() {
             if (newPassword !== confirmPassword) {
                 setMatchError(true);
                 return;
-            } else {
-                setMatchError(false);
             }
 
             await updatePassword(newPassword, userType);
@@ -235,7 +228,7 @@ export default function Edit() {
                 {userType === "volunteer" && (
                     <div className={styles.inputGroup}>
                         <label>자기소개</label>
-                        <textarea name="introduction" value={formData.introduction} onChange={handleInputChange} placeholder="소개를 잘 작성하시면 매칭에 도움이 됩니다." maxLength={100} rows={10} className={styles.introduction} />
+                        <textarea className={styles.introduction} name="introduction" value={formData.introduction} onChange={handleInputChange} placeholder="소개를 잘 작성하시면 매칭에 도움이 됩니다." maxLength={100} rows={10} />
                     </div>
                 )}
 
@@ -262,6 +255,8 @@ export default function Edit() {
 
                 <button type="submit" className={styles.submitBtn}>비밀번호 변경</button>
             </form>
+
+            <LoadingModal isOpen={isLoading} message="처리 중입니다..." />
         </div>
     );
 }
