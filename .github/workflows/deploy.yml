@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - backend
-      - feat/92
 jobs:
   deploy:
     runs-on: ubuntu-latest
