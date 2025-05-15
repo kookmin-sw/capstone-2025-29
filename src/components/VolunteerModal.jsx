@@ -18,7 +18,7 @@ export default function VolunteerModal({ isOpen, onClose, volunteer }) {
                 ✕
             </button>
             <div className={styles.imageWrapper}>
-                <img src={volunteer.icon} alt={volunteer.name} className={styles.icon} />
+                <img src={volunteer.profileImageUrl} alt={volunteer.name} className={styles.icon} />
             </div>
             <h2 className={styles.name}>{volunteer.name} 님</h2>
             <p className={styles.hours}>봉사시간 {volunteer.volunteerActivityTime}시간</p>

@@ -187,7 +187,9 @@ export default function Edit() {
                 {userType === "volunteer" && (
                     <div className={styles.inputGroup}>
                         <label>자기소개</label>
-                        <textarea className={styles.introduction} name="introduction" value={formData.introduction} onChange={handleInputChange} rows={5} />
+                        <textarea className={styles.introduction} name="introduction" value={formData.introduction} onChange={handleInputChange} rows={10}
+                            placeholder="소개를 잘 작성하시면 매칭에 도움이 됩니다." />
+
                     </div>
                 )}
                 <button type="submit" className={styles.submitBtn}>수정하기</button>
@@ -196,16 +198,18 @@ export default function Edit() {
             <form className={styles.form} onSubmit={handlePasswordSubmit}>
                 <div className={styles.inputGroup}>
                     <label>현재 비밀번호</label>
-                    <input type="password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} />
-                    {passwordError && <span className={styles.errorText}>비밀번호를 확인해주세요.</span>}
+                    <input placeholder="현재 비밀번호를 입력해주세요" name="passwordInput"
+                        type="password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} />
+                    {passwordError && <span className={styles.errorText} >비밀번호를 확인해주세요.</span>}
                 </div>
                 <div className={styles.inputGroup}>
                     <label>새 비밀번호</label>
-                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                    <input placeholder="새 비밀번호를 입력해주세요."
+                        type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                 </div>
                 <div className={styles.inputGroup}>
                     <label>새 비밀번호 확인</label>
-                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                    <input  placeholder="새 비밀번호를 확인해주세요."type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                     {matchError && <span className={styles.errorText}>비밀번호가 일치하지 않습니다.</span>}
                 </div>
                 <button type="submit" className={styles.submitBtn}>비밀번호 변경</button>

@@ -60,7 +60,7 @@ export default function VolunteerRecommend() {
 
     // 카드 클릭 → 상세 모달
     const handleCardClick = (id) => {
-        const volunteer = volunteers.find((v) => v.id === id);
+        const volunteer = volunteers.find((v) => v.volunteerId === id);
         setSelectedVolunteer(volunteer);
         setIsModalOpen(true);
     };
@@ -134,16 +134,16 @@ export default function VolunteerRecommend() {
                         <p>요청하신 내용과</p>
                         <p>딱 맞는 봉사자를 찾았어요!</p>
                     </div>
-
+                
                     <div className={styles.cardGrid}>
                         {volunteers.map((volunteer, index) => (
                             <div
                                 key={volunteer.volunteerId || `volunteer-${index}`}
                                 className={styles.card}
-                                onClick={() => handleCardClick(volunteer.id)}
+                                onClick={() => handleCardClick(volunteer.volunteerId)}
                             >
                                 <div className={styles.imageWrapper}>
-                                    <img src={volunteer.icon} alt={volunteer.name} className={styles.icon} />
+                                    <img src={volunteer.profileImageUrl} alt={volunteer.name} className={styles.icon} />
                                 </div>
                                 <div className={styles.info}>
                                     <p className={styles.name}>{volunteer.name}님</p>

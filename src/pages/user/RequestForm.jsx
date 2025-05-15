@@ -4,6 +4,8 @@ import styles from "./RequestForm.module.css";
 import Topbar from "../../components/Topbar";
 import MatchCard from "../../components/MatchCard";
 import { requestElderlyMatching, fetchRecommendedVolunteers } from "../../api/UserApi";
+import LoadingModal from "../../components/LoadingModal";
+
 /**
  * 도움 요청 폼 컴포넌트
  * 4단계로 구성된 폼을 통해 사용자의 도움 요청 정보를 수집
@@ -128,7 +130,7 @@ export default function RequestForm() {
                     : formData.pet.includes("기타") ? "etc"
                         : "none",
             address: {
-                district: userAddress.district || "구역 없음", 
+                district: userAddress.district || "구역 없음",
                 detail: userAddress.detail || "상세 주소 없음"
             }
         };
@@ -144,7 +146,7 @@ export default function RequestForm() {
         try {
             setIsLoading(true); // 로딩 시작
             const recommendedVolunteers = await fetchRecommendedVolunteers(requestBody); // 추천 봉사자 데이터 가져오기
-            setIsLoading(false); // 로딩 종료
+
 
             console.log("추천 봉사자 데이터:", recommendedVolunteers);
 
@@ -159,7 +161,10 @@ export default function RequestForm() {
             if (error.status) {
                 console.error("에러 상태코드:", error.status);
             }
+        } finally {
+            setIsLoading(false); // 로딩 종료
         }
+
     };
 
     return (
@@ -211,6 +216,7 @@ export default function RequestForm() {
                         <input
                             className={styles.timeInput}
                             type="time"
+                            step="3600"
                             value={formData.time}
                             onChange={(e) => handleChange("time", e.target.value)}
                         />
@@ -339,6 +345,9 @@ export default function RequestForm() {
                     </div>
                 </>
             )}
+            {/* 로딩 모달 */}
+            <LoadingModal isOpen={isLoading} message="매칭 중입니다..." />
+
         </div>
     );
 }
