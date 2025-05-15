@@ -1,4 +1,4 @@
-import React from 'react';
+import { React,useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import styles from "./VolunteerMain.module.css";
@@ -36,6 +36,7 @@ export default function VolunteerMain() {
         refetchOnMount: false,
         refetchOnWindowFocus: false,
     });
+    
 
     const volunteerStatus = userInfo?.currentMatching?.status || null;
 

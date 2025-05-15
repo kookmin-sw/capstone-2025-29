@@ -1,9 +1,15 @@
 import axios from 'axios';
 
+
+const baseURL = import.meta.env.VITE_API_BASE
+    ? 'https://coffeesupliers.shop'
+    : '';
+
+
 // ✅ 로그인 API
 export const login = async (username, password, userType) => {
     try {
-        const response = await axios.get(`/api/login`, {
+        const response = await axios.get(`${baseURL}/api/login`, {
             params: { username, password, userType },
             headers: {
                 'Content-Type': 'application/json',

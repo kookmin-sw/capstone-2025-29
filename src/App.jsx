@@ -34,7 +34,7 @@ import ChatCenter from './pages/user/ChatCenter';
 import ChatPage from './pages/user/ChatPage';
 import NotificationPage from './pages/both/NotificationPage';
 import VolunteerRecommend from './pages/user/VolunteerRecommend';
-
+import RedirectHandler from './api/RedirectHandler'; // ✅ 리다이렉트 핸들러
 
 import LoadingModalTest from './components/LoadingModalTest';
 
@@ -92,7 +92,10 @@ function App() {
           <Route path="/chatpage" element={<ChatPage />} />
           <Route path="/VolunteerRecommend" element={<VolunteerRecommend />} />
 
+          {/* 리다이렉트 핸들러 - 로그인 후 리다이렉트 처리 */}
+          <Route path="/redirect" element={<RedirectHandler />} />
 
+          {/* 테스트 페이지 - 로딩 모달 테스트 */}
           <Route path="/loadingmodaltest" element={<LoadingModalTest />} />
 
 

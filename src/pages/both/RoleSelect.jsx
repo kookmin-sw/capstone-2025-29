@@ -1,17 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./RoleSelect.module.css";
 import Topbar from "../../components/Topbar";
-import { useNavigate } from "react-router-dom";
 
 export default function RoleSelect() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [selectedRole, setSelectedRole] = useState("");
+
+    
+    useEffect(() => {
+        console.log(location)
+        if (location.search) {
+            const params = new URLSearchParams(location.search);
+            
+            const username = params.get("username");
+            const name = params.get("name");
+            const gender = params.get("gender");
+            const phone = params.get("phone");
+            const age = params.get("age");
+
+            console.log("=== Query Params ===");
+            console.log("username:", username);
+            console.log("name:", name);
+            console.log("gender:", gender);
+            console.log("phone:", phone);
+            console.log("age:", age);
+        } else {
+            console.log("location.search is empty:", location.search);
+        }
+    }, []);
 
     const handleSelect = (role) => {
         setSelectedRole(role);
     };
-    
 
     return (
         <div className={styles.container}>

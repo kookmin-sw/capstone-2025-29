@@ -108,12 +108,17 @@ export default function Edit() {
                 });
 
                 finalImageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
+
+                // ✅ 여기 추가 (이미지 즉시 반영)
+                setFormData((prev) => ({ ...prev, profileImage: finalImageUrl }));
+
             } catch (error) {
                 alert("프로필 이미지 업로드 실패: " + error.message);
                 setIsLoading(false);
                 return;
             }
         }
+
 
         const updatePayload = {
             name: formData.name,
