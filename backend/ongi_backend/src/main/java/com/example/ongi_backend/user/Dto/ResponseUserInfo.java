@@ -14,4 +14,5 @@ public class ResponseUserInfo {
     private String phone;
     private Address address;
     private String profileImage;
+    private String bio;
 }
