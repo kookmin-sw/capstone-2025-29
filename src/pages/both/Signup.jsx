@@ -10,15 +10,19 @@ export default function Signup() {
     const navigate = useNavigate();
     const selectedRole = location.state?.role || "";
     const userInfo = location.state?.userInfo || {};
-    
-    
+
     const formatPhoneNumber = (phone) => {
-        if (phone.startsWith('82')) {
-            return phone.replace('82 ', '0').replace(/[^0-9-]/g, '');
+        if (phone.startsWith('82 ')) {
+            // '82 ' -> '0', 공백 제거 후 남은 부분 붙이기
+            return '0' + phone.slice(3);
+        }
+        if (phone.startsWith('+82 ')) {
+            // 혹시 +82 가 붙은 경우도 대비
+            return '0' + phone.slice(4);
         }
         return phone;
     };
-    console.log(userInfo)
+
     const districts = [
         { value: "GANGNAM", label: "강남구" }, { value: "GANGDONG", label: "강동구" },
         { value: "GANGBUK", label: "강북구" }, { value: "GANGSEO", label: "강서구" },
@@ -66,6 +70,10 @@ export default function Signup() {
                 gender: userInfo.gender || "male",
                 phone: formatPhoneNumber(userInfo.phone || "")
             }));
+
+            if (userInfo.username) {
+                setIdChecked(true); // ✅ 카카오로 넘어온 경우 중복확인 true 처리
+            }
         }
     }, [userInfo]);
 
@@ -207,6 +215,7 @@ export default function Signup() {
             </div>
 
             <input
+                className={styles.inputGroup}
                 type="text"
                 name="name"
                 value={formValues.name}
@@ -217,7 +226,7 @@ export default function Signup() {
 
             <div className={styles.inputGroup}>
                 <label>성별</label>
-                <select name="gender" value={formValues.gender} onChange={handleInputChange}   disabled={!!userInfo.gender}>
+                <select name="gender" value={formValues.gender} onChange={handleInputChange} disabled={!!userInfo.gender}>
                     <option value="male">남성</option>
                     <option value="female">여성</option>
                 </select>
