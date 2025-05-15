@@ -68,11 +68,11 @@ export default defineConfig({
   server: {
     port: 5174,
     proxy: {
-      // '/oauth2': {
-      //   target: 'https://coffeesupliers.shop',
-      //   changeOrigin: true,
-      //   secure: false
-      // },
+      '/oauth2': {
+        target: 'https://coffeesupliers.shop',
+        changeOrigin: true,
+        secure: false
+      },
       '/api': {
         target: 'https://coffeesupliers.shop',
         changeOrigin: true,

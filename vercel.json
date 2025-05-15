@@ -1,10 +1,17 @@
 {
   "version": 2,
   "rewrites": [
-    
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/api/(.*)",
+      "destination": "https://coffeesupliers.shop/api/$1"
+    },
+    {
+      "source": "/oauth2/(.*)",
+      "destination": "https://coffeesupliers.shop/oauth2/$1"
     }
-  ]
+  ],
+  "fallback": {
+    "source": "/(.*)",
+    "destination": "/index.html"
+  }
 }
