@@ -1,49 +1,76 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // useNavigate 추가
-import { submitReview } from "../../api/VolunteerApi"; // API 호출 함수 가져오기
+import { useLocation, useNavigate } from "react-router-dom";
+import { submitReview } from "../../api/VolunteerApi";
+import axios from "axios";
 import styles from "./WriteReview.module.css";
 import Topbar from "../../components/Topbar";
+import { getReviewPreSignedUrls } from "../../api/ImgApi";
 
 export default function WriteReview() {
     const location = useLocation();
-    const navigate = useNavigate(); // useNavigate 훅 초기화
-    const { currentMatching } = location.state || {}; // VolunteerMain에서 전달된 데이터
-    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+    const { currentMatching } = location.state || {};
+
     const [reviewText, setReviewText] = useState("");
-    const [images, setImages] = useState([]); // 이미지 URL 배열
+    const [images, setImages] = useState([]);
 
-    console.log("currentMatching:", currentMatching);
     const handleAttachClick = () => {
-        setShowModal(true);
-    };
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.multiple = true;
 
-    const closeModal = () => {
-        setShowModal(false);
+        input.onchange = async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            try {
+                const urlsData = await getReviewPreSignedUrls(files.length);
+                console.log("PreSigned URLs:", urlsData);
+
+                const uploadedUrls = [];
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const { preSignedUrl, key } = urlsData[i];
+
+                    await axios.put(preSignedUrl, file, {
+                        headers: { 'Content-Type': file.type || 'application/octet-stream' }
+                    });
+
+                    const imageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
+                    uploadedUrls.push(imageUrl);
+                }
+
+                setImages((prev) => [...prev, ...uploadedUrls]);
+            } catch (error) {
+                console.error("이미지 업로드 실패:", error);
+                alert("이미지 업로드 실패: " + error.message);
+            }
+        };
+
+        input.click();
     };
 
     const handleSubmit = async () => {
         if (!currentMatching?.matchingId) {
-            console.error("매칭 ID가 없습니다.");
+            alert("매칭 ID가 없습니다.");
             return;
         }
 
-        // 이미지가 없으면 기본 이미지 사용
         const reviewData = {
             volunteerActivityId: currentMatching.matchingId,
             content: reviewText,
-            imageUrls: images.length > 0 ? images : ["/imgex.png"], // 기본 이미지 경로
+            imageUrls: images,
         };
 
         try {
-            const response = await submitReview(reviewData);
-            console.log("후기 작성 성공:", response);
-            // 성공 메시지 출력
+            await submitReview(reviewData);
             alert("후기가 성공적으로 작성되었습니다.");
-            navigate("/volunteermain"); // VolunteerMain 페이지로 이동
+            navigate("/volunteermain");
         } catch (error) {
             console.error("후기 작성 실패:", error);
-            // 실패 메시지 출력
-            console.error(error.message || "후기 작성에 실패했습니다. 다시 시도해주세요.");
+            alert(error.message || "후기 작성에 실패했습니다.");
         }
     };
 
@@ -51,9 +78,8 @@ export default function WriteReview() {
         <div className={styles.container}>
             <Topbar title="후기작성" />
 
-            {/* 매칭 정보 */}
             <div className={styles.matchInfo}>
-                <img src="/check.svg" className={styles.matchIcon} />
+                <img src="/check.svg" className={styles.matchIcon} alt="체크" />
                 <div>
                     <div className={styles.matchText}>
                         <strong>{currentMatching?.otherName || "이름 없음"}</strong> 님과의 매칭
@@ -66,7 +92,7 @@ export default function WriteReview() {
                                 day: "numeric",
                             })
                             : "날짜 없음"}{" "}
-                        &nbsp; | &nbsp;{" "}
+                        &nbsp; | &nbsp;
                         {currentMatching
                             ? new Date(currentMatching.startTime).toLocaleTimeString([], {
                                 hour: "2-digit",
@@ -77,39 +103,16 @@ export default function WriteReview() {
                 </div>
             </div>
 
-          
-
-            {/* 사진/동영상 첨부 */}
             <button className={styles.attachBtn} onClick={handleAttachClick}>
                 사진/동영상 첨부하기
             </button>
 
-            {/* 이미지 미리보기 */}
             <div className={styles.imageScroll}>
-                {images.length > 0 ? (
-                    images.map((src, idx) => (
-                        <img key={idx} src={src} className={styles.previewImage} alt={`preview-${idx}`} />
-                    ))
-                ) : (
-                    <img src="/imgex.png" className={styles.previewImage} alt="기본 이미지" />
-                )}
+                {images.map((src, idx) => (
+                    <img key={idx} src={src} className={styles.previewImage} alt={`preview-${idx}`} />
+                ))}
             </div>
 
-            {/* 모달 */}
-            {showModal && (
-                <div className={styles.modalOverlay} onClick={closeModal}>
-                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        <p className={styles.modalTitle}>사진 첨부</p>
-                        <button className={styles.modalBtn}>앨범에서 사진 선택</button>
-                        <button className={styles.modalBtn}>기본 이미지 적용</button>
-                        <button className={styles.cancelBtn} onClick={closeModal}>
-                            취소
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* 후기 작성 */}
             <div className={styles.reviewSection}>
                 <label>후기 작성</label>
                 <textarea
@@ -119,7 +122,6 @@ export default function WriteReview() {
                 />
             </div>
 
-            {/* 완료 버튼 */}
             <div className={styles.submitArea}>
                 <button className={styles.submitBtn} onClick={handleSubmit}>
                     완료

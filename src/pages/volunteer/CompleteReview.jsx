@@ -15,7 +15,8 @@ export default function CompleteReview() {
                 const data = await getCompletedReviews();
                 console.log("완료된 후기 데이터:", data);
 
-                const sortedData = data.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+                const sortedData = data.sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
+
                 setCompleteMatchData(sortedData);
             } catch (err) {
                 console.error("fetchCompletedReviews 에러:", err);
