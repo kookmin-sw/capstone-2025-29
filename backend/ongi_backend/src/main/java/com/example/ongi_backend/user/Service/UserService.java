@@ -84,14 +84,21 @@ public class UserService implements UserDetailsService {
 
     public ResponseUserInfo getUser(String username, String userType) {
         BaseUser baseUser = findUserByUserName(username, userType);
-        return ResponseUserInfo.builder()
+
+        ResponseUserInfo.ResponseUserInfoBuilder builder = ResponseUserInfo.builder()
                 .name(baseUser.getName())
                 .phone(baseUser.getPhone())
                 .age(baseUser.getAge())
                 .profileImage(baseUser.getProfileImage())
                 .gender(baseUser.getGender())
-                .address(baseUser.getAddress())
-                .build();
+                .address(baseUser.getAddress());
+
+        // 봉사자인 경우 bio 추가
+        if (baseUser instanceof Volunteer) {
+            Volunteer volunteer = (Volunteer) baseUser;
+            builder.bio(volunteer.getBio());
+        }
+        return builder.build();
     }
     public BaseUser findUserByUserName(String username, String userType) {
         if (userType.equalsIgnoreCase("volunteer")) {
