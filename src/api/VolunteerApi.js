@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// ✅ API BASE 설정 (production/개발 상관없이 고정)
-const API_BASE = import.meta.env.VITE_API_BASE || "https://coffeesupliers.shop";
+
+
 
 // ✅ 공통 헤더 함수
 const getAuthHeaders = () => ({
@@ -12,7 +12,7 @@ const getAuthHeaders = () => ({
 // ✅ 유저 정보 가져오기
 export const getUserInfo = async () => {
     try {
-        const response = await axios.get(`${API_BASE}/api/volunteer`, { headers: getAuthHeaders() });
+        const response = await axios.get(`/api/volunteer`, { headers: getAuthHeaders() });
 
         if (!response.data) throw { status: 400, message: '유저 정보를 가져오는데 실패했습니다.' };
         return response.data;
