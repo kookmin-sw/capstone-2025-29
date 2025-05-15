@@ -12,15 +12,15 @@ export default function Signup() {
     const userInfo = location.state?.userInfo || {};
 
     const formatPhoneNumber = (phone) => {
-        if (phone.startsWith('82 ')) {
-            // '82 ' -> '0', 공백 제거 후 남은 부분 붙이기
-            return '0' + phone.slice(3);
+        if (phone.startsWith('+82')) {
+            // '+82 10-2900-1797' → '01029001797'
+            return '0' + phone.replace('+82', '').replace(/\D/g, '');
         }
-        if (phone.startsWith('+82 ')) {
-            // 혹시 +82 가 붙은 경우도 대비
-            return '0' + phone.slice(4);
+        if (phone.startsWith('82')) {
+            // '82 10-2900-1797' → '01029001797'
+            return '0' + phone.replace('82', '').replace(/\D/g, '');
         }
-        return phone;
+        return phone.replace(/\D/g, ''); // 나머지도 숫자만 남기기
     };
 
     const districts = [
@@ -214,15 +214,10 @@ export default function Signup() {
                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="비밀번호 다시 입력" />
             </div>
 
-            <input
-                className={styles.inputGroup}
-                type="text"
-                name="name"
-                value={formValues.name}
-                onChange={handleInputChange}
-                placeholder="이름 입력"
-                disabled={!!userInfo.name}
-            />
+            <div className={styles.inputGroup}>
+                <label>이름</label>
+                <input type="text" name="name" value={formValues.name} onChange={handleInputChange} placeholder="이름 입력" disabled={!userInfo.name} />
+            </div>
 
             <div className={styles.inputGroup}>
                 <label>성별</label>
