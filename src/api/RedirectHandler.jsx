@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-0
+
 export default function RedirectHandler() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -8,24 +8,33 @@ export default function RedirectHandler() {
     useEffect(() => {
         const params = new URLSearchParams(location.search);
 
-        console.log('params' ,params)
         const accessToken = params.get('accessToken');
         const refreshToken = params.get('refreshToken');
         const userType = params.get('userType');
 
-        if (accessToken) {
-            localStorage.setItem('accessToken', accessToken);
-        }
-        if (refreshToken) {
-            localStorage.setItem('refreshToken', refreshToken);
-        }
-        if (userType) {
-            localStorage.setItem('userType', userType);
-        }
-        console.log('params : ',accessToken)
-        // ✅ 저장하고 바로 봉사자 메인으로 이동
-        navigate('/volunteermain');
-    }, [location.search]);
+        const userInfo = {
+            name: params.get('name') || "",
+            profileImage: params.get('profileImage') || "",
+            phone: params.get('phone') || "",
+            address: params.get('address') || ""
+        };
 
-    return <div>로그인 중입니다...</div>;
+        // ✅ localStorage 저장
+        if (accessToken) localStorage.setItem('accessToken', accessToken);
+        if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+        if (userType) localStorage.setItem('userType', userType);
+
+        console.log('accessToken:', accessToken);
+        console.log('userType:', userType);
+        console.log('userInfo:', userInfo);
+
+        // ✅ navigate 시 userInfo를 state로 전달
+        if (userType === 'elderly') {
+            navigate('/usermain', { state: { from: 'redirect', userInfo } });
+        } else {
+            navigate('/volunteermain', { state: { from: 'redirect', userInfo } });
+        }
+    }, [location.search, navigate]);
+
+    return null;
 }
