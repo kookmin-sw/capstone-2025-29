@@ -139,7 +139,7 @@ public class VolunteerService {
 					findVolunteerActivity.updateStatus(PROGRESS);
 					findVolunteerActivity.updateVolunteer(v);
 
-					return null;
+					return true;
 				})
 				.orElseGet(() -> {
 					// 매칭 실패 처리
