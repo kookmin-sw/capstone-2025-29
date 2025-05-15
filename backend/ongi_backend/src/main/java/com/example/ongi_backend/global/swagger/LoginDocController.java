@@ -24,16 +24,18 @@ public class LoginDocController {
     public void login(
             @Parameter(description = "아이디") @RequestParam String username,
             @Parameter(description = "비밀번호") @RequestParam String password,
-            @Parameter(description = "사용자 타입") @RequestParam String userType
+            @Parameter(description = "사용자 타입") @RequestParam String userType,
+            @Parameter(description = "fcm 토큰") @RequestParam String fcmToken
     ) {
     }
 
-    @Operation(summary = "카카오 로그인", description = "isNewUser에 따라 반환값 달라짐")
+    @Operation(summary = "카카오 로그인", description = "")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "로그인 성공, 기존 사용자일 경우 JWT 발급. responseCode : 301  쿼리 파라미터: " +
-                            "isNewUser=false, accessToken=<access_token>, refreshToken=<refresh_token>, userType=<user_type>",
+                            "accessToken=<access_token>, refreshToken=<refresh_token>, userType=<user_type>,\n" +
+                            "name=<name>, profileImage=<profile_image_url>, phone=<phone_number>, address=<address>",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = String.class)),
                     headers = {
@@ -44,7 +46,7 @@ public class LoginDocController {
             @ApiResponse(
                     responseCode = "301",
                     description = "새로운 사용자일 경우 회원가입 페이지로 리다이렉트. 쿼리 파라미터: " +
-                            "isNewUser=true, username=<username>, name=<name>, gender=<gender>, phone=<phone>, age=<age>",
+                            "username=<username>, name=<name>, gender=<gender>, phone=<phone>, age=<age>",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = String.class)),
                     headers = {

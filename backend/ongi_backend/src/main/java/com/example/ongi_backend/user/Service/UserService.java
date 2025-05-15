@@ -148,8 +148,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void modifyFcmToken(BaseUser baseUser, String userType, String fcmToken) {
-        BaseUser user = findUserByUserName(baseUser.getUsername(), userType);
+    public void modifyFcmToken(String username, String userType, String fcmToken) {
+        BaseUser user = findUserByUserName(username, userType);
         user.updateFcmToken(fcmToken);
     }
 }

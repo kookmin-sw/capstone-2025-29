@@ -48,7 +48,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         BaseUser baseUser = principalDetails.getBaseUser();
 
-        userService.modifyFcmToken(baseUser, request.getParameter("userType"), request.getParameter("fcmToken"));
+        userService.modifyFcmToken(baseUser.getUsername(), request.getParameter("userType"), request.getParameter("fcmToken"));
 
         String accessToken = jwtProvider.createAccessToken(baseUser.getUsername());
         String refreshToken = jwtProvider.createRefreshToken(baseUser.getUsername());
