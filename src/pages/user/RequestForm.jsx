@@ -5,7 +5,9 @@ import Topbar from "../../components/Topbar";
 import MatchCard from "../../components/MatchCard";
 import { requestElderlyMatching, fetchRecommendedVolunteers } from "../../api/UserApi";
 import LoadingModal from "../../components/LoadingModal";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/locale";
 /**
  * 도움 요청 폼 컴포넌트
  * 4단계로 구성된 폼을 통해 사용자의 도움 요청 정보를 수집
@@ -18,6 +20,8 @@ export default function RequestForm() {
 
     const userName = localStorage.getItem('userName') || "이름 없음";
     const userAddress = JSON.parse(localStorage.getItem('userAddress')) || { district: "", detail: "" };
+
+    const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
 
     const districtMap = {
         GANGNAM: "강남구", GANGDONG: "강동구", GANGBUK: "강북구", GANGSEO: "강서구",
@@ -205,22 +209,55 @@ export default function RequestForm() {
                     <div className={styles.dateTitleBox}>
                         <p>정확한 날짜와 시간을<br />입력해주세요</p>
                     </div>
-                    <div className={styles.datetimeInputs}>
-                        <input
-                            className={styles.dateInput}
-                            type="date"
-                            value={formData.date}
-                            min={new Date().toISOString().split('T')[0]}
-                            onChange={(e) => handleChange("date", e.target.value)}
-                        />
-                        <input
-                            className={styles.timeInput}
-                            type="time"
-                            step="3600"
-                            value={formData.time}
-                            onChange={(e) => handleChange("time", e.target.value)}
+
+                    {/* ✅ 날짜 선택 */}
+                    <div className={styles.datepickerWrapper}>
+                        <DatePicker
+                            locale={ko}
+                            dateFormat="yyyy년 MM월 dd일"
+                            selected={formData.date ? new Date(formData.date) : null}
+                            minDate={new Date()}
+                            onChange={(date) => {
+                                const formatted = date.toISOString().split('T')[0];
+                                handleChange("date", formatted);
+                            }}
+                            placeholderText="날짜를 선택해주세요"
+                            className={styles.datepickerInput}
+                            popperPlacement="bottom"
                         />
                     </div>
+
+                    <div className={styles.timeSelectBox}>
+                        <select
+                            className={styles.timeSelect}
+                            value={formData.time}
+                            onChange={(e) => handleChange("time", e.target.value)}
+                            required
+                        >
+                            <option value="" disabled hidden>시간을 선택해주세요</option>
+                            {Array.from({ length: 48 }, (_, i) => {
+                                const hour = Math.floor(i / 2);
+                                const minute = i % 2 === 0 ? "00" : "30";
+                                const hourString = `${String(hour).padStart(2, '0')}:${minute}`;
+                                const displayHour = hour === 0
+                                    ? `오전 12시 ${minute}분`
+                                    : hour < 12
+                                        ? `오전 ${hour}시 ${minute}분`
+                                        : hour === 12
+                                            ? `오후 12시 ${minute}분`
+                                            : `오후 ${hour - 12}시 ${minute}분`;
+
+                                return (
+                                    <option key={hourString} value={hourString}>
+                                        {displayHour}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    </div>
+
+
+
                     <div className={styles.nextButton} onClick={handleNext}>
                         <img src="/nextbtn.svg" alt="다음" />
                     </div>

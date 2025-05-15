@@ -171,7 +171,7 @@ export default function Edit() {
                 </div>
                 {["name", "age", "phone", "district", "detail"].map(field => (
                     <div key={field} className={styles.inputGroup}>
-                        <label>{field === "district" ? "지역(구)" : field === "detail" ? "상세주소" : field === "phone" ? "번호" : field}</label>
+                        <label>{field === "district" ? "지역(구)" : field === "detail" ? "상세주소" : field === "phone" ? "번호" : field === 'name' ? '이름' : field === 'age' ? '나이' : field }</label>
                         {field === "district" ? (
                             <select name={field} value={formData[field]} onChange={handleInputChange}>
                                 <option value="">지역 선택</option>

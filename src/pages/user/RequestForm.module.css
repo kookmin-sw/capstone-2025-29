@@ -391,7 +391,7 @@
     margin-top: 5px;
 }
 
-.name strong{
+.name strong {
     font-size: 1.2;
 }
 
@@ -426,4 +426,89 @@
 
 .dateTime .divider {
     color: #666;
+}
+
+
+.timePickerGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.timeButton {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.timeButton:hover {
+    background-color: #e0e0e0;
+}
+
+.activeTime {
+    background-color: #6D57DE;
+    color: white;
+    font-weight: bold;
+    border: none;
+}
+
+
+/* 날짜 선택 디자인 */
+.timeSelectBox {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.timeSelect {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.4rem;
+    background-color: #f5f5f5;
+
+    appearance: none;
+    background-image: url('/dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+
+    text-align: center;
+    border: 0px;
+}
+
+.timeSelect option:first-child {
+    color: #999;
+    /* placeholder 색상 */
+}
+
+.timeSelect {
+    color: #000;
+    /* 기본 선택된 항목 색상 */
+}
+
+/* 선택 안했을 때는 첫 번째 옵션 색상을 따라가게 */
+.timeSelect:invalid {
+    color: #999;
+}
+
+
+.datepickerWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10vh;
+}
+
+.datepickerInput {
+    background-color: #f5f5f5;
+    padding: 12px;
+    font-size: 1.4rem;
+
+    text-align: center;
+    border: 0px;
+
+    margin: 0;
 }

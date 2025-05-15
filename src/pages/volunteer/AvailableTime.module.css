@@ -126,17 +126,11 @@
 .timeGroup {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     flex: 1;
-    gap: 6vw;
+
 }
 
-/* 시작시간 (회색 박스) */
-.timeRow input[type="time"]:not(.endInput) {
-    background-color: #e6e6e6;
-    color: black;
-    font-size: 0.7rem;
-}
 
 
 
@@ -158,4 +152,20 @@
     font-weight: bold;
     border: none;
     border-radius: 8px;
+}
+
+.timeSelect {
+
+
+    font-size: 1rem;
+    background-color: #fff;
+
+    appearance: none;
+    background-image: url('/dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+
+    text-align: center;
+    border: 0px;
 }
