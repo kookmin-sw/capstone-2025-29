@@ -10,7 +10,14 @@ export default function Signup() {
     const navigate = useNavigate();
     const selectedRole = location.state?.role || "";
     const userInfo = location.state?.userInfo || {};
-
+    
+    
+    const formatPhoneNumber = (phone) => {
+        if (phone.startsWith('+82')) {
+            return phone.replace('+82 ', '0').replace(/[^0-9-]/g, '');
+        }
+        return phone;
+    };
     console.log(userInfo)
     const districts = [
         { value: "GANGNAM", label: "강남구" }, { value: "GANGDONG", label: "강동구" },
@@ -57,7 +64,7 @@ export default function Signup() {
                 id: userInfo.username || "",
                 name: userInfo.name || "",
                 gender: userInfo.gender || "male",
-                phone: userInfo.phone || "",
+                phone: formatPhoneNumber(userInfo.phone || "")
             }));
         }
     }, [userInfo]);
@@ -102,6 +109,7 @@ export default function Signup() {
         if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
         return age;
     };
+
 
     const birthDateComplete = formValues.birthYear && formValues.birthMonth && formValues.birthDay;
     const isRequiredTermsAgreed = agreements.terms && agreements.privacy;
@@ -198,18 +206,23 @@ export default function Signup() {
                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="비밀번호 다시 입력" />
             </div>
 
-            <div className={styles.inputGroup}>
-                <label>이름</label>
-                <input type="text" name="name" value={formValues.name} onChange={handleInputChange} placeholder="이름 입력" />
-            </div>
-
-            <div className={styles.inputGroup}>
-                <label>성별</label>
-                <select name="gender" value={formValues.gender} onChange={handleInputChange}>
-                    <option value="male">남성</option>
-                    <option value="female">여성</option>
-                </select>
-            </div>
+            <input
+                type="text"
+                name="name"
+                value={formValues.name}
+                onChange={handleInputChange}
+                placeholder="이름 입력"
+                disabled={!!userInfo.name}
+            />
+            <select
+                name="gender"
+                value={formValues.gender}
+                onChange={handleInputChange}
+                disabled={!!userInfo.gender}
+            >
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+            </select>
 
             <div className={styles.inputGroup}>
                 <label>지역구</label>
@@ -248,7 +261,7 @@ export default function Signup() {
             <div className={styles.inputGroup}>
                 <label>휴대전화</label>
                 <div className={styles.inputWithButton}>
-                    <input type="text" name="phone" value={formValues.phone} onChange={handleInputChange} placeholder="전화번호 입력" />
+                    <input type="text" name="phone" value={formValues.phone} onChange={handleInputChange} placeholder="전화번호 입력" disabled={!userInfo.phone} />
                     <button type="button" className={styles.checkBtn}>인증번호 받기</button>
                 </div>
                 <input type="text" name="authCode" value={formValues.authCode} onChange={handleInputChange} placeholder="인증번호 입력" />
