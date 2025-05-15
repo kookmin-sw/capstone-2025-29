@@ -13,8 +13,8 @@ export default function Signup() {
     
     
     const formatPhoneNumber = (phone) => {
-        if (phone.startsWith('+82')) {
-            return phone.replace('+82 ', '0').replace(/[^0-9-]/g, '');
+        if (phone.startsWith('82')) {
+            return phone.replace('82 ', '0').replace(/[^0-9-]/g, '');
         }
         return phone;
     };
@@ -214,16 +214,14 @@ export default function Signup() {
                 placeholder="이름 입력"
                 disabled={!!userInfo.name}
             />
-            <select
-                name="gender"
-                value={formValues.gender}
-                onChange={handleInputChange}
-                disabled={!!userInfo.gender}
-            >
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-            </select>
 
+            <div className={styles.inputGroup}>
+                <label>성별</label>
+                <select name="gender" value={formValues.gender} onChange={handleInputChange}   disabled={!!userInfo.gender}>
+                    <option value="male">남성</option>
+                    <option value="female">여성</option>
+                </select>
+            </div>
             <div className={styles.inputGroup}>
                 <label>지역구</label>
                 <select name="region" value={formValues.region} onChange={handleInputChange}>
