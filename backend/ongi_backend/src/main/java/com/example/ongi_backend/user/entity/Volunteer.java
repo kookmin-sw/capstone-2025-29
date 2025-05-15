@@ -29,6 +29,9 @@ public class Volunteer extends BaseUser {
 	public void updateCategory(Integer category) {
 		this.volunteerCategory = category;
 	}
+	public void updateBio(String bio) {
+		this.bio = bio;
+	}
 	protected Volunteer() {
 		super();
 	}

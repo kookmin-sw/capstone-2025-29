@@ -76,6 +76,11 @@ public class UserService implements UserDetailsService {
                 requestModify.getAddress(),
                 requestModify.getPassword(),
                 requestModify.getProfileImage());
+
+        if(requestModify.getUserType().equals("volunteer")) {
+            Volunteer volunteer = (Volunteer) baseUser;
+            volunteer.updateBio(requestModify.getBio());
+        }
     }
 
     public ResponseUserInfo getUser(String username, String userType) {

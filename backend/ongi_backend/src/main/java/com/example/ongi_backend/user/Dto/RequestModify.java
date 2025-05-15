@@ -14,4 +14,5 @@ public class RequestModify {
     private String profileImage;
     private String password;
     private String userType;
+    private String bio;
 }
