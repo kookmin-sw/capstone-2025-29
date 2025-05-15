@@ -1,14 +1,7 @@
 {
   "version": 2,
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://coffeesupliers.shop/api/$1"
-    },
-    {
-      "source": "/chatapi/(.*)",
-      "destination": "https://aiserver.store/$1"
-    },
+    
     {
       "source": "/(.*)",
       "destination": "/index.html"
