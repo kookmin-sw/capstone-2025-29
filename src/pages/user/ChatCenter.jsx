@@ -1,69 +1,45 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Topbar from "../../components/Topbar";
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import styles from "./ChatCenter.module.css";
-import { fetchSentimentAnalysis } from "../../api/ChatApi"; // API 호출 함수
+import { fetchSentimentAnalysis } from "../../api/ChatApi";
+import LoadingModal from "../../components/LoadingModal";
 
- 
-// API 호출 함수
+
+// Chart.js 요소 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// 감정별 색상 매핑
-const colorMap = {
-    기쁨: '#5D47FF',
-    슬픔: '#D9B2FF',
-    분노: '#94C6FF',
-    불안: '#FF6B91',
-    놀람: '#CFFF47',
-};
-
-// 서버에서 받은 데이터 (예시)
-const serverData = [
-    { label: '기쁨', value: 25 },
-    { label: '슬픔', value: 25 },
-    { label: '분노', value: 15 },
-    { label: '불안', value: 10 },
-    { label: '놀람', value: 10 },
-    { label: '행복', value: 10 },
-    { label: '기절', value: 10 },
+// 7가지 고정 색상 (서버 데이터와 무관하게)
+const fixedColors = [
+    '#5D47FF', // 보라
+    '#FF6B6B', // 빨강
+    '#FFD93D', // 노랑
+    '#6BCB77', // 초록
+    '#4D96FF', // 파랑
+    '#FFB5E8', // 핑크
+    '#C084FC'  // 연보라
 ];
-
-// colorMap을 기준으로 색상 추가
-const emotionData = serverData.map(item => ({
-    ...item,
-    color: colorMap[item.label] || '#999999' // fallback color
-}));
-
-const pieData = {
-    labels: emotionData.map(e => e.label),
-    datasets: [{
-        data: emotionData.map(e => e.value),
-        backgroundColor: emotionData.map(e => e.color),
-        borderWidth: 0,
-    }],
-};
 
 const ChatCenter = () => {
     const navigate = useNavigate();
     const [emotionData, setEmotionData] = useState([]);
     const [feedback, setFeedback] = useState('');
     const [chatBotName, setChatBotName] = useState('');
+    const [loading, setLoading] = useState(true);
 
     const userName = localStorage.getItem('chatBotName') || '홍길동';
 
-    // 감정 분석 데이터 불러오기
     useEffect(() => {
         const loadSentimentData = async () => {
             try {
                 const data = await fetchSentimentAnalysis();
 
-                const mappedData = Object.entries(data.sentimentPercentages).map(([label, value]) => ({
+                const mappedData = Object.entries(data.sentimentPercentages).map(([label, value], idx) => ({
                     label,
                     value,
-                    color: colorMap[label] || '#999999'
+                    color: fixedColors[idx % fixedColors.length]  // 색상 고정 7개
                 }));
 
                 setEmotionData(mappedData);
@@ -71,14 +47,13 @@ const ChatCenter = () => {
                 setChatBotName(data.chatBotName);
             } catch (error) {
                 console.error(error.message);
+            }  finally {
+                setLoading(false);
             }
         };
 
         loadSentimentData();
     }, []);
-
-
-    console.log("감정 분석 데이터:", emotionData);
 
     const handleChatClick = () => {
         navigate('/ChatPage');
@@ -92,11 +67,11 @@ const ChatCenter = () => {
                 {/* 채팅 카드 */}
                 <div className={styles.chatCard}>
                     <div className={styles.textSection}>
-                        <h2>{userName} </h2>
+                        <h2>{userName}</h2>
                         <p>지금 바로 연결해 드릴게요.</p>
                     </div>
                     <div className={styles.imageWrapper}>
-                        <img src="/chat-icon.svg" alt="채팅 오른쪽" className={styles.rightImg} />
+                        <img src="/chat-icon.svg" alt="채팅 아이콘" className={styles.rightImg} />
                     </div>
                     <button className={styles.chatBtn} onClick={handleChatClick}>채팅 시작하기</button>
                 </div>
@@ -109,7 +84,14 @@ const ChatCenter = () => {
                             <p className={styles.analysisDate}>2025년 2월</p>
                             <div className={styles.chartWrapper}>
                                 <Pie
-                                    data={pieData}
+                                    data={{
+                                        labels: emotionData.map(e => e.label),
+                                        datasets: [{
+                                            data: emotionData.map(e => e.value),
+                                            backgroundColor: emotionData.map(e => e.color),
+                                            borderWidth: 0,
+                                        }],
+                                    }}
                                     options={{
                                         plugins: {
                                             legend: { display: false },
@@ -119,6 +101,13 @@ const ChatCenter = () => {
                                     }}
                                 />
                             </div>
+                            {feedback && (
+                                <div className={styles.feedbackBox}>
+                                    <p className={styles.feedbackText}>
+                                        {feedback}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         <ul className={styles.right}>
@@ -136,6 +125,8 @@ const ChatCenter = () => {
                     </div>
                 </div>
             </div>
+
+            <LoadingModal isOpen={loading} onClose={() => setLoading(false)} />
         </div>
     );
 };

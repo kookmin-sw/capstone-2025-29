@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_BASE;
+
 const CHAT_API_BASE = import.meta.env.VITE_CHAT_API_BASE;
 
 // ✅ AI 챗봇 서버 - 채팅 메시지 전송

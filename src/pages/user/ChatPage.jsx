@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
-import LoadingModal from "../../components/LoadingModal"; // ✅ 여기 추가
-import styles from "./ChatPage.module.css";
+import LoadingModal from "../../components/LoadingModal";
 import { sendChatMessage } from "../../api/ChatApi";
+import styles from "./ChatPage.module.css";
 
 const ChatPage = () => {
     const navigate = useNavigate();
@@ -26,42 +26,27 @@ const ChatPage = () => {
     const recognition = useRef(null);
     const transcriptRef = useRef("");
 
+    // ✅ Dummy 무음 오디오 (PWA 자동재생 문제 해결용)
+    const dummyAudioRef = useRef(null);
+
+    const unlockAudioContext = () => {
+        if (dummyAudioRef.current) {
+            dummyAudioRef.current.play().catch((e) => {
+                console.log('Dummy Audio play blocked:', e);
+            });
+        }
+    };
+
     useEffect(() => {
         recognition.current = new SpeechRecognition();
         recognition.current.continuous = true;
         recognition.current.interimResults = true;
         recognition.current.lang = "ko-KR";
+
+        dummyAudioRef.current = new Audio();
+        dummyAudioRef.current.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=";
+        dummyAudioRef.current.volume = 0;
     }, []);
-
-    const toggleListening = () => {
-        if (!recognition.current) return;
-
-        if (isListening) {
-            recognition.current.stop();
-            recognition.current.onend = () => {
-                setIsListening(false);
-                transcriptRef.current = "";
-            };
-        } else {
-            transcriptRef.current = "";
-            recognition.current.start();
-            setIsListening(true);
-
-            recognition.current.onresult = (event) => {
-                const transcript = Array.from(event.results)
-                    .map((result) => result[0].transcript)
-                    .join("");
-                
-                transcriptRef.current = transcript;
-                setInput(transcript);
-            };
-
-            recognition.current.onerror = (event) => {
-                console.error("음성 인식 오류:", event.error);
-                setIsListening(false);
-            };
-        }
-    };
 
     useEffect(() => {
         const storedUserName = localStorage.getItem("userName") || "사용자";
@@ -84,6 +69,33 @@ const ChatPage = () => {
         ]);
     }, []);
 
+    const toggleListening = () => {
+        if (!recognition.current) return;
+
+        if (isListening) {
+            recognition.current.stop();
+            recognition.current.onend = () => {
+                setIsListening(false);
+                transcriptRef.current = "";
+            };
+        } else {
+            transcriptRef.current = "";
+            recognition.current.start();
+            setIsListening(true);
+
+            recognition.current.onresult = (event) => {
+                const transcript = Array.from(event.results).map(result => result[0].transcript).join("");
+                transcriptRef.current = transcript;
+                setInput(transcript);
+            };
+
+            recognition.current.onerror = (event) => {
+                console.error("음성 인식 오류:", event.error);
+                setIsListening(false);
+            };
+        }
+    };
+
     const sendMessage = async () => {
         if (input.trim() === "" || isSending) return;
 
@@ -94,7 +106,7 @@ const ChatPage = () => {
         }
 
         setIsSending(true);
-        setIsLoading(true); 
+        setIsLoading(true);
 
         const userMessage = {
             id: lastMessageId.current + 1,
@@ -103,7 +115,7 @@ const ChatPage = () => {
             timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
             name: userName,
         };
-        setMessages((prev) => [...prev, userMessage]);
+        setMessages(prev => [...prev, userMessage]);
         lastMessageId.current += 1;
 
         setInput("");
@@ -123,11 +135,12 @@ const ChatPage = () => {
                 name: chatBotName,
                 profileImage: chatBotProfileImage
             };
-            setMessages((prev) => [...prev, aiMessage]);
+            setMessages(prev => [...prev, aiMessage]);
             lastMessageId.current += 1;
 
+            // ✅ 실제 응답 오디오 재생
             const audio = new Audio(audio_path);
-            audio.play();
+            await audio.play();
         } catch (error) {
             const errorMessage = {
                 id: lastMessageId.current + 1,
@@ -137,11 +150,11 @@ const ChatPage = () => {
                 name: chatBotName,
                 profileImage: chatBotProfileImage
             };
-            setMessages((prev) => [...prev, errorMessage]);
+            setMessages(prev => [...prev, errorMessage]);
             lastMessageId.current += 1;
         } finally {
             setIsSending(false);
-        setIsLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -194,7 +207,10 @@ const ChatPage = () => {
                 <div className={styles.centerMic}>
                     <button
                         className={`${styles.micButton} ${isListening ? styles.activeMic : ""}`}
-                        onClick={toggleListening}
+                        onClick={() => {
+                            unlockAudioContext(); // ✅ 유저 인터랙션 시 오디오 권한 확보
+                            toggleListening();
+                        }}
                     >
                         <img src="/mike-icon.svg" alt="음성 입력" />
                     </button>
@@ -211,7 +227,13 @@ const ChatPage = () => {
                             placeholder="대화를 입력해 주세요"
                             rows={1}
                         />
-                        <button className={styles.sendButton} onClick={sendMessage}>
+                        <button
+                            className={styles.sendButton}
+                            onClick={() => {
+                                unlockAudioContext(); // ✅ 유저 인터랙션 시 오디오 권한 확보
+                                sendMessage();
+                            }}
+                        >
                             <img src="/send-icon.svg" alt="전송" />
                         </button>
                     </div>
@@ -219,7 +241,6 @@ const ChatPage = () => {
             </div>
 
             <LoadingModal isOpen={isLoading} message="답변을 생성 중입니다..." />
-
         </div>
     );
 };
