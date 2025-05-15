@@ -43,15 +43,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 2. 기존 사용자라면 → JWT 발급 및 전달
         String accessToken = jwtProvider.createAccessToken(user.getUsername());
         String refreshToken = jwtProvider.createRefreshToken(user.getUsername());
-        String targetPageUrl;
 
-        if ("elderly".equals(user.getClass().getName().toLowerCase())) {
-            targetPageUrl = "https://capstone-2025-29-vercel.vercel.app/usermain";
-        } else {
-            targetPageUrl = "https://capstone-2025-29-vercel.vercel.app/volunteermain";
-        }
-
-        String redirectUrl = UriComponentsBuilder.fromUriString(targetPageUrl)
+        String redirectUrl = UriComponentsBuilder.fromUriString("https://capstone-2025-29-vercel.vercel.app/redirect")
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)
                 .queryParam("userType", user.getClass().getSimpleName().toLowerCase())
