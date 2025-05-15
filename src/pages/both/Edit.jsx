@@ -2,18 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
 import LoadingModal from "../../components/LoadingModal";
-import {
-    fetchUserInfo,
-    updateUserInfo,
-    checkPassword,
-    updatePassword,
-} from "../../api/both";
+import { fetchUserInfo, updateUserInfo, checkPassword, updatePassword } from "../../api/both";
 import { getPreSignedUrl } from "../../api/ImgApi";
 import axios from "axios";
 import styles from "./Edit.module.css";
 
 export default function Edit() {
     const navigate = useNavigate();
+    const userType = localStorage.getItem("userType") || "volunteer";
 
     const districtMap = {
         GANGNAM: "강남구", GANGDONG: "강동구", GANGBUK: "강북구", GANGSEO: "강서구",
@@ -29,41 +25,37 @@ export default function Edit() {
     );
 
     const [formData, setFormData] = useState({
-        name: "",
-        age: "",
-        gender: "",
-        phone: "",
-        district: "",
-        detail: "",
-        profileImage: "",
-        introduction: ""
+        name: "", age: "", gender: "", phone: "", district: "", detail: "", profileImage: "", introduction: ""
     });
 
     const [selectedFile, setSelectedFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [passwordInput, setPasswordInput] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState(false);
     const [matchError, setMatchError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const userType = localStorage.getItem("userType") || "volunteer";
 
     useEffect(() => {
         const loadUserInfo = async () => {
             setIsLoading(true);
             try {
                 const data = await fetchUserInfo(userType);
+
+                const cachedImage = localStorage.getItem("profileImage");
+                const profileImageUrl = cachedImage || data.profileImage || "/profile.svg";
+
                 setFormData({
-                    name: data.name || "",
-                    age: data.age?.toString() || "",
-                    gender: data.gender || "",
-                    phone: data.phone || "",
-                    district: districtMap[data.address?.district] || "",
-                    detail: data.address?.detail || "",
-                    profileImage: data.profileImage || "",
-                    introduction: data.introduction || ""
+                    name: data.name || "", age: data.age?.toString() || "", gender: data.gender || "",
+                    phone: data.phone || "", district: districtMap[data.address?.district] || "",
+                    detail: data.address?.detail || "", profileImage: profileImageUrl, introduction: data.bio || ""
                 });
+
+                // ✅ 처음 프로필 이미지 캐싱할 때만 저장 (selectedFile로 업데이트한 경우에만 덮어씀)
+                if (!cachedImage && data.profileImage) {
+                    localStorage.setItem("profileImage", data.profileImage);
+                }
+
             } catch (error) {
                 alert("유저 정보 불러오기 실패: " + error.message);
             } finally {
@@ -101,17 +93,13 @@ export default function Edit() {
         if (selectedFile) {
             try {
                 const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
-                const contentType = selectedFile.type || 'application/octet-stream';
-
                 await axios.put(preSignedUrl, selectedFile, {
-                    headers: { 'Content-Type': contentType }
+                    headers: { 'Content-Type': selectedFile.type || 'application/octet-stream' }
                 });
-
                 finalImageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
 
-                // ✅ 여기 추가 (이미지 즉시 반영)
-                setFormData((prev) => ({ ...prev, profileImage: finalImageUrl }));
-
+                console.log("Uploaded image URL:", finalImageUrl);
+                localStorage.setItem("profileImage", `${finalImageUrl}?v=${new Date().getTime()}`);
             } catch (error) {
                 alert("프로필 이미지 업로드 실패: " + error.message);
                 setIsLoading(false);
@@ -119,37 +107,24 @@ export default function Edit() {
             }
         }
 
-
         const updatePayload = {
             name: formData.name,
             age: Number(formData.age),
             gender: formData.gender,
             phone: formData.phone,
-            address: {
-                district: reverseDistrictMap[formData.district] || "",
-                detail: formData.detail
-            },
+            address: { district: reverseDistrictMap[formData.district] || "", detail: formData.detail },
             profileImage: finalImageUrl,
-            introduction: formData.introduction,
+            bio: formData.introduction,
             userType
         };
 
         try {
             await updateUserInfo(updatePayload);
-            localStorage.setItem("userName", formData.name);
             alert("정보가 수정되었습니다.");
-
-            // ✅ userType 에 따라 navigate, 이미지 리프레시를 위한 from: 'edit' 상태 전달
-            if (userType === "volunteer") {
-                navigate("/volunteermain", { state: { from: 'edit' } });
-            } else {
-                navigate("/usermain", { state: { from: 'edit' } });
-            }
-
+            navigate(userType === "volunteer" ? "/volunteermain" : "/usermain", { state: { from: 'edit' } });
         } catch (error) {
             alert("정보 수정 실패: " + error.message);
-        }
-        finally {
+        } finally {
             setIsLoading(false);
         }
     };
@@ -185,79 +160,54 @@ export default function Edit() {
     return (
         <div className={styles.container}>
             <Topbar title="프로필 수정" />
-
             <form className={styles.form} onSubmit={handleInfoSubmit}>
                 <div className={styles.profileImageWrapper} onClick={handleImageClick}>
                     <img
-                        className={styles.profileImage}
                         src={formData.profileImage || "/profile.svg"}
                         alt="Profile"
+                        className={styles.profileImage}
                     />
-                </div>
 
-                <div className={styles.inputGroup}>
-                    <label>이름</label>
-                    <input name="name" type="text" value={formData.name} onChange={handleInputChange} />
                 </div>
-
-                <div className={styles.inputGroup}>
-                    <label>나이</label>
-                    <input name="age" type="text" value={formData.age} onChange={handleInputChange} />
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label>성별</label>
-                    <input type="text" value={formData.gender === 'male' ? '남성' : formData.gender === 'female' ? '여성' : '정보 없음'} readOnly />
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label>번호</label>
-                    <input name="phone" type="text" value={formData.phone} onChange={handleInputChange} />
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label>지역(구)</label>
-                    <select name="district" value={formData.district} onChange={handleInputChange}>
-                        <option value="">지역 선택</option>
-                        {Object.entries(districtMap).map(([key, value]) => (
-                            <option key={key} value={value}>{value}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label>상세주소</label>
-                    <input name="detail" type="text" value={formData.detail} onChange={handleInputChange} />
-                </div>
-
+                {["name", "age", "phone", "district", "detail"].map(field => (
+                    <div key={field} className={styles.inputGroup}>
+                        <label>{field === "district" ? "지역(구)" : field === "detail" ? "상세주소" : field === "phone" ? "번호" : field}</label>
+                        {field === "district" ? (
+                            <select name={field} value={formData[field]} onChange={handleInputChange}>
+                                <option value="">지역 선택</option>
+                                {Object.entries(districtMap).map(([key, value]) => (
+                                    <option key={key} value={value}>{value}</option>
+                                ))}
+                            </select>
+                        ) : (
+                            <input name={field} type="text" value={formData[field]} onChange={handleInputChange} />
+                        )}
+                    </div>
+                ))}
                 {userType === "volunteer" && (
                     <div className={styles.inputGroup}>
                         <label>자기소개</label>
-                        <textarea className={styles.introduction} name="introduction" value={formData.introduction} onChange={handleInputChange} placeholder="소개를 잘 작성하시면 매칭에 도움이 됩니다." maxLength={100} rows={10} />
+                        <textarea className={styles.introduction} name="introduction" value={formData.introduction} onChange={handleInputChange} rows={5} />
                     </div>
                 )}
-
                 <button type="submit" className={styles.submitBtn}>수정하기</button>
             </form>
 
             <form className={styles.form} onSubmit={handlePasswordSubmit}>
                 <div className={styles.inputGroup}>
                     <label>현재 비밀번호</label>
-                    <input type="password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} placeholder="현재 비밀번호" />
-                    {passwordError && <span className={styles.errorText}>* 비밀번호를 확인해주세요.</span>}
+                    <input type="password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} />
+                    {passwordError && <span className={styles.errorText}>비밀번호를 확인해주세요.</span>}
                 </div>
-
                 <div className={styles.inputGroup}>
                     <label>새 비밀번호</label>
-                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="새 비밀번호" />
+                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                 </div>
-
                 <div className={styles.inputGroup}>
                     <label>새 비밀번호 확인</label>
-                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="새 비밀번호 확인" />
-                    {matchError && <span className={styles.errorText}>* 새 비밀번호를 확인해주세요.</span>}
+                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                    {matchError && <span className={styles.errorText}>비밀번호가 일치하지 않습니다.</span>}
                 </div>
-
                 <button type="submit" className={styles.submitBtn}>비밀번호 변경</button>
             </form>
 

@@ -1,13 +1,12 @@
 import axios from 'axios';
 
-
-
-
 // ✅ 로그인 API
 export const login = async (username, password, userType) => {
     try {
+        const fcmToken = localStorage.getItem("fcmToken");
+
         const response = await axios.get(`/api/login`, {
-            params: { username, password, userType },
+            params: { username, password, userType,fcmToken },
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
