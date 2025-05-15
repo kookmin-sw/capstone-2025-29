@@ -32,8 +32,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     public void saveUser(UserRegisterDto userRegisterDto) {
-        if (baseUserRepository.countUsernameInBothTables(userRegisterDto.getUsername()) > 0)
-            throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
+        duplicateCheck(userRegisterDto.getUsername());
         if ("elderly".equalsIgnoreCase(userRegisterDto.getUserType())) {
             Elderly elderly = Elderly.builder()
                     .name(userRegisterDto.getName())
@@ -105,16 +104,9 @@ public class UserService implements UserDetailsService {
             throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
         }
     }
-    public void duplicateCheck(String username, String userType) {
-        if (userType.equalsIgnoreCase("volunteer")) {
-            if (volunteerRepository.existsByUsername(username))
-                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
-        } else if (userType.equalsIgnoreCase("elderly")) {
-            if (elderlyRepository.existsByUsername(username))
-                throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
-        } else {
-            throw new CustomException(ErrorCode.INVALID_USER_TYPE_ERROR);
-        }
+    public void duplicateCheck(String username) {
+        if (baseUserRepository.countUsernameInBothTables(username) > 0)
+            throw new CustomException(ErrorCode.ALREADY_EXIST_USER_ERROR);
     }
 
     public void passwordCheck(String username, String userType, String password) {

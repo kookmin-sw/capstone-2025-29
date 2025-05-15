@@ -59,8 +59,8 @@ public class UserController {
 
     @GetMapping("/username")
     @Operation(summary = "아이디 중복 체크", description = "회원가입 시 아이디 중복 체크")
-    public ResponseEntity<?> duplicateCheck(@RequestParam String username, @RequestParam String userType) {
-        userService.duplicateCheck(username, userType);
+    public ResponseEntity<?> duplicateCheck(@RequestParam String username) {
+        userService.duplicateCheck(username);
         return ResponseEntity.ok().build();
     }
 
