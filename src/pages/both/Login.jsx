@@ -45,11 +45,11 @@ export default function Login() {
         }
     };
 
-    // ✅ 카카오 로그인 리다이렉트 핸들러
-    const handleKakaoLogin = () => {
-        // 백엔드의 /oauth2/authorization/kakao 로 리다이렉트
-        window.location.href = '/oauth2/authorization/kakao';
-    };
+    // // ✅ 카카오 로그인 리다이렉트 핸들러
+    // const handleKakaoLogin = () => {
+    //     // 백엔드의 /oauth2/authorization/kakao 로 리다이렉트
+    //     window.location.href = '/oauth2/authorization/kakao';
+    // };
 
     return (
         <div className={styles.container}>
@@ -112,7 +112,7 @@ export default function Login() {
                 </div>
 
                 {/* ✅ 카카오 로그인 버튼 */}
-                <button className={styles.kakaoBtn} onClick={handleKakaoLogin}>
+                <button className={styles.kakaoBtn} >
                     <img src="/login_kakko.svg" alt="카카오 아이콘" className={styles.icon} />
                     카카오로 시작하기
                 </button>
