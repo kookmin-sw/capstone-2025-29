@@ -227,35 +227,36 @@ export default function RequestForm() {
                         />
                     </div>
 
-                    <div className={styles.timeSelectBox}>
-                        <select
-                            className={styles.timeSelect}
-                            value={formData.time}
-                            onChange={(e) => handleChange("time", e.target.value)}
-                            required
-                        >
-                            <option value="" disabled hidden>시간을 선택해주세요</option>
-                            {Array.from({ length: 48 }, (_, i) => {
-                                const hour = Math.floor(i / 2);
-                                const minute = i % 2 === 0 ? "00" : "30";
-                                const hourString = `${String(hour).padStart(2, '0')}:${minute}`;
-                                const displayHour = hour === 0
-                                    ? `오전 12시 ${minute}분`
-                                    : hour < 12
-                                        ? `오전 ${hour}시 ${minute}분`
-                                        : hour === 12
-                                            ? `오후 12시 ${minute}분`
-                                            : `오후 ${hour - 12}시 ${minute}분`;
+                    <div className={styles.datepickerWrapper}>
+                        <div className={styles.timeSelectBox}>
+                            <select
+                                className={styles.timeSelect}
+                                value={formData.time}
+                                onChange={(e) => handleChange("time", e.target.value)}
+                                required
+                            >
+                                <option value="" disabled hidden>시간을 선택해주세요</option>
+                                {Array.from({ length: 48 }, (_, i) => {
+                                    const hour = Math.floor(i / 2);
+                                    const minute = i % 2 === 0 ? "00" : "30";
+                                    const hourString = `${String(hour).padStart(2, '0')}:${minute}`;
+                                    const displayHour = hour === 0
+                                        ? `오전 12시 ${minute}분`
+                                        : hour < 12
+                                            ? `오전 ${hour}시 ${minute}분`
+                                            : hour === 12
+                                                ? `오후 12시 ${minute}분`
+                                                : `오후 ${hour - 12}시 ${minute}분`;
 
-                                return (
-                                    <option key={hourString} value={hourString}>
-                                        {displayHour}
-                                    </option>
-                                );
-                            })}
-                        </select>
+                                    return (
+                                        <option key={hourString} value={hourString}>
+                                            {displayHour}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
                     </div>
-
 
 
                     <div className={styles.nextButton} onClick={handleNext}>

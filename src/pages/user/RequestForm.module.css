@@ -93,7 +93,7 @@
     font-size: 1.3rem;
     font-weight: bold;
     line-height: 1.5;
-    margin-bottom: 3vh;
+    margin-bottom: 10vh;
     text-align: left;
 }
 
@@ -460,11 +460,15 @@
 
 /* 날짜 선택 디자인 */
 .timeSelectBox {
+    display: flex;
+    align-items: center;
     margin-top: 20px;
     width: 100%;
 }
 
 .timeSelect {
+    display: flex;
+    justify-content: center;
     width: 100%;
     padding: 12px;
     font-size: 1.4rem;
@@ -499,7 +503,7 @@
 .datepickerWrapper {
     display: flex;
     justify-content: center;
-    margin-top: 10vh;
+
 }
 
 .datepickerInput {

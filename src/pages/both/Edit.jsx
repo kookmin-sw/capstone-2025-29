@@ -42,19 +42,18 @@ export default function Edit() {
             try {
                 const data = await fetchUserInfo(userType);
 
-                const cachedImage = localStorage.getItem("profileImage");
-                const profileImageUrl = cachedImage || data.profileImage || "/profile.svg";
+                const profileImageUrl = data.profileImage || "/profile.svg"; // ✅ localStorage 안 씀
 
                 setFormData({
-                    name: data.name || "", age: data.age?.toString() || "", gender: data.gender || "",
-                    phone: data.phone || "", district: districtMap[data.address?.district] || "",
-                    detail: data.address?.detail || "", profileImage: profileImageUrl, introduction: data.bio || ""
+                    name: data.name || "",
+                    age: data.age?.toString() || "",
+                    gender: data.gender || "",
+                    phone: data.phone || "",
+                    district: districtMap[data.address?.district] || "",
+                    detail: data.address?.detail || "",
+                    profileImage: profileImageUrl, // ✅ 서버에서 직접 받아온 이미지
+                    introduction: data.bio || ""
                 });
-
-                // ✅ 처음 프로필 이미지 캐싱할 때만 저장 (selectedFile로 업데이트한 경우에만 덮어씀)
-                if (!cachedImage && data.profileImage) {
-                    localStorage.setItem("profileImage", data.profileImage);
-                }
 
             } catch (error) {
                 alert("유저 정보 불러오기 실패: " + error.message);
@@ -65,6 +64,7 @@ export default function Edit() {
         loadUserInfo();
     }, [userType]);
 
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -74,15 +74,40 @@ export default function Edit() {
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
-        input.onchange = (e) => {
+        input.capture = "environment"; // 모바일 카메라 우선
+        input.onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            const localUrl = URL.createObjectURL(file);
-            setFormData((prev) => ({ ...prev, profileImage: localUrl }));
-            setSelectedFile(file);
+
+            console.log("📸 선택한 이미지 파일:", file);
+
+            try {
+                setIsLoading(true);
+
+                const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
+                console.log("📝 S3 PreSigned URL:", preSignedUrl);
+
+                await axios.put(preSignedUrl, file, {
+                    headers: { 'Content-Type': file.type || 'application/octet-stream' }
+                });
+
+                const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}?v=${new Date().getTime()}`;
+
+
+                // 업로드된 이미지로 상태 업데이트 (캐싱X, 무조건 서버 URL)
+                setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
+
+
+            } catch (error) {
+                alert("이미지 업로드 실패: " + error.message);
+            } finally {
+                setIsLoading(false);
+            }
         };
         input.click();
     };
+
+
 
     const handleInfoSubmit = async (e) => {
         e.preventDefault();
@@ -96,10 +121,10 @@ export default function Edit() {
                 await axios.put(preSignedUrl, selectedFile, {
                     headers: { 'Content-Type': selectedFile.type || 'application/octet-stream' }
                 });
-                finalImageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
 
-                console.log("Uploaded image URL:", finalImageUrl);
-                localStorage.setItem("profileImage", `${finalImageUrl}?v=${new Date().getTime()}`);
+                finalImageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
+                console.log("서버에 저장된 이미지 URL:", finalImageUrl);
+
             } catch (error) {
                 alert("프로필 이미지 업로드 실패: " + error.message);
                 setIsLoading(false);
@@ -171,7 +196,7 @@ export default function Edit() {
                 </div>
                 {["name", "age", "phone", "district", "detail"].map(field => (
                     <div key={field} className={styles.inputGroup}>
-                        <label>{field === "district" ? "지역(구)" : field === "detail" ? "상세주소" : field === "phone" ? "번호" : field === 'name' ? '이름' : field === 'age' ? '나이' : field }</label>
+                        <label>{field === "district" ? "지역(구)" : field === "detail" ? "상세주소" : field === "phone" ? "번호" : field === 'name' ? '이름' : field === 'age' ? '나이' : field}</label>
                         {field === "district" ? (
                             <select name={field} value={formData[field]} onChange={handleInputChange}>
                                 <option value="">지역 선택</option>
@@ -209,7 +234,7 @@ export default function Edit() {
                 </div>
                 <div className={styles.inputGroup}>
                     <label>새 비밀번호 확인</label>
-                    <input  placeholder="새 비밀번호를 확인해주세요."type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                    <input placeholder="새 비밀번호를 확인해주세요." type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                     {matchError && <span className={styles.errorText}>비밀번호가 일치하지 않습니다.</span>}
                 </div>
                 <button type="submit" className={styles.submitBtn}>비밀번호 변경</button>
