@@ -3,6 +3,7 @@ package com.example.ongi_backend.Security;
 import com.example.ongi_backend.Security.Jwt.CustomAuthenticationEntryPoint;
 import com.example.ongi_backend.Security.Jwt.JwtFilter;
 import com.example.ongi_backend.Security.Jwt.JwtProvider;
+import com.example.ongi_backend.Security.oauth.OAuth2FailureHandler;
 import com.example.ongi_backend.Security.oauth.OAuth2SuccessHandler;
 import com.example.ongi_backend.Security.oauth.OAuth2UserService;
 import com.example.ongi_backend.user.Service.UserService;
@@ -31,6 +32,7 @@ public class SecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final ObjectProvider<UserService> userServiceProvider;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -71,7 +73,8 @@ public class SecurityConfig {
                 .oauth2Login((auth) -> auth
                         .loginPage("/login/kakao")
                         .userInfoEndpoint(c -> c.userService(oAuth2UserService))
-                        .successHandler(oAuth2SuccessHandler))
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureHandler(oAuth2FailureHandler))
 
                 // jwt 사용으로 인해 세션 방식을 사용하지 않음
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
