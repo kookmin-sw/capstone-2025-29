@@ -39,7 +39,7 @@ export default function VolunteerRecommend() {
             }
         };
 
-        const handleBeforeUnload = (e) => {
+        const handleBeforeUnload = () => {
             cancelMatchingKeepalive();
         };
 
@@ -61,8 +61,15 @@ export default function VolunteerRecommend() {
     // 카드 클릭 → 상세 모달
     const handleCardClick = (id) => {
         const volunteer = volunteers.find((v) => v.volunteerId === id);
-        setSelectedVolunteer(volunteer);
-        setIsModalOpen(true);
+        if (volunteer) {
+            setSelectedVolunteer({
+                ...volunteer,
+                profileImageUrl: volunteer.profileImageUrl && volunteer.profileImageUrl.trim() !== ""
+                    ? volunteer.profileImageUrl
+                    : "/profile.svg"
+            });
+            setIsModalOpen(true);
+        }
     };
 
     const handleSelectButtonClick = async (id) => {
@@ -89,15 +96,13 @@ export default function VolunteerRecommend() {
         setIsModalOpen(false);
     };
 
-
-    // ✅ 매칭 취소 핸들러 (뒤로가기용)
     const handleBack = async () => {
         const confirmCancel = window.confirm("매칭을 취소하시겠습니까?");
         if (confirmCancel && matchingId) {
             try {
                 await cancelMatching(matchingId);
                 alert("매칭이 취소되었습니다.");
-                navigate('/helpcenter'); // 이전 페이지로 이동
+                navigate('/helpcenter');
             } catch (error) {
                 console.error("매칭 취소 실패:", error);
                 alert(error.message || "매칭 취소에 실패했습니다.");
@@ -105,7 +110,6 @@ export default function VolunteerRecommend() {
         }
     };
 
-    // '아니요, 괜찮습니다' → 랜덤 매칭
     const handleBottomButtonClick = async () => {
         if (volunteers.length === 0) {
             navigate("/helpcenter");
@@ -127,39 +131,44 @@ export default function VolunteerRecommend() {
         <div className={styles.container}>
             <Topbar title="" handleBack={handleBack} />
 
-
             {volunteers.length > 0 ? (
                 <>
                     <div className={styles.titleBox}>
                         <p>요청하신 내용과</p>
                         <p>딱 맞는 봉사자를 찾았어요!</p>
                     </div>
-                
+
                     <div className={styles.cardGrid}>
-                        {volunteers.map((volunteer, index) => (
-                            <div
-                                key={volunteer.volunteerId || `volunteer-${index}`}
-                                className={styles.card}
-                                onClick={() => handleCardClick(volunteer.volunteerId)}
-                            >
-                                <div className={styles.imageWrapper}>
-                                    <img src={volunteer.profileImageUrl} alt={volunteer.name} className={styles.icon} />
-                                </div>
-                                <div className={styles.info}>
-                                    <p className={styles.name}>{volunteer.name}님</p>
-                                    <p className={styles.hours}>{volunteer.volunteerActivityTime}시간</p>
-                                </div>
-                                <button
-                                    className={`${styles.selectButton} ${activeVolunteerId === volunteer.volunteerId ? styles.selected : ""}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleSelectButtonClick(volunteer.volunteerId);
-                                    }}
+                        {volunteers.map((volunteer, index) => {
+                            const profileImage = volunteer.profileImageUrl && volunteer.profileImageUrl.trim() !== ""
+                                ? volunteer.profileImageUrl
+                                : "/profile.svg";
+
+                            return (
+                                <div
+                                    key={volunteer.volunteerId || `volunteer-${index}`}
+                                    className={styles.card}
+                                    onClick={() => handleCardClick(volunteer.volunteerId)}
                                 >
-                                    선택
-                                </button>
-                            </div>
-                        ))}
+                                    <div className={styles.imageWrapper}>
+                                        <img src={profileImage} alt={volunteer.name} className={styles.icon} />
+                                    </div>
+                                    <div className={styles.info}>
+                                        <p className={styles.name}>{volunteer.name}님</p>
+                                        <p className={styles.hours}>{volunteer.volunteerActivityTime}시간</p>
+                                    </div>
+                                    <button
+                                        className={`${styles.selectButton} ${activeVolunteerId === volunteer.volunteerId ? styles.selected : ""}`}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleSelectButtonClick(volunteer.volunteerId);
+                                        }}
+                                    >
+                                        선택
+                                    </button>
+                                </div>
+                            );
+                        })}
                     </div>
                 </>
             ) : (
