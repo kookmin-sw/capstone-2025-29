@@ -8,7 +8,7 @@ export default function RedirectHandler() {
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
-
+        console.log('location', location)
         console.log('params', params)
         const accessToken = params.get('accessToken');
         const refreshToken = params.get('refreshToken');
@@ -17,10 +17,7 @@ export default function RedirectHandler() {
         // ✅ localStorage 저장 (토큰 및 userType)
         if (accessToken) localStorage.setItem('accessToken', accessToken);
         if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
-        if (userType) localStorage.setItem('userType', userType);
-
-        console.log('accessToken:', accessToken);
-        console.log('userType:', userType);
+        if (userType) localStorage.setItem('userType', userType)
 
         const init = async () => {
             try {
