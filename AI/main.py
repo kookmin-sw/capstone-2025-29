@@ -16,10 +16,10 @@ from modules.auth import get_current_user
 from modules.delete_audiofile import delete_file_after_delay
 from modules.logger_module import load_logs_from_s3
 from modules.logger_module import log_to_s3
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
-#배포테스트
+#배포 테스트
 app = FastAPI()
 app.mount("/audio", StaticFiles(directory="tts_output"), name="audio")
 
@@ -169,11 +169,10 @@ async def test_emotion_from_s3_and_send(
         async with httpx.AsyncClient() as client:
             res = await client.post(backend_url, json=payload)
 
-        # 응답 본문 확인
         try:
             backend_response = res.json()
         except Exception:
-            backend_response = res.text  # JSON이 아니면 텍스트로 반환
+            backend_response = res.text  
 
         return {
             "status": "success",
@@ -187,58 +186,66 @@ async def test_emotion_from_s3_and_send(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"감정 분석 및 백엔드 전송 실패: {str(e)}")
 
-
 @app.post("/emotion/")
 async def emotion(
-    backend_url: str = "https://coffeesupliers.shop/api/sentimentAnalysis",
-    username: str = Depends(get_current_user)
-):
+    backend_url: str = "https://coffeesupliers.shop/api/sentimentAnalysis",):
     try:
-        today = datetime.now().strftime("%Y-%m-%d")
-        messages = load_logs_from_s3(username, today)
+        from modules.logger_module import list_usernames
 
-        if not messages:
-            raise HTTPException(status_code=404, detail="오늘 날짜에 대한 대화 로그가 없습니다.")
+        yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+        users = list_usernames()
 
-        history = []
-        for entry in messages:
-            history.append({"role": "user", "content": entry["user"]})
-            history.append({"role": "assistant", "content": entry["assistant"]})
+        results = []
+        for username in users:
+            messages = load_logs_from_s3(username, yesterday)
 
-        emotion = analyze_emotion(
-            history,
-            ["JOY", "SAD", "LONELINESS", "FEAR", "CLAM", "ANTICIPATION", "EXCITEMENT", "ANGRY"]
-        )
+            if not messages:
+                continue
 
-        payload = {
-            "username": username,
-            "analysis": emotion,
-            "analysisDate": today
-        }
+            history = []
+            for entry in messages:
+                history.append({"role": "user", "content": entry["user"]})
+                history.append({"role": "assistant", "content": entry["assistant"]})
 
-        print(f"백엔드로 전송할 감정 분석 데이터: {payload}")
-
-        async with httpx.AsyncClient() as client:
-            res = await client.post(
-                backend_url,
-                json=payload,
-                headers={"Content-Type": "application/json"}
+            emotion = analyze_emotion(
+                history,
+                ["JOY", "SAD", "LONELINESS", "FEAR", "CLAM", "ANTICIPATION", "EXCITEMENT", "ANGRY"]
             )
 
-        # 응답 처리 (JSON 응답이 아닐 경우 대비)
-        try:
-            backend_response = res.json()
-        except Exception:
-            backend_response = res.text
+            payload = {
+                "username": username,
+                "analysis": emotion,
+                "analysisDate": yesterday
+            }
 
-        print(f"백엔드 응답 코드: {res.status_code}")
-        print(f"백엔드 응답 본문: {backend_response}")
+            print(f"백엔드로 전송할 감정 분석 데이터: {payload}")
+
+            async with httpx.AsyncClient() as client:
+                res = await client.post(
+                    backend_url,
+                    json=payload,
+                    headers={"Content-Type": "application/json"}
+                )
+
+            try:
+                backend_response = res.json()
+            except Exception:
+                backend_response = res.text
+
+            print(f"백엔드 응답 코드: {res.status_code}")
+            print(f"백엔드 응답 본문: {backend_response}")
+
+            results.append({
+                "username": username,
+                "emotion": emotion,
+                "backend_response_code": res.status_code,
+                "backend_response_body": backend_response
+            })
 
         return {
             "status": "success",
-            "emotion": emotion,
-            "backend_response_code": res.status_code,
-            "backend_response_body": backend_response
+            "processed": len(results),
+            "results": results
         }
 
     except Exception as e:
