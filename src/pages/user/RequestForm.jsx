@@ -212,20 +212,50 @@ export default function RequestForm() {
 
                     {/* 날짜 선택 (무조건 캘린더) */}
                     <div className={styles.selectWrapper}>
-                        <DatePicker
-                            locale={ko}
-                            dateFormat="yyyy년 MM월 dd일"
-                            selected={formData.date ? new Date(formData.date) : null}
-                            minDate={new Date()}
-                            onChange={(date) => {
-                                const formatted = date.toISOString().split('T')[0];
-                                handleChange("date", formatted);
-                            }}
-                            className={styles.datepickerInput}
-                            popperPlacement="bottom"
-                            placeholderText="날짜를 선택해주세요"
-                        />
+                        {/* 연도 선택 */}
+                        <select
+                            className={styles.customSelect}
+                            value={formData.year}
+                            onChange={(e) => handleChange("year", e.target.value)}
+                        >
+                            <option value="" disabled>년 선택</option>
+                            {Array.from({ length: 5 }, (_, i) => {
+                                const year = new Date().getFullYear() + i;
+                                return <option key={year} value={year}>{year}년</option>;
+                            })}
+                        </select>
                     </div>
+
+                    <div className={styles.selectWrapper}>
+                        {/* 월 선택 */}
+                        <select
+                            className={styles.customSelect}
+                            value={formData.month}
+                            onChange={(e) => handleChange("month", e.target.value)}
+                        >
+                            <option value="" disabled>월 선택</option>
+                            {Array.from({ length: 12 }, (_, i) => {
+                                const month = i + 1;
+                                return <option key={month} value={month}>{month}월</option>;
+                            })}
+                        </select>
+                    </div>
+
+                    <div className={styles.selectWrapper}>
+                        {/* 일 선택 */}
+                        <select
+                            className={styles.customSelect}
+                            value={formData.day}
+                            onChange={(e) => handleChange("day", e.target.value)}
+                        >
+                            <option value="" disabled>일 선택</option>
+                            {Array.from({ length: 31 }, (_, i) => {
+                                const day = i + 1;
+                                return <option key={day} value={day}>{day}일</option>;
+                            })}
+                        </select>
+                    </div>
+
 
                     {/* 시간 선택 (option select) */}
                     <div className={styles.selectWrapper}>
