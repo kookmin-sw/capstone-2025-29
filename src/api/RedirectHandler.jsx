@@ -9,6 +9,7 @@ export default function RedirectHandler() {
     useEffect(() => {
         const params = new URLSearchParams(location.search);
 
+        console.log('params', params)
         const accessToken = params.get('accessToken');
         const refreshToken = params.get('refreshToken');
         const userType = params.get('userType');
