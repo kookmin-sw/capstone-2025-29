@@ -1,0 +1,150 @@
+/* 전체 컨테이너 스타일 */
+/* 화면 전체를 채우는 컨테이너 */
+.container {
+    padding: 2vh 5vw;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #f5f5f5;
+}
+
+/* 뒤로가기 버튼 스타일 */
+/* 상단 네비게이션 바의 뒤로가기 버튼 */
+.backBtn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+}
+
+/* 상단 액션 버튼 영역 */
+/* 새 신청과 신청내역 버튼을 포함하는 컨테이너 */
+.topButtons {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 4vh 0;
+}
+
+/* 정사각형 버튼 스타일 */
+/* 1:1 비율을 유지하는 정사각형 버튼 */
+.squareBtn {
+    width: 35vw;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+}
+
+/* 액션 버튼 공통 스타일 */
+/* 새 신청과 신청내역 버튼의 기본 스타일 */
+.actionBtn {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    padding: 2vh 1vw;
+    cursor: pointer;
+}
+
+/* 선택된 버튼 스타일 */
+/* 현재 선택된 버튼의 강조 스타일 */
+
+/* 아이콘 이미지 스타일 */
+/* 버튼 내부의 SVG 아이콘 */
+.iconImage {
+    width: 50px;
+    margin-bottom: 1vh;
+}
+
+/* 매칭 정보 카드 스타일 */
+/* 봉사자 매칭 정보를 표시하는 카드 */
+.matchCard {
+    border: 2px solid #6D57DE;
+    border-radius: 12px;
+    padding: 2vh 3vw;
+    text-align: center;
+    margin: 5vh 0;
+    background-color: #fff;
+}
+
+/* 매칭 이름 텍스트 스타일 */
+.matchName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* 강조 텍스트 스타일 */
+/* 매칭된 봉사자 이름 등 강조가 필요한 텍스트 */
+.matchCard strong {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+/* 매칭 시간 정보 스타일 */
+.matchTime {
+    color: #666;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* 요청서 확인/완료 버튼 스타일 */
+/* 매칭 카드 내부의 액션 버튼 */
+.reviewBtn {
+    background-color: #6D57DE;
+    color: white;
+    border: none;
+    padding: 1vh 3vw;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 1.5vh 0;
+    width: 30vw;
+}
+
+/* 매칭 정보 설명 텍스트 스타일 */
+.reviewInfo {
+    font-size: 0.9rem;
+    color: #333;
+    margin: 0;
+}
+
+/* 사용 방법 가이드 섹션 스타일 */
+.guideSection {
+    margin-top: 6vh;
+}
+
+/* 가이드 섹션 제목 스타일 */
+.guideTitle {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0 0 1vh 0;
+}
+
+/* 가이드 영상 썸네일 박스 스타일 */
+.videoBox {
+    position: relative;
+    background-color: #ddd;
+    height: 25vh;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 영상 플레이 아이콘 스타일 */
+.playIcon {
+    font-size: 2rem;
+    color: #6D57DE;
+}
+
+/* 가이드 영상 버튼 스타일 */
+.guideBtn {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    background-color: #444;
+    color: white;
+    font-size: 0.75rem;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
