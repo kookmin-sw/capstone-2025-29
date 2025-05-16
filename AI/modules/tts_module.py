@@ -2,7 +2,7 @@ from gradio_client import Client
 import uuid, os, shutil
 
 # GRADIO_URL = "http://52.78.135.32:8888/"
-GRADIO_URL = "https://b197-1-209-175-113.ngrok-free.app"
+GRADIO_URL = "https://eef8-118-216-139-150.ngrok-free.app"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "..", "tts_output")  
