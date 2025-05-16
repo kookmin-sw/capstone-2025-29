@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect ,useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { updateFcmToken } from './both'; // FCM 토큰 등록 API
 import { fetchElderlyMatching } from './UserApi'; // elderly API
