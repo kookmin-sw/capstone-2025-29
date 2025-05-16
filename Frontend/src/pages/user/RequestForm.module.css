@@ -1,0 +1,622 @@
+/* =================== 공통 스타일 =================== */
+
+/* 전체 컨테이너 스타일 */
+/* 화면 전체를 채우는 컨테이너 */
+.container {
+    padding: 2vh 5vw;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+
+
+}
+
+/* 공통 타이틀 텍스트 스타일 */
+.title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 4vh;
+    text-align: center;
+}
+
+/* STEP 화면 공통 wrapper 스타일 */
+.stepBox {
+    padding: 0 7vw;
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+    justify-content: space-between;
+}
+
+/* 다음 버튼 공통 스타일 */
+.nextButton {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* 다음 버튼 이미지 스타일 */
+.nextButton img {
+    background-color: #6D57DE;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding: 0.2rem;
+    cursor: pointer;
+}
+
+/* =================== STEP 1: 신청 유형 선택 =================== */
+
+/* 2x2 카테고리 그리드 레이아웃 */
+.categoryGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5vw;
+}
+
+/* 각 카테고리 버튼 스타일 */
+.categoryBtn {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 2vh 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    border: 1px solid #eee;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+}
+
+/* 카테고리 버튼 내부 이미지 */
+.categoryBtn img {
+    width: 50px;
+    height: 50px;
+}
+
+/* 선택된 카테고리 버튼 스타일 */
+.categoryBtn.active {
+    background-color: #E6E6FA;
+    border: none;
+    color: #6D57DE;
+}
+
+/* =================== STEP 2: 날짜/시간 선택 =================== */
+
+/* 두 줄 타이틀 텍스트 박스 스타일 */
+.dateTitleBox {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.3rem;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-bottom: 10vh;
+    text-align: left;
+}
+
+/* 날짜와 시간 input 전체 wrapper */
+.datetimeInputs {
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3vh;
+}
+
+/* 날짜/시간 input 공통 스타일 */
+.dateInput,
+.timeInput {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    background: none;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    outline: none;
+    width: 80%;
+    position: relative;
+    z-index: 1;
+}
+
+/* 시간 입력 wrapper 스타일 */
+.timeInputWrapper {
+    position: relative;
+    width: 80%;
+    min-height: 40px;
+}
+
+/* 시간 입력 placeholder 스타일 */
+.timePlaceholder {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #aaa;
+    font-size: 1.4rem;
+    font-weight: bold;
+    pointer-events: none;
+    text-align: center;
+    width: 100%;
+    z-index: 0;
+}
+
+/* input placeholder 색상 */
+.dateInput::placeholder,
+.timeInput::placeholder {
+    color: #aaa;
+}
+
+/* =================== STEP 3: 반려동물 정보 =================== */
+
+/* 섹션과 카드 wrapper 공통 패딩 */
+.section,
+.cardwrapper {
+    padding: 0 4vw 3vh 4vw;
+}
+
+/* 반려동물 여부 섹션 제목 스타일 */
+.label {
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin: 0 0 1vh 0;
+}
+
+/* 반려동물 버튼 전체 컨테이너 */
+.petOptions {
+    display: flex;
+    gap: 2vw;
+    flex-wrap: wrap;
+    margin-top: 1vh;
+}
+
+/* 개별 반려동물 버튼 스타일 */
+.petBtn {
+    flex: 1;
+    text-align: center;
+    padding: 0.8vh 0;
+    border-radius: 8px;
+    border: 0.5px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    font-size: 0.95rem;
+    min-width: 0;
+}
+
+/* 선택된 반려동물 버튼 스타일 */
+.petBtn.selected {
+
+    color: #6D57DE;
+    border: 1px solid #6D57DE;
+}
+
+/* STEP 3 전용 작은 다음 버튼 스타일 */
+.smallNextButton img {
+    margin-top: 2vh;
+    width: 32px;
+    height: 32px;
+}
+
+/* =================== STEP 3: 정신건강복지센터 카드 =================== */
+
+/* 정신건강복지센터 카드 전체 스타일 */
+.mentalCard {
+    background-color: #958fd6;
+    border-radius: 16px;
+    padding: 5vh 2vh 2vh 2vh;
+    margin-top: 3vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    aspect-ratio: 1 / 1;
+}
+
+/* 카드 타이틀 스타일 */
+.cardTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    padding-left: 3vw;
+    margin: 0;
+}
+
+/* 전화번호 스타일 */
+.cardPhone {
+    margin: auto 0 0 0;
+    padding-left: 3vw;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* 전화기 아이콘 wrapper 스타일 */
+.phoneIconWrapper {
+    margin: 1vh 0 2vh 0;
+    padding-left: 3vw;
+}
+
+/* 전화기 아이콘 이미지 스타일 */
+.phoneIconWrapper img {
+    width: 60px;
+    height: 60px;
+}
+
+/* 전화연결 버튼 스타일 */
+.callBtn {
+    background-color: #fff;
+    color: #6D57DE;
+    font-weight: bold;
+    width: 100%;
+    padding: 1.2vh 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* =================== STEP 4: 최종 확인 =================== */
+
+/* 주소 정보 스타일 */
+.address {
+    padding: 3vh 4vw;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* 주소 텍스트 마진 제거 */
+.address p {
+    margin: 0;
+}
+
+/* 요청사항 textarea 스타일 */
+.textarea {
+    width: 100%;
+    min-height: 15vh;
+    padding: 2vw;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    box-sizing: border-box;
+
+}
+
+/* 제출 버튼 스타일 */
+.submitBtn {
+    width: 40%;
+    margin-left: auto;
+    padding: 1.2vh 2vw;
+    background-color: #6D57DE;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin-top: 4vh;
+}
+
+/* Match Card Styles */
+.matchCard {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.matchCardContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.matchCardLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.matchCardIcon {
+    width: 48px;
+    height: 48px;
+    background: #F4F3FF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.matchCardIcon img {
+    width: 24px;
+    height: 24px;
+}
+
+.matchCardInfo h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin: 0 0 4px 0;
+}
+
+.matchCardInfo p {
+    font-size: 14px;
+    color: #646464;
+    margin: 0 0 8px 0;
+}
+
+.matchCardTags {
+    display: flex;
+    gap: 8px;
+}
+
+.matchCardTags span {
+    background: #F4F3FF;
+    color: #6D57DE;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+}
+
+
+/* step4 match card */
+.card {
+    padding: 2vh 4vw;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 부모에서 .card가 여러 개일 때, 마지막 카드만 border-bottom 제거 */
+.card:last-child {
+    border-bottom: none;
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    gap: 3vw;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+}
+
+.name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.name strong {
+    font-size: 1.2;
+}
+
+.date {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2vw;
+    margin-top: 1.5vh;
+}
+
+.tag {
+    background-color: #ede9fe;
+    color: #333;
+    padding: 1vh 5vw;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.dateTime {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 4px;
+}
+
+.dateTime .divider {
+    color: #666;
+}
+
+
+.timePickerGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.timeButton {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.timeButton:hover {
+    background-color: #e0e0e0;
+}
+
+.activeTime {
+    background-color: #6D57DE;
+    color: white;
+    font-weight: bold;
+    border: none;
+}
+
+
+/* 날짜 선택 디자인 */
+.timeSelectBox {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.timeSelect {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    font-size: 1.4rem;
+    background-color: #f5f5f5;
+    text-align: center;
+    appearance: none;
+    background-image: url('/dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+
+    text-align: center;
+    border: 0px;
+}
+
+.timeSelect option:first-child {
+    text-align: center;
+    color: #999;
+    /* placeholder 색상 */
+}
+
+.timeSelect {
+    color: #000;
+    /* 기본 선택된 항목 색상 */
+}
+
+/* 선택 안했을 때는 첫 번째 옵션 색상을 따라가게 */
+.timeSelect:invalid {
+    color: #999;
+}
+
+
+.datepickerWrapper {
+    display: flex;
+    justify-content: center;
+
+}
+
+.datepickerInput {
+    background-color: #f5f5f5;
+    padding: 12px;
+    font-size: 1.4rem;
+
+    text-align: center;
+    border: 0px;
+
+    margin: 0;
+}
+
+.selectWrapper {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.customSelect {
+    width: 90%;
+    max-width: 400px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    box-sizing: border-box;
+    outline: none;
+    appearance: none;
+    background-image: url('/dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    text-align: center;
+    color: #333;
+}
+
+.customSelect:focus {
+    box-shadow: none;
+}
+
+.selectRow {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* 년/월/일 셀렉트 박스 스타일 (폭 좁게 조정) */
+.customSelect {
+    flex: 1;
+
+    padding: 12px 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    box-sizing: border-box;
+    outline: none;
+    appearance: none;
+    background-image: url('/dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    text-align: center;
+    color: #333;
+}
+
+.customSelect:focus {
+    box-shadow: none;
+}
+
+.customSelect:invalid {
+    color: #999;
+}
+.selectRow {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* 년/월/일 셀렉트 박스 스타일 (폭 좁게 조정) */
+.customSelect {
+    flex: 1;
+    padding: 12px 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    box-sizing: border-box;
+    outline: none;
+    appearance: none;
+    background-image: url('/dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    text-align: center;
+    color: #333;
+}
+
+.customSelect:focus {
+    box-shadow: none;
+}
+
+.customSelect:invalid {
+    color: #999;
+}
+
+
