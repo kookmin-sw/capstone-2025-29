@@ -11,7 +11,7 @@ export default function Signup() {
     const selectedRole = location.state?.role || "";
     const userInfo = location.state?.userInfo || {};
 
-    
+
     // 전화번호 포맷 변환 (+8210 형태로)
     const formatToInternational = (phone) => {
         const cleaned = phone.replace(/\D/g, '');
@@ -23,25 +23,25 @@ export default function Signup() {
 
     const formatTo010 = (phone) => {
         if (!phone) return '';
-    
+
         // 1. "10"이 나오는 위치 찾기
         const index = phone.indexOf('10');
         if (index === -1) return phone.replace(/\D/g, ''); // "10" 없으면 그냥 숫자만 남김
-    
+
         // 2. "10"부터 끝까지 잘라서
         let result = phone.slice(index);
-    
+
         // 3. 하이픈, 공백, 기타 문자 다 제거
         result = result.replace(/[\s-]/g, '');
-    
+
         // 4. 앞에 0 붙이기 (중복 방지)
         if (!result.startsWith('0')) {
             result = '0' + result;
         }
-    
+
         return result;
     };
-    
+
 
     const formatToEncodedInternational = (phone) => {
         const cleaned = phone.replace(/\D/g, '');
@@ -140,7 +140,7 @@ export default function Signup() {
             }
         }
 
-        
+
     }, [userInfo]);
 
     useEffect(() => {
@@ -226,7 +226,7 @@ export default function Signup() {
             bio: selectedRole === "volunteer" ? formValues.introduction : ""
         };
 
-    
+
         try {
             console.log("회원가입 데이터:", formData);
             await registerUser(formData);
@@ -253,20 +253,22 @@ export default function Signup() {
                         value={formValues.id}
                         onChange={handleInputChange}
                         placeholder="아이디 입력"
-                        disabled={idChecked || !!userInfo.username} // ✅ userInfo.username 이 있으면 비활성화
+                        disabled={userInfo.username && userInfo.username === formValues.id}
                     />
+
                     <button
                         type="button"
                         className={styles.checkBtn}
                         onClick={handleCheckId}
-                        disabled={idChecked || !!userInfo.username} // ✅ userInfo.username 이 있으면 비활성화
+                        disabled={idChecked || (userInfo.username && userInfo.username === formValues.id)}
                         style={{
-                            backgroundColor: (idChecked || !!userInfo.username) ? "#E6E6FA" : "#6D57DE",
-                            color: (idChecked || !!userInfo.username) ? "#6D57DE" : "#fff"
+                            backgroundColor: (idChecked || (userInfo.username && userInfo.username === formValues.id)) ? "#E6E6FA" : "#6D57DE",
+                            color: (idChecked || (userInfo.username && userInfo.username === formValues.id)) ? "#6D57DE" : "#fff"
                         }}
                     >
                         중복확인
                     </button>
+
 
                 </div>
             </div>
