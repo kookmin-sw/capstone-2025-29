@@ -21,6 +21,8 @@ export default function RequestForm() {
     const userName = localStorage.getItem('userName') || "이름 없음";
     const userAddress = JSON.parse(localStorage.getItem('userAddress')) || { district: "", detail: "" };
 
+
+    console.log(userName, userAddress);
     const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
 
     const districtMap = {

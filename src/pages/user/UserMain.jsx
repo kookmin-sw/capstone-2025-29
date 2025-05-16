@@ -13,6 +13,7 @@ export default function UserMain() {
     }, []);
 
     const handleChatClick = async () => {
+
         try {
             const chatbotData = await fetchChatBotName();
 
