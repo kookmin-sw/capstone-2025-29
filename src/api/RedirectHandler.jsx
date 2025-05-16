@@ -14,19 +14,12 @@ export default function RedirectHandler() {
         const refreshToken = params.get('refreshToken');
         const userType = params.get('userType');
 
-        const userInfo = {
-            name: params.get('name') || "",
-            profileImage: params.get('profileImage') || "",
-            phone: params.get('phone') || "",
-            address: params.get('address') || ""
-        };
+       
 
         // ✅ localStorage 저장
         if (accessToken) localStorage.setItem('accessToken', accessToken);
         if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
         if (userType) localStorage.setItem('userType', userType);
-        if (userInfo.name) localStorage.setItem('userName', userInfo.name);
-        if (userInfo.address) localStorage.setItem('userAddress', userInfo.address);
         
         // ✅ FCM 토큰 등록 API 호출
         const registerFcmToken = async () => {
@@ -42,11 +35,13 @@ export default function RedirectHandler() {
             try {
                 const response = await fetchElderlyMatching();
 
+                console.log('Elderly Matching Data:', response);
+
                 console.log('Elderly Matching Data:', response.data);
                 localStorage.setItem('userName', response.data.name);
                 localStorage.setItem('userAddress', response.data.address);
 
-                console.log('Elderly Matching Data:', response.data);
+
 
             } catch (error) {
                 console.error('Error fetching elderly matching data:', error);
@@ -60,12 +55,12 @@ export default function RedirectHandler() {
 
         // ✅ navigate 시 userInfo를 state로 전달
         if (userType === 'elderly') {
-            navigate('/usermain', { state: { from: 'redirect', userInfo } });
+            navigate('/usermain' );
         } else {
             console.log('userInfo:', userInfo);
-            navigate('/volunteermain', { state: { from: 'redirect', userInfo } });
+            navigate('/volunteermain');
         }
     }, [location.search, navigate]);
 
-    return <div>로그인 중입니다...</div>;
+    return 
 }
