@@ -19,34 +19,63 @@ const ChatPage = () => {
 
     const messageEndRef = useRef(null);
     const lastMessageId = useRef(1);
-    const inputRef = useRef(null);
     const accessToken = localStorage.getItem("accessToken");
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = useRef(null);
-    const transcriptRef = useRef("");
-
-    // ✅ Dummy 무음 오디오 (PWA 자동재생 문제 해결용)
     const dummyAudioRef = useRef(null);
 
-    const unlockAudioContext = () => {
-        if (dummyAudioRef.current) {
-            dummyAudioRef.current.play().catch((e) => {
-                console.log('Dummy Audio play blocked:', e);
-            });
-        }
-    };
+    const getTime = () => new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true });
 
     useEffect(() => {
+        const stopRecognition = () => {
+            if (isListening && recognition.current) {
+                console.log("🚫 음성 인식 중지 (cleanup)");
+                recognition.current.stop();
+                setIsListening(false);
+            }
+        };
+
+        // 창 닫기, 새로고침
+        const handleBeforeUnload = (e) => {
+            stopRecognition();
+        };
+
+        // 브라우저 뒤로가기/앞으로가기
+        const handlePopState = (e) => {
+            stopRecognition();
+        };
+
+        // 등록
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        window.addEventListener('popstate', handlePopState);
+
+        // React Router effect cleanup (컴포넌트 언마운트)
+        return () => {
+            stopRecognition();
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [isListening]);
+
+    
+    useEffect(() => {
         recognition.current = new SpeechRecognition();
-        recognition.current.continuous = true;
-        recognition.current.interimResults = true;
+        recognition.current.continuous = false;
+        recognition.current.interimResults = false;
         recognition.current.lang = "ko-KR";
 
         dummyAudioRef.current = new Audio();
         dummyAudioRef.current.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=";
         dummyAudioRef.current.volume = 0;
-    }, []);
+
+        return () => {
+            if (isListening && recognition.current) {
+                recognition.current.stop();
+                setIsListening(false);
+            }
+        };
+    }, [isListening]);
 
     useEffect(() => {
         const storedUserName = localStorage.getItem("userName") || "사용자";
@@ -57,16 +86,14 @@ const ChatPage = () => {
         setChatBotName(storedBotName);
         setChatBotProfileImage(storedBotImage);
 
-        setMessages([
-            {
-                id: 1,
-                sender: "ai",
-                content: "안녕하세요\n챗봇과 대화하며 마음을 나누고,\n감정을 분석해보세요.",
-                timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
-                name: storedBotName,
-                profileImage: storedBotImage
-            },
-        ]);
+        setMessages([{
+            id: 1,
+            sender: "ai",
+            content: "안녕하세요\n챗봇과 대화하며 마음을 나누고,\n감정을 분석해보세요.",
+            timestamp: getTime(),
+            name: storedBotName,
+            profileImage: storedBotImage
+        }]);
     }, []);
 
     const toggleListening = () => {
@@ -74,20 +101,20 @@ const ChatPage = () => {
 
         if (isListening) {
             recognition.current.stop();
-            recognition.current.onend = () => {
-                setIsListening(false);
-                transcriptRef.current = "";
-            };
         } else {
-            transcriptRef.current = "";
             recognition.current.start();
             setIsListening(true);
 
             recognition.current.onresult = (event) => {
-                const transcript = Array.from(event.results).map(result => result[0].transcript).join("");
-                transcriptRef.current = transcript;
-                setInput(transcript);
+                const lastResult = event.results[event.results.length - 1];
+                if (lastResult.isFinal) {
+                    const transcript = lastResult[0].transcript.trim();
+                    setInput(transcript);
+                    setIsListening(false);
+                }
             };
+
+            recognition.current.onend = () => setIsListening(false);
 
             recognition.current.onerror = (event) => {
                 console.error("음성 인식 오류:", event.error);
@@ -97,68 +124,63 @@ const ChatPage = () => {
     };
 
     const sendMessage = async () => {
-        if (input.trim() === "" || isSending) return;
-
-        if (isListening && recognition.current) {
-            recognition.current.stop();
-            recognition.current.onresult = null;
-            setIsListening(false);
-        }
+        if (!input.trim() || isSending) return;
 
         setIsSending(true);
         setIsLoading(true);
 
         const userMessage = {
-            id: lastMessageId.current + 1,
+            id: ++lastMessageId.current,
             sender: "user",
             content: input,
-            timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
-            name: userName,
+            timestamp: getTime(),
+            name: userName
         };
         setMessages(prev => [...prev, userMessage]);
-        lastMessageId.current += 1;
-
         setInput("");
-        setTimeout(() => setInput(""), 0);
 
         try {
             const response = await sendChatMessage(input, accessToken);
-            const text = response.text;
-            const audio_path = response.audioUrl;
+            const { text, audioUrl } = response;
 
-            const aiMessage = {
-                id: lastMessageId.current + 1,
-                sender: "ai",
-                content: text,
-                audioPath: audio_path,
-                timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
-                name: chatBotName,
-                profileImage: chatBotProfileImage
-            };
-            setMessages(prev => [...prev, aiMessage]);
-            lastMessageId.current += 1;
+            if (text) {
+                const aiMessage = {
+                    id: ++lastMessageId.current,
+                    sender: "ai",
+                    content: text,
+                    audioPath: audioUrl,
+                    timestamp: getTime(),
+                    name: chatBotName,
+                    profileImage: chatBotProfileImage
+                };
+                setMessages(prev => [...prev, aiMessage]);
 
-            // ✅ 실제 응답 오디오 재생
-            const audio = new Audio(audio_path);
-            await audio.play();
+                if (audioUrl) {
+                    const audio = new Audio(audioUrl);
+                    await audio.play().catch(err => console.error("오디오 재생 오류:", err));
+                }
+            }
+
         } catch (error) {
+            console.error("Chat API Error:", error);
             const errorMessage = {
-                id: lastMessageId.current + 1,
+                id: ++lastMessageId.current,
                 sender: "ai",
                 content: "죄송합니다. 현재 요청을 처리할 수 없습니다.",
-                timestamp: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric", hour12: true }),
+                timestamp: getTime(),
                 name: chatBotName,
                 profileImage: chatBotProfileImage
             };
             setMessages(prev => [...prev, errorMessage]);
-            lastMessageId.current += 1;
         } finally {
             setIsSending(false);
             setIsLoading(false);
         }
     };
 
-    const handleInputChange = (e) => setInput(e.target.value);
+    useEffect(() => {
+        messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -167,23 +189,19 @@ const ChatPage = () => {
         }
     };
 
-    useEffect(() => {
-        if (messageEndRef.current) {
-            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [messages]);
+    const unlockAudioContext = () => {
+        dummyAudioRef.current?.play().catch((e) => {
+            console.log('Dummy Audio play blocked:', e);
+        });
+    };
 
     return (
         <div className={styles.container}>
             <Topbar title="챗봇" />
-
             <div className={styles.chatContainer}>
                 <div className={styles.messages}>
                     {messages.map((message) => (
-                        <div
-                            key={message.id}
-                            className={`${styles.messageRow} ${message.sender === "user" ? styles.userMessageRow : styles.aiMessageRow}`}
-                        >
+                        <div key={message.id} className={`${styles.messageRow} ${message.sender === "user" ? styles.userMessageRow : styles.aiMessageRow}`}>
                             {message.sender === "ai" && (
                                 <div className={styles.profileSection}>
                                     <div className={styles.profileImage}>
@@ -192,12 +210,8 @@ const ChatPage = () => {
                                     <span className={styles.profileName}>{message.name}</span>
                                 </div>
                             )}
-                            <div
-                                className={`${styles.message} ${message.sender === "user" ? styles.userMessage : styles.aiMessage}`}
-                            >
-                                <div className={styles.messageContent}>
-                                    <p>{message.content}</p>
-                                </div>
+                            <div className={`${styles.message} ${message.sender === "user" ? styles.userMessage : styles.aiMessage}`}>
+                                <div className={styles.messageContent}><p>{message.content}</p></div>
                             </div>
                         </div>
                     ))}
@@ -205,13 +219,7 @@ const ChatPage = () => {
                 </div>
 
                 <div className={styles.centerMic}>
-                    <button
-                        className={`${styles.micButton} ${isListening ? styles.activeMic : ""}`}
-                        onClick={() => {
-                            unlockAudioContext(); // ✅ 유저 인터랙션 시 오디오 권한 확보
-                            toggleListening();
-                        }}
-                    >
+                    <button className={`${styles.micButton} ${isListening ? styles.activeMic : ""}`} onClick={() => { unlockAudioContext(); toggleListening(); }}>
                         <img src="/mike-icon.svg" alt="음성 입력" />
                     </button>
                 </div>
@@ -219,21 +227,14 @@ const ChatPage = () => {
                 <div className={styles.inputContainer}>
                     <div className={styles.inputWrapper}>
                         <textarea
-                            ref={inputRef}
                             className={styles.input}
                             value={input}
-                            onChange={handleInputChange}
+                            onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="대화를 입력해 주세요"
                             rows={1}
                         />
-                        <button
-                            className={styles.sendButton}
-                            onClick={() => {
-                                unlockAudioContext(); // ✅ 유저 인터랙션 시 오디오 권한 확보
-                                sendMessage();
-                            }}
-                        >
+                        <button className={styles.sendButton} onClick={() => { unlockAudioContext(); sendMessage(); }}>
                             <img src="/send-icon.svg" alt="전송" />
                         </button>
                     </div>
