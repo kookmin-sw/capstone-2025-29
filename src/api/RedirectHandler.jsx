@@ -1,8 +1,7 @@
-import { useEffect ,useState} from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { updateFcmToken } from './both'; // FCM 토큰 등록 API
 import { fetchElderlyMatching } from './UserApi'; // elderly API
-import { set } from 'date-fns';
 
 export default function RedirectHandler() {
     const navigate = useNavigate();
@@ -14,9 +13,13 @@ export default function RedirectHandler() {
         const accessToken = params.get('accessToken');
         const refreshToken = params.get('refreshToken');
         const userType = params.get('userType');
-        const [userInfo, setUserInfo] = useState({});
 
-
+        const userInfo = {
+            name: params.get('name') || "",
+            profileImage: params.get('profileImage') || "",
+            phone: params.get('phone') || "",
+            address: params.get('address') || ""
+        };
 
         // ✅ localStorage 저장
         if (accessToken) localStorage.setItem('accessToken', accessToken);
@@ -36,8 +39,6 @@ export default function RedirectHandler() {
         };
 
         const getElderlyMatching = async () => {
-
-            console.log('Elderly Matching Data:', accessToken);
             try {
                 const response = await fetchElderlyMatching();
 
