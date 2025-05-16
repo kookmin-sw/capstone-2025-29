@@ -13,7 +13,7 @@ export default function ApplyingDetail() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const userAddress = JSON.parse(localStorage.getItem('userAddress')) || { district: "", detail: "" };
+    const userAddress = JSON.parse(localStorage.getItem('useraddress')) || { district: "", detail: "" };
 
     const districtMap = {
         GANGNAM: "강남구", GANGDONG: "강동구", GANGBUK: "강북구", GANGSEO: "강서구",

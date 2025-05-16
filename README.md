@@ -174,30 +174,35 @@
 
 ## 🛠 기술 스택
 
-### 🖥 Frontend
-|역할|종류|
-|-|-|
-|**Programming Language**| ![Javascript](https://img.shields.io/badge/Javascript-F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=white)
-|**Library**| ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white)
-|**UI Component Library**| ![Ant Design](https://img.shields.io/badge/Ant_Design-0170FE?style=for-the-badge&logo=AntDesign&logoColor=white)
-|**Styling**| ![styled-components](https://img.shields.io/badge/styled_components-DB7093.svg?style=for-the-badge&logo=styledcomponents&logoColor=white)
-|**Formatting**| ![ESLint](https://img.shields.io/badge/ESLint-4B32C3.svg?style=for-the-badge&logo=ESLint&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E.svg?style=for-the-badge&logo=Prettier&logoColor=white)
-|**Package Manager**|![Yarn](https://img.shields.io/badge/Yarn-2C8EBB.svg?style=for-the-badge&logo=Yarn&logoColor=white)                             
-|**Web Server**|![Nginx](https://img.shields.io/badge/Nginx-009639.svg?style=for-the-badge&logo=Nginx&logoColor=white)
+## 🖥️ Frontend 
+| Category              | Technology |
+|-----------------------|------------|
+| **Programming Language** | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) |
+| **Routing**             | ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white) |
+| **Styling**             | ![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white) ![styled-components](https://img.shields.io/badge/styled_components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) |
+| **Package Manager**     | ![npm](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white) |
+| **Build Tool**          | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |
+| **Version Control**     | ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white) |
+| **PWA Support**         | ![Vite-PWA](https://img.shields.io/badge/Vite_PWA-646CFF?style=for-the-badge&logo=vite&logoColor=white) |
+| **Push Notification**   | ![Firebase Cloud Messaging](https://img.shields.io/badge/Firebase_Cloud_Messaging-FFCA28?style=for-the-badge&logo=firebase&logoColor=black) |
+| **Social Login**        | ![Kakao Login](https://img.shields.io/badge/Kakao_Login-FFCD00?style=for-the-badge&logo=kakao&logoColor=black) ![OAuth 2.0](https://img.shields.io/badge/OAuth_2.0-2C2C2C?style=for-the-badge&logo=oauth&logoColor=white) |
+
 
 <br />
 
 ### 🖥 Backend
-|역할|종류|
-|-|-|
-|**Programming Language**| ![JAVA](https://img.shields.io/badge/JAVA-004027?style=for-the-badge&logo=Jameson&logoColor=white) 
-|**Framework**| ![SpringBoot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white)
-|**Build Tool**| ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white) 
-|**API**| ![Rest](https://img.shields.io/badge/Rest_API-000000?style=for-the-badge&logo=iRobot&logoColor=white)
-|**Database**| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=white) ![PostGIS](https://img.shields.io/badge/PostGIS-885630?style=for-the-badge&logo=Packagist&logoColor=white)
-|**Database Service**| ![AmazonRDS](https://img.shields.io/badge/Amazon_RDS-527FFF?style=for-the-badge&logo=AmazonRDS&logoColor=white) ![AmazonS3](https://img.shields.io/badge/Amazon_S3-569A31?style=for-the-badge&logo=AmazonS3&logoColor=white)
-|**Application Service**| ![NaverCloudPlatform](https://img.shields.io/badge/Naver_Cloud-03C75A?style=for-the-badge&logo=Naver&logoColor=white) 
-|**Message Queue**| ![ApacheKafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=ApacheKafka&logoColor=white) 
+| 역할 | 종류 |
+|------|------|
+| **Programming Language** | ![JAVA](https://img.shields.io/badge/JAVA-004027?style=for-the-badge&logo=OpenJDK&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white) |
+| **Framework** | ![SpringBoot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white) ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white) |
+| **Build Tool** | ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white) |
+| **API** | ![REST API](https://camo.githubusercontent.com/93b769ba1df37e7996f6315b8d5a131c739744d4a02ff81a5ba4ff2353789eb2/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f526573745f4150492d3030303030303f7374796c653d666f722d7468652d6261646765266c6f676f3d69526f626f74266c6f676f436f6c6f723d7768697465) ![gRPC](https://img.shields.io/badge/gRPC-4A154B?style=for-the-badge&logo=grpc&logoColor=white) |
+| **Database** | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=Redis&logoColor=white) |
+| **Database Service** | ![Amazon RDS](https://img.shields.io/badge/Amazon_RDS-527FFF?style=for-the-badge&logo=AmazonRDS&logoColor=white) ![Amazon ElastiCache](https://img.shields.io/badge/ElastiCache-305B9A?style=for-the-badge&logo=AmazonAWS&logoColor=white) |
+| **Storage Service** | ![Amazon S3](https://img.shields.io/badge/Amazon_S3-569A31?style=for-the-badge&logo=AmazonS3&logoColor=white) |
+| **Application Service** | ![AWS EC2](https://img.shields.io/badge/AWS_EC2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white) ![AWS Lambda](https://img.shields.io/badge/Lambda-FF9900?style=for-the-badge&logo=AWSLambda&logoColor=white) ![ECR](https://img.shields.io/badge/AWS_ECR-4053D6?style=for-the-badge&logo=AmazonECS&logoColor=white) |
+| **Container** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white) |
+| **Message Queue** | ![AWS SQS](https://img.shields.io/badge/AWS_SQS-FF4F8B?style=for-the-badge&logo=amazonsqs&logoColor=white) ![AWS SNS](https://img.shields.io/badge/AWS_SNS-FF66B3?style=for-the-badge&logo=amazonaws&logoColor=white) |
 
 <br />
 
