@@ -8,19 +8,7 @@ export const requestFCMToken = async () => {
         });
 
         localStorage.setItem('fcmToken', currentToken); // 토큰을 로컬 스토리지에 저장
-        
 
-        // if (currentToken) {
-
-        //     // ✅ 서버에 토큰 전송 (예시)
-        //     await fetch('/api/save-token', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ token: currentToken })
-        //     });
-        // } else {
-        //     console .log('No registration token available. Request permission to generate one.');
-        // }
     } catch (err) {
         console.error('An error occurred while retrieving token. ', err);
     }

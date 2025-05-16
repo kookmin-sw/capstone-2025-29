@@ -7,6 +7,7 @@ import { requestElderlyMatching, fetchRecommendedVolunteers } from "../../api/Us
 import LoadingModal from "../../components/LoadingModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 import { ko } from "date-fns/locale";
 /**
  * 도움 요청 폼 컴포넌트
@@ -18,8 +19,8 @@ export default function RequestForm() {
     const [currentTime, setCurrentTime] = useState('');
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
-    const userName = localStorage.getItem('userName') || "이름 없음";
-    const userAddress = JSON.parse(localStorage.getItem('userAddress')) || { district: "", detail: "" };
+    const userName = localStorage.getItem('username') || "이름 없음";
+    const userAddress = JSON.parse(localStorage.getItem('useraddress')) || { district: "", detail: "" };
 
 
     console.log(userName, userAddress);

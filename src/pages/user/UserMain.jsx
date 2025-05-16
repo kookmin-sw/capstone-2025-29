@@ -3,20 +3,28 @@ import styles from "./UserMain.module.css";
 import ongi from "../../assets/ongi.svg";
 import { useNavigate } from "react-router-dom";
 import { fetchChatBotName } from "../../api/ChatApi"; // 챗봇 이름 불러오기 API
+import { fetchUserInfo } from "../../api/both";
 
 export default function UserMain() {
     const navigate = useNavigate();
 
-    
     useEffect(() => {
         window.scrollTo(0, 0);
+
+        const getuserinfo = async () => {
+            const data = await fetchUserInfo('elderly');
+            console.log("userInfo", data);
+            localStorage.setItem('username', data.name);
+            localStorage.setItem('useraddress', JSON.stringify(data.address));
+            console.log("userInfo", data);
+        }
+
+        getuserinfo();
     }, []);
 
     const handleChatClick = async () => {
-
         try {
             const chatbotData = await fetchChatBotName();
-
             if (chatbotData) {
                 // 데이터가 있으면 /ChatCenter로 이동
                 navigate('/ChatCenter', { state: { chatBotName: chatbotData.chatBotName } });
