@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { updateFcmToken, fetchElderlyInfo } from '../../api/both'; // ✅ FCM, Elderly 정보 API
-
+import { updateFcmToken  } from '../api/both'; // ✅ FCM, Elderly 정보 API
+import { fetchElderlyMatching } from '../api/UserApi'; // ✅ Elderly 정보 API
 export default function RedirectHandler() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -29,7 +29,7 @@ export default function RedirectHandler() {
 
                 // ✅ elderly인 경우: 나의 정보 조회
                 if (userType === 'elderly') {
-                    const elderlyInfo = await fetchElderlyInfo(accessToken);
+                    const elderlyInfo = await fetchElderlyMatching(accessToken);
 
                     console.log('elderlyInfo:', elderlyInfo);
 
