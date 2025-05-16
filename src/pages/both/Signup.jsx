@@ -11,6 +11,7 @@ export default function Signup() {
     const selectedRole = location.state?.role || "";
     const userInfo = location.state?.userInfo || {};
 
+    
     // 전화번호 포맷 변환 (+8210 형태로)
     const formatToInternational = (phone) => {
         const cleaned = phone.replace(/\D/g, '');
@@ -20,6 +21,41 @@ export default function Signup() {
         return phone.startsWith('+82') ? phone : `+82${cleaned}`;
     };
 
+    const formatTo010 = (phone) => {
+        if (!phone) return '';
+    
+        // 1. "10"이 나오는 위치 찾기
+        const index = phone.indexOf('10');
+        if (index === -1) return phone.replace(/\D/g, ''); // "10" 없으면 그냥 숫자만 남김
+    
+        // 2. "10"부터 끝까지 잘라서
+        let result = phone.slice(index);
+    
+        // 3. 하이픈, 공백, 기타 문자 다 제거
+        result = result.replace(/[\s-]/g, '');
+    
+        // 4. 앞에 0 붙이기 (중복 방지)
+        if (!result.startsWith('0')) {
+            result = '0' + result;
+        }
+    
+        return result;
+    };
+    
+
+    const formatToEncodedInternational = (phone) => {
+        const cleaned = phone.replace(/\D/g, '');
+        if (cleaned.startsWith('010')) {
+            return `%2B82${cleaned.slice(1)}`;
+        }
+        if (phone.startsWith('+82')) {
+            return `%2B${phone.slice(1)}`;
+        }
+        if (phone.startsWith('82')) {
+            return `%2B${phone}`;
+        }
+        return `%2B${cleaned}`;
+    };
 
     const formatPhoneNumber = (phone) => {
         if (phone.startsWith('+82')) {
@@ -32,6 +68,24 @@ export default function Signup() {
         }
         return phone.replace(/\D/g, ''); // 나머지도 숫자만 남기기
     };
+
+    const normalizePhoneNumber = (phone) => {
+        if (!phone) return '';
+        const cleaned = phone.replace(/\D/g, ''); // 숫자만 남기기 (띄어쓰기, 하이픈 제거)
+
+        if (cleaned.startsWith('82')) {
+            return '0' + cleaned.slice(2); // 82 떼고 0 붙이기
+        }
+
+        if (cleaned.startsWith('10')) {
+            return '0' + cleaned; // 10으로 시작하면 0 붙이기
+        }
+
+        return cleaned; // 나머지는 숫자만 남긴 값 리턴
+    };
+
+
+
 
     const districts = [
         { value: "GANGNAM", label: "강남구" }, { value: "GANGDONG", label: "강동구" },
@@ -78,13 +132,15 @@ export default function Signup() {
                 id: userInfo.username || "",
                 name: userInfo.name || "",
                 gender: userInfo.gender || "male",
-                phone: formatPhoneNumber(userInfo.phone || "")
+                phone: formatTo010(userInfo.phone || "")
             }));
 
             if (userInfo.username) {
                 setIdChecked(true); // ✅ 카카오로 넘어온 경우 중복확인 true 처리
             }
         }
+
+        
     }, [userInfo]);
 
     useEffect(() => {
@@ -160,7 +216,7 @@ export default function Signup() {
             name: formValues.name,
             age: calculateAge(formValues.birthYear, formValues.birthMonth, formValues.birthDay),
             gender: formValues.gender,
-            phone: formValues.phone,
+            phone: formatTo010(formValues.phone),
             address: {
                 district: formValues.region,
                 detail: formValues.detailAddress || ""
@@ -170,6 +226,7 @@ export default function Signup() {
             bio: selectedRole === "volunteer" ? formValues.introduction : ""
         };
 
+    
         try {
             console.log("회원가입 데이터:", formData);
             await registerUser(formData);
@@ -299,7 +356,7 @@ export default function Signup() {
                             console.log("인증번호 발송 전화번호:", intlPhone);
                             try {
                                 const response = await sendAuthCode(intlPhone);
-                                
+
                                 console.log("인증번호 발송 응답:", response);
                                 alert('인증번호가 발송되었습니다.');
                             } catch (err) {

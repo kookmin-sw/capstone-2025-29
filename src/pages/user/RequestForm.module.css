@@ -561,7 +561,7 @@
 /* 년/월/일 셀렉트 박스 스타일 (폭 좁게 조정) */
 .customSelect {
     flex: 1;
-    max-width: 120px;
+
     padding: 12px 10px;
     font-size: 1rem;
     border: none;
@@ -595,7 +595,6 @@
 /* 년/월/일 셀렉트 박스 스타일 (폭 좁게 조정) */
 .customSelect {
     flex: 1;
-    max-width: 120px;
     padding: 12px 10px;
     font-size: 1rem;
     border: none;
@@ -619,3 +618,5 @@
 .customSelect:invalid {
     color: #999;
 }
+
+

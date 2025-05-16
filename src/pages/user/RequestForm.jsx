@@ -32,6 +32,28 @@ export default function RequestForm() {
         YONGSAN: "용산구", EUNPYEONG: "은평구", JONGNO: "종로구"
     };
 
+    const [formValues, setFormValues] = useState({
+        year: '',
+        month: '',
+        day: '',
+        time: '',
+    });
+
+    useEffect(() => {
+        if (formValues.year && formValues.month && formValues.day) {
+            const formattedMonth = String(formValues.month).padStart(2, '0');
+            const formattedDay = String(formValues.day).padStart(2, '0');
+            const fullDate = `${formValues.year}-${formattedMonth}-${formattedDay}`;
+            setFormData(prev => ({ ...prev, date: fullDate }));
+        }
+    }, [formValues.year, formValues.month, formValues.day]);
+
+    // 입력 핸들러
+    const handleFormValuesChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues(prev => ({ ...prev, [name]: value }));
+    };
+
 
     useEffect(() => {
         const updateDateTime = () => {
@@ -204,66 +226,59 @@ export default function RequestForm() {
             )}
 
             {/* STEP 2: 날짜/시간 선택 */}
+
             {step === 2 && (
                 <div className={styles.stepBox}>
                     <div className={styles.dateTitleBox}>
                         <p>정확한 날짜와 시간을<br />선택해주세요</p>
                     </div>
 
-                    {/* 날짜 선택 (무조건 캘린더) */}
-                    <div className={styles.selectWrapper}>
-                        {/* 연도 선택 */}
+                    {/* 날짜 선택 (년/월/일 가로 배치) */}
+                    <div className={styles.dateRowWrapper}>
                         <select
+                            name="year"
                             className={styles.customSelect}
-                            value={formData.year}
-                            onChange={(e) => handleChange("year", e.target.value)}
+                            value={formValues.year}
+                            onChange={handleFormValuesChange}
                         >
-                            <option value="" disabled>년 선택</option>
+                            <option value="" disabled>년</option>
                             {Array.from({ length: 5 }, (_, i) => {
                                 const year = new Date().getFullYear() + i;
                                 return <option key={year} value={year}>{year}년</option>;
                             })}
                         </select>
-                    </div>
 
-                    <div className={styles.selectWrapper}>
-                        {/* 월 선택 */}
                         <select
+                            name="month"
                             className={styles.customSelect}
-                            value={formData.month}
-                            onChange={(e) => handleChange("month", e.target.value)}
+                            value={formValues.month}
+                            onChange={handleFormValuesChange}
                         >
-                            <option value="" disabled>월 선택</option>
-                            {Array.from({ length: 12 }, (_, i) => {
-                                const month = i + 1;
-                                return <option key={month} value={month}>{month}월</option>;
-                            })}
+                            <option value="" disabled>월</option>
+                            {Array.from({ length: 12 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>{i + 1}월</option>
+                            ))}
+                        </select>
+
+                        <select
+                            name="day"
+                            className={styles.customSelect}
+                            value={formValues.day}
+                            onChange={handleFormValuesChange}
+                        >
+                            <option value="" disabled>일</option>
+                            {Array.from({ length: 31 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>{i + 1}일</option>
+                            ))}
                         </select>
                     </div>
 
-                    <div className={styles.selectWrapper}>
-                        {/* 일 선택 */}
-                        <select
-                            className={styles.customSelect}
-                            value={formData.day}
-                            onChange={(e) => handleChange("day", e.target.value)}
-                        >
-                            <option value="" disabled>일 선택</option>
-                            {Array.from({ length: 31 }, (_, i) => {
-                                const day = i + 1;
-                                return <option key={day} value={day}>{day}일</option>;
-                            })}
-                        </select>
-                    </div>
-
-
-                    {/* 시간 선택 (option select) */}
+                    {/* 시간 선택 */}
                     <div className={styles.selectWrapper}>
                         <select
                             className={styles.customSelect}
                             value={formData.time}
                             onChange={(e) => handleChange("time", e.target.value)}
-                            required
                         >
                             <option value="" disabled hidden>시간을 선택해주세요</option>
                             {Array.from({ length: 48 }, (_, i) => {
@@ -273,9 +288,7 @@ export default function RequestForm() {
                                 const display = hour >= 12
                                     ? `오후 ${hour === '12' ? '12' : String(Number(hour) - 12)}:${min}`
                                     : `오전 ${Number(hour)}:${min}`;
-                                return (
-                                    <option key={value} value={value}>{display}</option>
-                                );
+                                return <option key={value} value={value}>{display}</option>;
                             })}
                         </select>
                     </div>
@@ -285,6 +298,7 @@ export default function RequestForm() {
                     </div>
                 </div>
             )}
+
 
             {/* STEP 3: 반려동물 정보 및 정신건강복지센터 안내 */}
             {step === 3 && (
