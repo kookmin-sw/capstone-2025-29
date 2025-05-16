@@ -40,6 +40,27 @@ import LoadingModalTest from './components/LoadingModalTest';
 
 /* 메인 App 컴포넌트 */
 function App() {
+
+  useEffect(() => {
+    // 홈화면 추가 여부 확인 (iOS PWA)
+    if (window.navigator.standalone) {
+      console.log("PWA로 실행 중 (홈화면 추가됨)");
+
+      // 알림 권한 요청
+      if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          console.log("Notification permission:", permission);
+          if (permission !== 'granted') {
+            alert('알림을 허용해야 매칭 알림을 받을 수 있습니다. 설정 > Safari > 알림에서 변경해주세요.');
+          }
+        });
+      }
+    } else {
+      // 홈화면 추가 안 된 경우 UX 안내
+      console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
+      // alert('홈화면에 추가하면 푸시 알림을 받을 수 있습니다.');
+    }
+  }, []);
   useEffect(() => {
     Notification.requestPermission().then(permission => {
       if (permission === 'granted') {

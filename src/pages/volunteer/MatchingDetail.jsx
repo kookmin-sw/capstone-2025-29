@@ -75,6 +75,8 @@ export default function MatchingDetail() {
     const startTime = new Date(detailData.startTime);
     const isPastStartTime = now >= startTime;  // ✅ 현재 시간이 시작 시간 이후인지 체크
 
+
+    console.log("상세정보:", detailData);
     return (
         <div className={styles.container}>
             <Topbar title="내역상세" />
