@@ -38,6 +38,8 @@ import RedirectHandler from './api/RedirectHandler'; // ✅ 리다이렉트 핸�
 
 import LoadingModalTest from './components/LoadingModalTest';
 
+let isOnMessageRegistered = false;
+
 /* 메인 App 컴포넌트 */
 function App() {
 
@@ -73,11 +75,13 @@ function App() {
 
   // ✅ 2. 포그라운드 알림 수신 처리
   useEffect(() => {
-    onMessage(messaging, (payload) => {
-      console.log('Message received. ', payload);
-      // ✅ 여기서 사용자에게 보여줄 알림 처리 (예: toast, alert 등)
-      alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
-    });
+    if (!isOnMessageRegistered) {
+      onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+        alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
+      });
+      isOnMessageRegistered = true;
+    }
   }, []);
 
   return (

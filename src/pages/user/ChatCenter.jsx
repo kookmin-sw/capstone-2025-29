@@ -47,7 +47,7 @@ const ChatCenter = () => {
                 setChatBotName(data.chatBotName);
             } catch (error) {
                 console.error(error.message);
-            }  finally {
+            } finally {
                 setLoading(false);
             }
         };
@@ -101,13 +101,14 @@ const ChatCenter = () => {
                                     }}
                                 />
                             </div>
-                            {feedback && (
+                            {emotionData.length > 0 && feedback && (
                                 <div className={styles.feedbackBox}>
                                     <p className={styles.feedbackText}>
                                         {feedback}
                                     </p>
                                 </div>
                             )}
+
                         </div>
 
                         <ul className={styles.right}>
@@ -126,7 +127,7 @@ const ChatCenter = () => {
                 </div>
             </div>
 
-            <LoadingModal isOpen={loading} onClose={() => setLoading(false)} />
+            <LoadingModal isOpen={loading} />
         </div>
     );
 };

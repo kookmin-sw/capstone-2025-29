@@ -47,9 +47,16 @@ export default function Login() {
 
     // ✅ 카카오 로그인 리다이렉트 핸들러
     const handleKakaoLogin = () => {
-        // 백엔드의 /oauth2/authorization/kakao 로 리다이렉트
-        window.location.href = 'https://coffeesupliers.shop/oauth2/authorization/kakao';
+        const kakaoAuthUrl = 'https://coffeesupliers.shop/oauth2/authorization/kakao';
+    
+        // ✅ iOS PWA 대응 (window.open 사용)
+        const newWindow = window.open(kakaoAuthUrl, '_blank', 'noopener,noreferrer');
+    
+        if (!newWindow) {
+            alert('팝업 차단 해제 후 다시 시도해주세요.');
+        }
     };
+    
 
     return (
         <div className={styles.container}>

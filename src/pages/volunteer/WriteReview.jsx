@@ -39,6 +39,10 @@ export default function WriteReview() {
                     });
 
                     const imageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
+
+                    console.log("imageUrl URLs:", imageUrl);
+
+                    
                     uploadedUrls.push(imageUrl);
                 }
 
