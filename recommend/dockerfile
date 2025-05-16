@@ -1,0 +1,18 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# 파이썬 패키지 설치
+COPY requirements.txt ./
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# 소스 복사
+COPY . .
+
+# gRPC proto 컴파일 (이미 컴파일된 파일이 있다면 생략 가능)
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. user_recommendation.proto
+
+# 환경변수 예시 (실제 배포시 docker run -e 또는 ECS/ECR에서 환경변수로 지정)
+ENV PYTHONUNBUFFERED=1
+
+CMD ["python", "grpc_server.py"]

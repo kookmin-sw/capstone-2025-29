@@ -1,0 +1,50 @@
+name: Ongi
+
+on:
+  push:
+    branches: 
+      - "master"
+      - "feat/101"
+      - "feat/106"
+    paths:
+      - "AI/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: AI
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Ensure tts_output directory exists
+        run: mkdir -p tts_output
+
+      - name: Stop existing container 
+        run: |
+          docker stop ai-server || true
+          docker rm ai-server || true
+
+      - name: Build Docker image 
+        run: docker build --no-cache -t ai-server .
+
+      - name: Run Docker container with restart policy
+        run: |
+          docker run -d --restart always --name ai-server -p 8000:8000 \
+            -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+            -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+            -e AWS_S3_ACCESS_KEY_ID=${{ secrets.AWS_S3_ACCESS_KEY_ID }} \
+            -e AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} \
+            -e LOGIN_ID=${{ secrets.LOGIN_ID }} \
+            -e LOGIN_PW=${{ secrets.LOGIN_PW }} \
+            -e USER_TYPE=${{ secrets.USER_TYPE }} \
+            -e BACKEND_API_BASE=${{ secrets.BACKEND_API_BASE }} \
+            -v ${{ github.workspace }}/AI/tts_output:/app/tts_output \
+            ai-server
