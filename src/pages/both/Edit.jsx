@@ -55,6 +55,9 @@ export default function Edit() {
                     introduction: data.bio || ""
                 });
 
+                localStorage.setItem('userName', formData.name);
+                localStorage.setItem('userAddress', formData.address);
+
             } catch (error) {
                 alert("유저 정보 불러오기 실패: " + error.message);
             } finally {
