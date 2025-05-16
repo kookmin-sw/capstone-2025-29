@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { updateFcmToken  } from '../api/both'; // ✅ FCM, Elderly 정보 API
-import { fetchElderlyMatching,fetchUserInfo } from '../api/UserApi'; // ✅ Elderly 정보 API
+import { updateFcmToken  ,fetchUserInfo} from '../api/both'; // ✅ FCM, Elderly 정보 API
 export default function RedirectHandler() {
     const navigate = useNavigate();
     const location = useLocation();
