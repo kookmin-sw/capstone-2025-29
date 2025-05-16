@@ -207,11 +207,11 @@ export default function RequestForm() {
             {step === 2 && (
                 <div className={styles.stepBox}>
                     <div className={styles.dateTitleBox}>
-                        <p>정확한 날짜와 시간을<br />입력해주세요</p>
+                        <p>정확한 날짜와 시간을<br />선택해주세요</p>
                     </div>
 
-                    {/* ✅ 날짜 선택 */}
-                    <div className={styles.datepickerWrapper}>
+                    {/* 날짜 선택 (무조건 캘린더) */}
+                    <div className={styles.selectWrapper}>
                         <DatePicker
                             locale={ko}
                             dateFormat="yyyy년 MM월 dd일"
@@ -221,43 +221,34 @@ export default function RequestForm() {
                                 const formatted = date.toISOString().split('T')[0];
                                 handleChange("date", formatted);
                             }}
-                            placeholderText="날짜를 선택해주세요"
                             className={styles.datepickerInput}
                             popperPlacement="bottom"
+                            placeholderText="날짜를 선택해주세요"
                         />
                     </div>
 
-                    <div className={styles.datepickerWrapper}>
-                        <div className={styles.timeSelectBox}>
-                            <select
-                                className={styles.timeSelect}
-                                value={formData.time}
-                                onChange={(e) => handleChange("time", e.target.value)}
-                                required
-                            >
-                                <option value="" disabled hidden>시간을 선택해주세요</option>
-                                {Array.from({ length: 48 }, (_, i) => {
-                                    const hour = Math.floor(i / 2);
-                                    const minute = i % 2 === 0 ? "00" : "30";
-                                    const hourString = `${String(hour).padStart(2, '0')}:${minute}`;
-                                    const displayHour = hour === 0
-                                        ? `오전 12시 ${minute}분`
-                                        : hour < 12
-                                            ? `오전 ${hour}시 ${minute}분`
-                                            : hour === 12
-                                                ? `오후 12시 ${minute}분`
-                                                : `오후 ${hour - 12}시 ${minute}분`;
-
-                                    return (
-                                        <option key={hourString} value={hourString}>
-                                            {displayHour}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
+                    {/* 시간 선택 (option select) */}
+                    <div className={styles.selectWrapper}>
+                        <select
+                            className={styles.customSelect}
+                            value={formData.time}
+                            onChange={(e) => handleChange("time", e.target.value)}
+                            required
+                        >
+                            <option value="" disabled hidden>시간을 선택해주세요</option>
+                            {Array.from({ length: 48 }, (_, i) => {
+                                const hour = String(Math.floor(i / 2)).padStart(2, '0');
+                                const min = i % 2 === 0 ? '00' : '30';
+                                const value = `${hour}:${min}`;
+                                const display = hour >= 12
+                                    ? `오후 ${hour === '12' ? '12' : String(Number(hour) - 12)}:${min}`
+                                    : `오전 ${Number(hour)}:${min}`;
+                                return (
+                                    <option key={value} value={value}>{display}</option>
+                                );
+                            })}
+                        </select>
                     </div>
-
 
                     <div className={styles.nextButton} onClick={handleNext}>
                         <img src="/nextbtn.svg" alt="다음" />
@@ -286,17 +277,7 @@ export default function RequestForm() {
                         </div>
                     </div>
 
-                    {/* 정신건강복지센터 연락처 카드 */}
-                    <div className={styles.cardwrapper}>
-                        <div className={styles.mentalCard}>
-                            <p className={styles.cardTitle}>정신건강복지센터에<br />도움을 요청할까요?</p>
-                            <p className={styles.cardPhone}>02-2226-0344</p>
-                            <div className={styles.phoneIconWrapper}>
-                                <img src="/icon-call.svg" alt="전화기 아이콘" />
-                            </div>
-                            <button className={styles.callBtn}>전화연결</button>
-                        </div>
-                    </div>
+
                 </>
             )}
 

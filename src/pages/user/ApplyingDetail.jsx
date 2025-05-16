@@ -61,11 +61,17 @@ export default function ApplyingDetail() {
     }, [matchId]);
 
     const handleCancelRequest = async () => {
+        if (!matchId) {
+            alert("유효한 matchId가 없습니다.");
+            return;
+        }
+
+        const confirmed = window.confirm("신청 취소하시겠습니까?");
+        if (!confirmed) {
+            return; // 취소 누르면 아무것도 안함
+        }
+
         try {
-            if (!matchId) {
-                alert("유효한 matchId가 없습니다.");
-                return;
-            }
             await cancelMatching(matchId);
             alert("취소 요청이 완료되었습니다.");
             navigate("/helpcenter");
@@ -74,7 +80,6 @@ export default function ApplyingDetail() {
             alert("취소 요청에 실패했습니다. 다시 시도해주세요.");
         }
     };
-
     if (loading || error || !activityDetail) return null;
 
     const koreanDistrict = districtMap[userAddress.district] || userAddress.district;
@@ -98,8 +103,8 @@ export default function ApplyingDetail() {
                     isMatched
                         ? (activityDetail.type === "EDUCATION" ? "/education.svg"
                             : activityDetail.type === "HOUSING" ? "/housing.svg"
-                            : activityDetail.type === "CULTURE" ? "/culture.svg"
-                            : "/medical.svg")
+                                : activityDetail.type === "CULTURE" ? "/culture.svg"
+                                    : "/medical.svg")
                         : "/cancel-icon.svg"
                 }
             />
