@@ -228,8 +228,9 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
 |**Operating System**| ![Ubuntu](https://img.shields.io/badge/ubuntu_22.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white) 
 |**Programming Language**| ![Python](https://img.shields.io/badge/Python_3.10-3776AB?style=for-the-badge&logo=python&logoColor=white) 
 |**Framework**| ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white)
-|**AI Env**| ![CuDnn](https://img.shields.io/badge/CuDnn_8.6-76B900?style=for-the-badge&logo=nvidia&logoColor=white) ![CudDa](https://img.shields.io/badge/CuDa_11.8-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
-|**Remote Env**| ![ssh](https://img.shields.io/badge/ssh-5391FE?style=for-the-badge&logo=powershell&logoColor=white) ![wol](https://img.shields.io/badge/wol-F2C811?style=for-the-badge&logoColor=white) ![vnc](https://img.shields.io/badge/vnc-E74536?style=for-the-badge&logoColor=white)
+| **Application Service** | ![AWS EC2](https://img.shields.io/badge/AWS_EC2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
+| **Storage Service** | ![Amazon S3](https://img.shields.io/badge/Amazon_S3-569A31?style=for-the-badge&logo=AmazonS3&logoColor=white) |
+| **Container** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white) |
 
 
 
@@ -238,9 +239,9 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
 ### 🖥 AI
 |역할|종류|
 |-|-|
-|**Image Detection**|  ![YOLO](https://custom-icon-badges.demolab.com/badge/-YOLO-gold?style=for-the-badge&logo=yolo&logoColor=white) ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=OpenAI&logoColor=white) ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=OpenCV&logoColor=white)
-|**TextReID**| ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white)
-|**Image Similarity Search** | ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![FAISS](https://img.shields.io/badge/Faiss-0467DF?style=for-the-badge&logo=Meta&logoColor=white)
+|**STT**|  ![YOLO](https://custom-icon-badges.demolab.com/badge/-YOLO-gold?style=for-the-badge&logo=yolo&logoColor=white) ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=OpenAI&logoColor=white) ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=OpenCV&logoColor=white)
+|**TTR**| ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=OpenAI&logoColor=white)
+|**TTS** | ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![FAISS](https://img.shields.io/badge/Faiss-0467DF?style=for-the-badge&logo=Meta&logoColor=white)
 
 <br />
 
