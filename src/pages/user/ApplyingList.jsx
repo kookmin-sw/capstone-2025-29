@@ -4,12 +4,15 @@ import Topbar from "../../components/Topbar";
 import MatchCard from "../../components/MatchCard";
 import { useNavigate } from "react-router-dom";
 import { fetchApplyingList } from "../../api/UserApi";
+import LoadingModal from "../../components/LoadingModal";
+import { fi } from "date-fns/locale/fi";
 
 export default function ApplyingList() {
     const navigate = useNavigate();
     const [matchData, setMatchData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const loadApplyingList = async () => {
@@ -52,6 +55,8 @@ export default function ApplyingList() {
                 console.error("Failed to load applying list:", err);
                 setError(err.message);
                 setLoading(false);
+            } finally {
+                setIsLoading(false); // 로딩 상태 종료
             }
         };
 
@@ -75,6 +80,8 @@ export default function ApplyingList() {
                     />
                 ))
             )}
+
+            <LoadingModal isLoading={isLoading} message="" />
         </div>
     );
 }

@@ -80,39 +80,48 @@ export default function ApplyingDetail() {
     const koreanDistrict = districtMap[userAddress.district] || userAddress.district;
     const koreanAnimalType = animalTypeMap[activityDetail.animalType] || null;
 
+    const isMatched = !!activityDetail.matchedUserInfo?.volunteerName;
+
     console.log("상세 매칭 데이터:", activityDetail);
+
     return (
         <div className={styles.container}>
             <Topbar title="신청 상세 내역" />
 
             <MatchCard
                 id={activityDetail.id}
-                name={activityDetail.matchedUserInfo?.volunteerName || "매칭 중입니다"}
+                name={isMatched ? activityDetail.matchedUserInfo.volunteerName : null}
                 date={formatDate(activityDetail.startTime)}
                 time={formatTime(activityDetail.startTime)}
-                tags={[activityDetail.type, koreanDistrict]}
+                tags={isMatched ? [activityDetail.type, koreanDistrict] : []}
                 icon={
-                    activityDetail.type === "EDUCATION" ? "/education.svg" :
-                    activityDetail.type === "HOUSING" ? "/housing.svg" :
-                    activityDetail.type === "CULTURE" ? "/culture.svg" :
-                    "/medical.svg"
+                    isMatched
+                        ? (activityDetail.type === "EDUCATION" ? "/education.svg"
+                            : activityDetail.type === "HOUSING" ? "/housing.svg"
+                            : activityDetail.type === "CULTURE" ? "/culture.svg"
+                            : "/medical.svg")
+                        : "/cancel-icon.svg"
                 }
             />
 
-            <div className={styles.address}>
-                <p>{`서울특별시 ${koreanDistrict}`}</p>
-                <p>{userAddress.detail || "상세 주소 정보 없음"}</p>
-            </div>
+            {isMatched && (
+                <>
+                    <div className={styles.address}>
+                        <p>{`서울특별시 ${koreanDistrict}`}</p>
+                        <p>{userAddress.detail || "상세 주소 정보 없음"}</p>
+                    </div>
 
-            <div className={styles.section}>
-                <h3 className={styles.label}>반려동물 여부</h3>
-                <p>{koreanAnimalType || "없음"}</p>
-            </div>
+                    <div className={styles.section}>
+                        <h3 className={styles.label}>반려동물 여부</h3>
+                        <p>{koreanAnimalType || "없음"}</p>
+                    </div>
 
-            <div className={styles.section}>
-                <h3 className={styles.label}>추가 요청사항</h3>
-                <p className={styles.requestText}>{activityDetail.addDescription || "요청사항 없음"}</p>
-            </div>
+                    <div className={styles.section}>
+                        <h3 className={styles.label}>추가 요청사항</h3>
+                        <p className={styles.requestText}>{activityDetail.addDescription || "요청사항 없음"}</p>
+                    </div>
+                </>
+            )}
 
             <button className={styles.cancelBtn} onClick={handleCancelRequest}>
                 취소요청

@@ -300,7 +300,7 @@ export default function Signup() {
                             try {
                                 const response = await sendAuthCode(intlPhone);
                                 
-                                console.log("인증번호 발송 응답:", respons);
+                                console.log("인증번호 발송 응답:", response);
                                 alert('인증번호가 발송되었습니다.');
                             } catch (err) {
                                 alert(err.message);

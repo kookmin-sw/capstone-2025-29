@@ -22,19 +22,21 @@ export default function MatchCard({ icon, name, date, time, tags, onClick }) {
                 <div>
                     <div className={styles.name}>
                         <strong>
-                            {name ? `${name}님과의 매칭` : "매칭 진행 중 입니다."}
+                            {name ? `${name}님과의 매칭` : "매칭 진행 중입니다."}
                         </strong>
                     </div>
                     <div className={styles.date}>{date} | {time}</div>
                 </div>
             </div>
-            <div className={styles.tags}>
-                {tags.map((tag, idx) => (
-                    <span key={idx} className={styles.tag}>
-                        {tagMap[tag] || tag}
-                    </span>
-                ))}
-            </div>
+            {name && ( // name이 있을 때만 태그 표시
+                <div className={styles.tags}>
+                    {tags.map((tag, idx) => (
+                        <span key={idx} className={styles.tag}>
+                            {tagMap[tag] || tag}
+                        </span>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

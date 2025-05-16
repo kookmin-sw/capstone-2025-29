@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./HelpCenter.module.css";
 import Topbar from "../../components/Topbar";
 import { fetchElderlyMatching, completeMatching, cancelMatching } from "../../api/UserApi";
-
+import LoadingModal from "../../components/LoadingModal";
 
 function HelpCenter() {
     const navigate = useNavigate();
@@ -14,6 +14,7 @@ function HelpCenter() {
     const [matchDate, setMatchDate] = useState("");
     const [matchTime, setMatchTime] = useState("");
     const [matchingId, setMatchingId] = useState(null); // 매칭 ID 저장
+    const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 
     // 컴포넌트가 마운트될 때 API 호출
     useEffect(() => {
@@ -47,7 +48,9 @@ function HelpCenter() {
                 }
             } catch (error) {
                 console.error("Failed to load matching data:", error);
-            }
+            }finally {
+                setIsLoading(false); // 로딩 상태 종료
+            }   
         };
 
         loadMatchingData();
@@ -165,6 +168,8 @@ function HelpCenter() {
                     <button className={styles.guideBtn}>가이드 영상 보러가기</button>
                 </div>
             </div>
+
+            <LoadingModal isOpen={isLoading} message="" />
         </div>
     );
 }
