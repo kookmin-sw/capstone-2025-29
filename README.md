@@ -2,7 +2,7 @@
 # 봉사자/독거노인 매칭 시스템, [온기](https://capstone-2025-29-vercel.vercel.app/) 
 <div align="center"> 
     <p align = "center">
-        <img src = "" width = "30%"/>
+        <img src = "https://github.com/user-attachments/assets/28b2ba5e-2c7f-4a8e-94b3-d4b5cceecfdd" width = "100%"/>
     </p>
 </div>
 
@@ -29,49 +29,65 @@
 
 <div align="center"> 
     <p align = "center">
-    <img src = "" width = "70%"/>
+    <img src = "https://github.com/user-attachments/assets/def71ec8-2eea-4964-ba63-b856fd6cd3ca" width = "100%"/>
     </p>
 </div>
 
+
+
 ### | 실시간 봉사 매칭 플랫폼
-✅ **온기**는 내용내용
+✅ **온기**는 독거노인과 봉사자를 실시간으로 연결해주는 AI 기반 봉사 매칭 플랫폼입니다.
+봉사자가 등록한 시간과 지역 정보를 기반으로, 봉사가 필요한 독거노인과 즉시 연결됩니다.
 
-✅ **온기**는 내용
+✅ **온기**는 봉사자 추천 시스템을 통해 사용자 선호도를 반영한 매칭을 지원합니다.
+이용자는 이전 대화 경험을 바탕으로 추천된 봉사자 중 선호하는 봉사자를 직접 선택할 수 있습니다.
 
-✅ **온기**는 내용내용
+✅ **온기**는 AI 음성 대화를 통해 정서적 케어를 제공합니다.
+AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 분석을 통해 우울감·불안 신호를 사전에 탐지하여 보호자나 사회복지사가 필요한 대응을 할 수 있도록 지원합니다.
 
 <br/>
 
-## 💡 Project Introduction
-
-<div align="center"> 
-    <p align = "center">
-    <img src = "" width = "70%"/>
-    </p>
-</div>
-
-### | 내용내용
-✅ **온기** 내용
-
-✅ **온기** 내용
-
-✅ **온기** 내용
 
 <br/>
 
 ## 🦾 주요 기능
 
-### 🧐 내용
+### 📌  실시간 봉사자 자동 매칭
+• 봉사자가 등록한 시간과 지역 정보 기반으로 독거노인과 자동 매칭 
+</br>
+</br>
+• 대기 없이 봉사 연결이 가능하며 신청하지 못한 독거노인도 연결 가능
 
-### 🗺️ 내용
+### 🧑‍🤝‍🧑 봉사자 추천 시스템
+• 사용자의 정보(자기소개, 성별)와 이용자의 선호도를 기반으로 봉사자 4명을 추천
+</br>
+</br>
+• 이용자가 원하는 봉사자를 직접 선택 가능
 
-### 🚨 내용
+### 🗣️ AI 음성 대화 시스템
+• Whisper 기반 STT로 음성을 텍스트로 변환
+</br>
+</br>
+• GPT 기반 TTR로 자연스러운 대화 응답 생성
+</br>
+</br>
+• MeloTTS 기반 TTS로 다시 음성으로 응답하여 음성 대화가 가능
 
-### 🔍 내용
+### 🧠 AI 감정 분석 및 정서 케어
+• 대화를 바탕으로 하루동안의 감정 기록 및 분석
+</br>
+</br>
+• 우울함,심리적 불안 신호 등을 사전 탐지
 
-### 👨‍👩‍👧‍👦 내용
+### 📈 상업적 확장 가능성
+• QR코드 기반 봉사 이력 자동 등록 및 인증 시스템
+</br>
+</br>
+• 블록체인을 활용한 봉사 진위 여부 검증 기능 추가 예정
+</br>
+</br>
+• 지자체, 복지기관, 외부 단체와의 연계를 통해통합 봉사 관리 플랫폼으로 확장 가능
 
-### 📊 상업적 확장 가능성
 
 <br/>
 
@@ -85,20 +101,20 @@
 <table>
     <tr align="center">
         <td style="min-width: 150px;">
-            <a href="https://github.com/begong313">
+            <a href="https://github.com/Sung-young">
               <br />
               <b>박성영</b>
             </a> 
             <br/>
-              ****0891
+              20203068
         </td>
         <td style="min-width: 150px;">
-            <a href="https://github.com/KJW988">
+            <a href="https://github.com/glory-yun">
               <br />
               <b>윤영광</b>
             </a>
                        <br/>
-              ****0812
+              20203109
         </td>
         <td style="min-width: 150px;">
             <a href="https://github.com/SUNMI-KIM">
@@ -106,7 +122,7 @@
               <b>김선미</b>
             </a> 
                        <br/>
-              ****2976
+              20212976
         </td>
         <td style="min-width: 150px;">
             <a href="https://github.com/chaews0327">
@@ -144,10 +160,10 @@
     </tr>
     <tr align="center">
         <td>
-            <span style="font-size: 12px;">nobin313@kookmin.ac.kr</span>
+            <span style="font-size: 12px;">pou876@kookmin.ac.kr</span>
         </td>
         <td>
-            <span style="font-size: 12px;">livelim313@gmail.com</span>
+            <span style="font-size: 12px;">yyk1797@gmail.com</span>
         </td>
         <td>
             <span style="font-size: 12px;">hariaus@kookmin.ac.kr</span>
