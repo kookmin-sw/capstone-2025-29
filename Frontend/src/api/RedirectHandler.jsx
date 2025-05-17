@@ -20,8 +20,8 @@ export default function RedirectHandler() {
         const init = async () => {
 
             alert('init은 실행')
-            console.log(params)
-            console.log(accessToken,refreshToken,userType)
+            alert(params)
+            alert(accessToken,refreshToken,userType)
             try {
                 // ✅ FCM 토큰 등록
                 await updateFcmToken(userType, accessToken);
