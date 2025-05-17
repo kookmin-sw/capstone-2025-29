@@ -33,7 +33,7 @@ export default function RedirectHandler() {
                 }
             } catch (error) {
                 
-                alert('로그인 중 오류가 발생했습니다.', ('초기화 실패:', error.message));
+                alert('초기화 실패:', error.message);
             }
         };
 
