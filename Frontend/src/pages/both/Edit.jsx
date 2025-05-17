@@ -90,13 +90,35 @@ export default function Edit() {
             try {
                 setIsLoading(true);
 
-                const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);  // S3 업로드용 URL 요청
+                const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
                 console.log("📝 S3 PreSigned URL:", preSignedUrl);
 
-                await axios.put(preSignedUrl, file, { headers: { 'Content-Type': file.type || 'application/octet-stream' } });
+                await axios.put(preSignedUrl, file, {
+                    headers: { 'Content-Type': file.type || 'application/octet-stream' }
+                });
 
+                // ✅ 업로드된 이미지 URL
                 const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}?v=${new Date().getTime()}`;
-                setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));  // 캐싱 회피용 v=timestamp
+
+                // ✅ 실제로 S3에 이미지가 존재하는지 확인 (HEAD 요청)
+                let retryCount = 0;
+                let success = false;
+
+                while (retryCount < 5 && !success) {
+                    try {
+                        await axios.head(uploadedUrl); // HEAD 요청으로 존재 여부 확인
+                        success = true;
+                    } catch {
+                        await new Promise((res) => setTimeout(res, 500)); // 0.5초 대기 후 재시도
+                        retryCount++;
+                    }
+                }
+
+                if (!success) {
+                    alert("이미지 업로드 확인 실패. 다시 시도해주세요.");
+                } else {
+                    setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
+                }
 
             } catch (error) {
                 alert("이미지 업로드 실패: " + error.message);
@@ -104,6 +126,7 @@ export default function Edit() {
                 setIsLoading(false);
             }
         };
+
         input.click();
     };
 
