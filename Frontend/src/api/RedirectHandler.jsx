@@ -24,7 +24,7 @@ export default function RedirectHandler() {
                 console.log('✅ FCM 토큰 등록 성공');
 
 
-                console.log(params,accessToken, refreshToken, userType);
+
                 // ✅ elderly인 경우: 나의 정보 조회
                 if (userType === 'elderly') {
                     navigate('/usermain');
@@ -32,8 +32,8 @@ export default function RedirectHandler() {
                     navigate('/volunteermain');
                 }
             } catch (error) {
-                console.error('초기화 실패:', error.message);
-                alert('로그인 중 오류가 발생했습니다.');
+                
+                alert('로그인 중 오류가 발생했습니다.', ('초기화 실패:', error.message));
             }
         };
 
