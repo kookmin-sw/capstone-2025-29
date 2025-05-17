@@ -208,7 +208,6 @@ export const kakaoLogin = async () => {
 export const updateFcmToken = async (userType, accessToken) => {
 
     const fcmToken = localStorage.getItem("fcmToken");
-    alert(`'fcmtoken', ${fcmToken}`)
     
     if (!accessToken) {
         throw new Error("AccessToken이 없습니다.");

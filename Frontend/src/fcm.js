@@ -10,7 +10,6 @@ export const requestFCMToken = async () => {
 
         if (currentToken) {
             localStorage.setItem('fcmToken', currentToken);
-            console.log('📌 FCM 토큰 발급 완료:', currentToken);
         } else {
             throw new Error("FCM 토큰이 존재하지 않습니다. 권한이 거부되었을 수 있습니다.");
         }
