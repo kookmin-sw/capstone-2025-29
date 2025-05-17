@@ -42,32 +42,51 @@ let isOnMessageRegistered = false;
 
 /* 메인 App 컴포넌트 */
 function App() {
-    useEffect(() => {
-    const isPWA = window.navigator.standalone; // iOS 홈화면 추가 여부
+  useEffect(() => {
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     const isNotificationSupported = 'Notification' in window;
 
+    // ✅ 서비스 워커 수동 등록
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then(registration => {
+          console.log('Service worker 등록 성공:', registration.scope);
+        })
+        .catch(err => {
+          console.error('Service worker 등록 실패:', err);
+        });
+    }
+
+    // ✅ iOS PWA & 알림 지원 시
     if (isPWA && isNotificationSupported) {
-      console.log("PWA로 실행 중 (홈화면 추가됨)");
+      console.log("PWA 환경에서 실행 중");
 
       if (Notification.permission === 'default') {
-        alert('앱을 실행하기 전에 알림을 허용해 주세요!\n설정 > Safari > 알림에서 변경할 수 있습니다.');
+        alert('앱 실행 시 알림 허용이 필요합니다.\n설정 > Safari > 알림에서 변경 가능합니다.');
         Notification.requestPermission().then(permission => {
-          console.log("Notification permission:", permission);
           if (permission === 'granted') {
-            requestFCMToken();
+            requestFCMToken()
+              .then(() => console.log('✅ FCM 토큰 요청 완료'))
+              .catch((err) => {
+                alert('FCM 토큰 요청 실패: ' + err.message);
+                console.error('FCM 요청 실패:', err);
+              });
           } else {
-            console.warn('Notification permission denied');
+            alert('알림 권한이 거부되었습니다. 알림 수신이 불가능합니다.');
           }
         });
       } else if (Notification.permission === 'granted') {
-        requestFCMToken();
+        requestFCMToken()
+          .then(() => console.log('✅ FCM 토큰 요청 완료'))
+          .catch((err) => {
+            alert('FCM 토큰 요청 실패: ' + err.message);
+            console.error('FCM 요청 실패:', err);
+          });
       } else if (Notification.permission === 'denied') {
-        alert('알림을 허용해야 매칭 알림을 받을 수 있습니다.\n설정 > Safari > 알림에서 변경해주세요.');
+        alert('알림이 차단되어 있습니다.\n설정 > Safari > 알림에서 허용으로 변경해주세요.');
       }
-
     } else {
-      console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
-      // alert('홈화면에 추가하면 푸시 알림을 받을 수 있습니다.');
+      console.log("PWA 환경 아님 or 알림 미지원");
     }
   }, []);
 
