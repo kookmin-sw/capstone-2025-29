@@ -42,36 +42,35 @@ let isOnMessageRegistered = false;
 
 /* 메인 App 컴포넌트 */
 function App() {
-
   useEffect(() => {
-    // 홈화면 추가 여부 확인 (iOS PWA)
-    if (window.navigator.standalone) {
+    const isPWA = window.navigator.standalone; // iOS 홈화면 추가 여부
+    const isNotificationSupported = 'Notification' in window;
+
+    if (isPWA && isNotificationSupported) {
       console.log("PWA로 실행 중 (홈화면 추가됨)");
 
-      // 알림 권한 요청
-      if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        alert('앱을 실행하기 전에 알림을 허용해 주세요!\n설정 > Safari > 알림에서 변경할 수 있습니다.');
         Notification.requestPermission().then(permission => {
           console.log("Notification permission:", permission);
-          if (permission !== 'granted') {
-            alert('알림을 허용해야 매칭 알림을 받을 수 있습니다. 설정 > Safari > 알림에서 변경해주세요.');
+          if (permission === 'granted') {
+            requestFCMToken();
+          } else {
+            console.warn('Notification permission denied');
           }
         });
+      } else if (Notification.permission === 'granted') {
+        requestFCMToken();
+      } else if (Notification.permission === 'denied') {
+        alert('알림을 허용해야 매칭 알림을 받을 수 있습니다.\n설정 > Safari > 알림에서 변경해주세요.');
       }
+
     } else {
-      // 홈화면 추가 안 된 경우 UX 안내
       console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
       // alert('홈화면에 추가하면 푸시 알림을 받을 수 있습니다.');
     }
   }, []);
-  useEffect(() => {
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        requestFCMToken();
-      } else {
-        console.warn('Notification permission denied');
-      }
-    });
-  }, []);
+
 
   // ✅ 2. 포그라운드 알림 수신 처리
   useEffect(() => {
