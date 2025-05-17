@@ -1,3 +1,4 @@
+// ✅ 필수 라이브러리 및 컴포넌트 import
 import { React, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
@@ -6,7 +7,7 @@ import Topbar from "../../components/Topbar";
 import { getUserInfo } from '../../api/VolunteerApi';
 import ongi from '../../assets/ongi.svg';
 
-// ✅ 전화번호 포맷팅 함수 (없으면 '전화번호 없음' 반환)
+// ✅ 포맷팅 함수들 (전화번호, 날짜, 시간)
 const formatPhoneNumber = (phoneNumber) => {
     if (!phoneNumber) return '전화번호 없음';
     const cleaned = phoneNumber.replace(/\D/g, '');
@@ -15,13 +16,11 @@ const formatPhoneNumber = (phoneNumber) => {
         : phoneNumber;
 };
 
-// ✅ 날짜 포맷팅 함수 (2024-05-17 → 2024년 05월 17일)
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월 ${String(date.getDate()).padStart(2, '0')}일`;
 };
 
-// ✅ 시간 포맷팅 함수 (HH:MM → 00:00 형태로)
 const formatTime = (timeString) => {
     const [hours, minutes] = timeString.split(':');
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
@@ -31,30 +30,19 @@ export default function VolunteerMain() {
     const navigate = useNavigate();
     const location = useLocation();
 
-
-    // ✅ edit에서 돌아왔을 때만 캐시 무효화 (invalidateQueries)
-    useEffect(() => {
-        if (location.state?.from === 'edit') {
-            queryClient.invalidateQueries(['userInfo']);
-            // ✅ 뒤로가기 시에도 안 꼬이게 state 초기화
-            navigate(location.pathname, { replace: true });
-        }
-    }, [location.state, queryClient, navigate, location.pathname]);
-
-    
-    // ✅ 사용자 정보 가져오기 (React Query)
+    // ✅ React Query로 사용자 정보 fetch (캐싱 5분 유지)
     const { data: userInfo, isLoading, isError } = useQuery({
         queryKey: ['userInfo'],
         queryFn: getUserInfo,
-        staleTime: 1000 * 60 * 5, // 5분 캐싱 유지
-        refetchOnMount: false,    // mount 시 재요청 X
-        refetchOnWindowFocus: true, // 포커스 돌아올 때 refetch (iOS swipe 대응)
+        staleTime: 1000 * 60 * 5,
+        refetchOnMount: false,
+        refetchOnWindowFocus: true,
     });
 
     // ✅ 현재 매칭 상태 (PROGRESS / REVIEWING / COMPLETED 등)
     const volunteerStatus = userInfo?.currentMatching?.status || null;
 
-    // ✅ 매칭 버튼 클릭 시 이동 경로 결정
+    // ✅ 매칭 버튼 클릭 시 경로 이동 처리
     const handleMatchingButton = () => {
         if (volunteerStatus === 'PROGRESS') {
             navigate('/matchingdetail', { state: { matchId: userInfo.currentMatching.matchingId } });
@@ -65,13 +53,13 @@ export default function VolunteerMain() {
         }
     };
 
-    // ✅ 로딩 중이면 렌더링 X
+    // ✅ 로딩 중인 경우 렌더링 안 함
     if (isLoading) return null;
 
     // ✅ 에러 발생 시 메시지 표시
     if (isError || !userInfo) return <div>데이터를 불러오지 못했습니다.</div>;
 
-    // ✅ 프로필 이미지 URL (edit에서 돌아올 땐 v=timestamp 붙여서 캐싱 회피)
+    // ✅ 프로필 이미지 URL (edit에서 돌아온 경우 캐싱 무시)
     const profileImageUrl = userInfo?.volunteerInfo?.profileImage
         ? `${userInfo.volunteerInfo.profileImage}${location.state?.from === 'edit' ? `?v=${new Date().getTime()}` : ''}`
         : "/profile.svg";
@@ -79,7 +67,7 @@ export default function VolunteerMain() {
     return (
         <div className={styles.container}>
 
-            {/* ✅ 상단바 (로고 + 우측 버튼들) */}
+            {/* ✅ 상단바 (로고 & 아이콘 버튼들) */}
             <div className={styles.topbar}>
                 <button className={styles.logo}><img src={ongi} alt="Logo" /></button>
                 <div className={styles.topRightButtons}>
@@ -102,7 +90,7 @@ export default function VolunteerMain() {
                 </div>
             </div>
 
-            {/* ✅ 나의 봉사 가능 시간 */}
+            {/* ✅ 봉사 가능 시간 표시 */}
             <div className={styles.section}>
                 <p className={styles.sectionTitle}>나의 봉사 가능한 시간</p>
                 <div className={styles.divider} />
@@ -119,7 +107,7 @@ export default function VolunteerMain() {
                 </div>
             </div>
 
-            {/* ✅ 매칭 정보 카드 (상태별 렌더링) */}
+            {/* ✅ 매칭 카드 (상태별 분기 렌더링) */}
             <div className={styles.matchCard}>
                 {volunteerStatus === "PROGRESS" && (
                     <>
@@ -131,7 +119,6 @@ export default function VolunteerMain() {
                         <p className={styles.reviewInfo}>오늘의 일정! 한번 더 확인하고 방문해요!</p>
                     </>
                 )}
-
                 {volunteerStatus === "REVIEWING" && (
                     <>
                         <p className={styles.matchName}><strong>{userInfo.currentMatching.otherName}</strong> 님과의 매칭</p>
@@ -142,7 +129,6 @@ export default function VolunteerMain() {
                         <p className={styles.reviewInfo}>후기를 남겨주세요!</p>
                     </>
                 )}
-
                 {volunteerStatus === "COMPLETED" && (
                     <>
                         <p className={styles.matchName}>오늘 봉사가 완료됐습니다.</p>
@@ -150,7 +136,6 @@ export default function VolunteerMain() {
                         <p className={styles.reviewInfo}>오늘의 일정은 더이상 없습니다.</p>
                     </>
                 )}
-
                 {volunteerStatus === "NOT_MATCHING" && (
                     <>
                         <p className={styles.matchName}>매칭 진행중입니다</p>
@@ -158,7 +143,6 @@ export default function VolunteerMain() {
                         <p className={styles.reviewInfo}>{formatDate(userInfo.currentMatching.startTime)} 봉사 신청</p>
                     </>
                 )}
-
                 {volunteerStatus === null && (
                     <>
                         <p className={styles.matchName}>오늘의 일정이 없습니다.</p>

@@ -47,8 +47,6 @@ function App() {
     const isNotificationSupported = 'Notification' in window;
 
     if (isPWA && isNotificationSupported) {
-      console.log("PWA로 실행 중 (홈화면 추가됨)");
-
       if (Notification.permission === 'default') {
         alert('앱을 실행하기 전에 알림을 허용해 주세요!\n설정 > Safari > 알림에서 변경할 수 있습니다.');
         Notification.requestPermission().then(permission => {
@@ -62,7 +60,7 @@ function App() {
       } else if (Notification.permission === 'granted') {
         requestFCMToken();
       } else if (Notification.permission === 'denied') {
-        alert('알림을 허용해야 매칭 알림을 받을 수 있습니다.\n설정 > Safari > 알림에서 변경해주세요.');
+
       }
 
     } else {
