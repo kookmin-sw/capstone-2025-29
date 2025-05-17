@@ -42,57 +42,30 @@ let isOnMessageRegistered = false;
 
 /* 메인 App 컴포넌트 */
 function App() {
-
   useEffect(() => {
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const isPWA = window.navigator.standalone; // iOS 홈화면 추가 여부
     const isNotificationSupported = 'Notification' in window;
 
-    // ✅ 서비스 워커 등록 (모바일/데스크톱 공통)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/firebase-messaging-sw.js')
-        .then(registration => {
-          console.log('✅ Service Worker 등록 성공:', registration.scope);
-        })
-        .catch(error => {
-          console.error('❌ Service Worker 등록 실패:', error);
-        });
-    }
-
-    // ✅ PWA 환경일 때 알림 권한 요청
     if (isPWA && isNotificationSupported) {
-      console.log('✅ iOS PWA 환경 감지됨');
-
-      const handleFCMRequest = async () => {
-        try {
-          await requestFCMToken();
-          console.log('✅ FCM 토큰 발급 성공');
-        } catch (err) {
-          alert('❌ FCM 토큰 요청 실패: ' + err.message);
-          console.error('FCM 요청 실패:', err);
-        }
-      };
-
       if (Notification.permission === 'default') {
 
         Notification.requestPermission().then(permission => {
+          console.log("Notification permission:", permission);
           if (permission === 'granted') {
-            handleFCMRequest();
-          } else {
-            alert("⚠️ 알림 권한이 거부되었습니다. 설정 > Safari > 알림에서 허용으로 변경해주세요.");
-          }
+            requestFCMToken();
+          } 
         });
       } else if (Notification.permission === 'granted') {
-        handleFCMRequest();
+        requestFCMToken();
       } else if (Notification.permission === 'denied') {
-        alert("🚫 알림이 차단되어 있습니다. 설정 > Safari > 알림에서 허용해주세요.");
+        alert('알림을 허용해야 매칭 알림을 받을 수 있습니다.\n설정 > Safari > 알림에서 변경해주세요.');
       }
+
     } else {
-      console.log('❌ PWA 환경이 아니거나 알림을 지원하지 않는 브라우저입니다.');
+      console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
+      // alert('홈화면에 추가하면 푸시 알림을 받을 수 있습니다.');
     }
   }, []);
-
-
 
   // ✅ 2. 포그라운드 알림 수신 처리
   useEffect(() => {
