@@ -23,6 +23,8 @@ export default function RedirectHandler() {
                 await updateFcmToken(userType, accessToken);
                 console.log('✅ FCM 토큰 등록 성공');
 
+
+                console.log(params,accessToken, refreshToken, userType);
                 // ✅ elderly인 경우: 나의 정보 조회
                 if (userType === 'elderly') {
                     navigate('/usermain');

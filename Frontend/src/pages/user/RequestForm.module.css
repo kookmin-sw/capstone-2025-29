@@ -36,6 +36,7 @@
     justify-content: flex-end;
     margin-top: auto;
     margin-bottom: auto;
+    
 }
 
 /* 다음 버튼 이미지 스타일 */
@@ -618,5 +619,7 @@
 .customSelect:invalid {
     color: #999;
 }
+
+
 
 
