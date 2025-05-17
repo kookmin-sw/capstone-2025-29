@@ -32,6 +32,15 @@ export default function VolunteerMain() {
     const location = useLocation();
 
 
+    // ✅ edit에서 돌아왔을 때만 캐시 무효화 (invalidateQueries)
+    useEffect(() => {
+        if (location.state?.from === 'edit') {
+            queryClient.invalidateQueries(['userInfo']);
+            // ✅ 뒤로가기 시에도 안 꼬이게 state 초기화
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.state, queryClient, navigate, location.pathname]);
+
     
     // ✅ 사용자 정보 가져오기 (React Query)
     const { data: userInfo, isLoading, isError } = useQuery({
