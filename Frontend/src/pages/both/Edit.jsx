@@ -122,7 +122,7 @@ export default function Edit() {
                     headers: { 'Content-Type': selectedFile.type || 'application/octet-stream' }
                 });
                 finalImageUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
-                console.log("서버에 저장된 이미지 URL:", finalImageUrl);
+
             } catch (error) {
                 alert("프로필 이미지 업로드 실패: " + error.message);
                 setIsLoading(false);
