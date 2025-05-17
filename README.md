@@ -1,5 +1,6 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/gFPznrUY)
-# 봉사자/독거노인 매칭 시스템, [온기](https://capstone-2025-29-vercel.vercel.app/) 
+# 봉사자/독거노인 매칭 플랫폼, <span>$\bf{\large{\color{#6D57DE}온기}}$</span>
+<span style = "color:red">온기</span>
 <div align="center"> 
     <p align = "center">
         <img src = "https://github.com/user-attachments/assets/28b2ba5e-2c7f-4a8e-94b3-d4b5cceecfdd" width = "100%"/>
