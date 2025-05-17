@@ -18,18 +18,25 @@ export default function RedirectHandler() {
         if (userType) localStorage.setItem('userType', userType)
 
         const init = async () => {
+
+            alert('init은 실행')
             try {
                 // ✅ FCM 토큰 등록
                 await updateFcmToken(userType, accessToken);
+                alert('fcm 저장 성공')
                 console.log('✅ FCM 토큰 등록 성공');
 
                 // ✅ elderly인 경우: 나의 정보 조회
+                
                 if (userType === 'elderly') {
+                    alert('이용자 로그인까지는 ok')
                     navigate('/usermain');
                 } else {
+                    alert('봉사자 로그인까지는 ok')
                     navigate('/volunteermain');
                 }
             } catch (error) {
+
                 const e = error.message;
                 alert('초기화 실패:', e);
             }
