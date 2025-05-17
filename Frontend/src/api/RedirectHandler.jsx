@@ -23,8 +23,6 @@ export default function RedirectHandler() {
                 await updateFcmToken(userType, accessToken);
                 console.log('✅ FCM 토큰 등록 성공');
 
-
-
                 // ✅ elderly인 경우: 나의 정보 조회
                 if (userType === 'elderly') {
                     navigate('/usermain');
@@ -32,8 +30,8 @@ export default function RedirectHandler() {
                     navigate('/volunteermain');
                 }
             } catch (error) {
-                
-                alert('초기화 실패:', error.message);
+                const e = error.message;
+                alert('초기화 실패:', e);
             }
         };
 
