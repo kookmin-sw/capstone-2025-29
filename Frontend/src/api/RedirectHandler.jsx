@@ -19,7 +19,9 @@ export default function RedirectHandler() {
 
         const init = async () => {
 
-            alert('init은 실행')
+            alert('init은 실행'
+            )
+            alert ('url' , location)
             alert("params :", params)
             alert("accessToken :",accessToken)
             alert("refreshToken :",refreshToken)
