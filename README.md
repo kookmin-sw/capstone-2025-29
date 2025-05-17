@@ -239,10 +239,9 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
 ### 🖥 AI
 |역할|종류|
 |-|-|
-|**STT**|  ![YOLO](https://custom-icon-badges.demolab.com/badge/-YOLO-gold?style=for-the-badge&logo=yolo&logoColor=white) ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=OpenAI&logoColor=white) ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=OpenCV&logoColor=white)
-|**TTR**| ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=OpenAI&logoColor=white)
-|**TTS** | ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![FAISS](https://img.shields.io/badge/Faiss-0467DF?style=for-the-badge&logo=Meta&logoColor=white)
-
+|**STT**| ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=OpenAI&logoColor=white) ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=OpenCV&logoColor=white)
+|**TTR**| ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=OpenAI&logoColor=white)
+|**TTS** | 
 <br />
 
 ### 🖥 Deployment
