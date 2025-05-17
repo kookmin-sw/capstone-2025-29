@@ -27,6 +27,7 @@ const formatTime = (timeString) => {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 };
 
+
 export default function VolunteerMain() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -61,7 +62,7 @@ export default function VolunteerMain() {
         }
     }, [location, refetch, navigate]);
 
-    
+
     // ✅ 매칭 상태에 따른 버튼 핸들러
     const volunteerStatus = userInfo?.currentMatching?.status || null;
 
@@ -75,11 +76,10 @@ export default function VolunteerMain() {
         }
     };
 
-    // ✅ 로딩 중 처리
-    if (isLoading) return null;
 
-    // ✅ 에러 처리
-    if (isError || !userInfo) return <div>데이터를 불러오지 못했습니다.</div>;
+    
+
+
 
     return (
         <div className={styles.container}>

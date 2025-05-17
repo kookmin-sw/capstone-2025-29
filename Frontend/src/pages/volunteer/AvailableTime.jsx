@@ -72,7 +72,7 @@ export default function AvailableTime() {
         try {
             await setAvailableTimes({ schedules, category });
             alert("신청이 완료되었습니다!");
-            navigate('/volunteermain');
+            navigate('/volunteermain', { state: { updated: true } });
         } catch (error) {
             console.error('스케줄 설정 실패:', error);
             alert('스케줄 설정에 실패했습니다. 다시 시도해주세요.');
@@ -84,9 +84,9 @@ export default function AvailableTime() {
         const minute = i % 2 === 0 ? "00" : "30";
         const value = `${String(hour).padStart(2, "0")}:${minute}`;
         const display = hour === 0 ? `오전 12시 ${minute}분` :
-                        hour < 12 ? `오전 ${hour}시 ${minute}분` :
-                        hour === 12 ? `오후 12시 ${minute}분` :
-                        `오후 ${hour - 12}시 ${minute}분`;
+            hour < 12 ? `오전 ${hour}시 ${minute}분` :
+                hour === 12 ? `오후 12시 ${minute}분` :
+                    `오후 ${hour - 12}시 ${minute}분`;
         return { value, display };
     });
 
