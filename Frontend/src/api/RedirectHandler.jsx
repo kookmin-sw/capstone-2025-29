@@ -27,6 +27,8 @@ export default function RedirectHandler() {
             alert(`👤 userType: ${userType}`);
 
             try {
+
+                alert('updatefcmtoken!!')
                 // ✅ FCM 토큰 등록
                 await updateFcmToken(userType, accessToken);
                 alert('✅ FCM 토큰 저장 성공');
