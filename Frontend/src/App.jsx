@@ -43,31 +43,41 @@ let isOnMessageRegistered = false;
 /* 메인 App 컴포넌트 */
 function App() {
   useEffect(() => {
-    const isPWA = window.navigator.standalone; // iOS 홈화면 추가 여부
     const isNotificationSupported = 'Notification' in window;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-    if (isPWA && isNotificationSupported) {
+    const tryGetFcmToken = () => {
+      requestFCMToken().then(() => {
+        console.log('✅ FCM 토큰 요청 성공');
+      }).catch((err) => {
+        console.error('❌ FCM 토큰 요청 실패:', err);
+      });
+    };
 
-      if (Notification.permission === 'default') {
-        
-        Notification.requestPermission().then(permission => {
-          console.log("Notification permission:", permission);
-          if (permission === 'granted') {
-            alert('앱을 실행하기 전에 알림을 허용해 주세요!\n설정 > Safari > 알림에서 변경할 수 있습니다.');
-            requestFCMToken();
-          } else {
-            console.warn('Notification permission denied');
-          }
-        });
-      } else if (Notification.permission === 'granted') {
-        requestFCMToken();
-      } else if (Notification.permission === 'denied') {
+    if (!isStandalone) {
+      alert('홈 화면에 추가하면 알림을 받을 수 있어요!\nSafari에서 "공유 > 홈 화면에 추가"를 해주세요.');
+      return;
+    }
 
-      }
+    if (!isNotificationSupported) {
+      alert('이 브라우저에서는 알림이 지원되지 않습니다.');
+      return;
+    }
 
-    } else {
-      console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
-      // alert('홈화면에 추가하면 푸시 알림을 받을 수 있습니다.');
+    // ✅ 권한 상태별 분기 처리
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then(permission => {
+        console.log("Notification permission:", permission);
+        if (permission === 'granted') {
+          tryGetFcmToken();
+        } else {
+          alert('알림 권한이 거부되었습니다.\n설정 > Safari > 알림 > Ongi 앱에서 허용해주세요.');
+        }
+      });
+    } else if (Notification.permission === 'granted') {
+      tryGetFcmToken();
+    } else if (Notification.permission === 'denied') {
+      alert('알림 권한이 꺼져 있습니다.\n설정 > Safari > 알림 > Ongi 앱에서 허용해주세요.');
     }
   }, []);
 
