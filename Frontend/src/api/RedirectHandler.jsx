@@ -46,7 +46,7 @@ export default function RedirectHandler() {
                     return;
                 }
 
-                console.log('✅ FCM 토큰 발급:', fcmToken);
+                alret('✅ FCM 토큰 발급:', fcmToken);
 
                 // ✅ 4. 서버에 FCM 토큰 저장
                 await updateFcmToken(userType, accessToken, fcmToken);
