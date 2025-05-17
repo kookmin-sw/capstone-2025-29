@@ -12,48 +12,43 @@ export default function RedirectHandler() {
         const refreshToken = params.get('refreshToken');
         const userType = params.get('userType');
 
-        // ✅ localStorage 저장 (토큰 및 userType)
+        // ✅ localStorage 저장
         if (accessToken) localStorage.setItem('accessToken', accessToken);
         if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
-        if (userType) localStorage.setItem('userType', userType)
+        if (userType) localStorage.setItem('userType', userType);
 
         const init = async () => {
+            alert('✅ init 함수 실행됨');
 
-            alert('init은 실행'
-            )
-            alert ('url' , location)
-            alert("params :", params)
-            alert("accessToken :",accessToken)
-            alert("refreshToken :",refreshToken)
-            alert("userType :",userType)
-    try {
-        // ✅ FCM 토큰 등록
-        await updateFcmToken(userType, accessToken);
-        alert('fcm 저장 성공')
-        console.log('✅ FCM 토큰 등록 성공');
+            alert(`🌐 location.href: ${window.location.href}`);
+            alert(`🔍 location.search: ${location.search}`);
+            alert(`🔑 accessToken: ${accessToken}`);
+            alert(`🔐 refreshToken: ${refreshToken}`);
+            alert(`👤 userType: ${userType}`);
 
-        // ✅ elderly인 경우: 나의 정보 조회
+            try {
+                // ✅ FCM 토큰 등록
+                await updateFcmToken(userType, accessToken);
+                alert('✅ FCM 토큰 저장 성공');
 
-        if (userType === 'elderly') {
-            alert('이용자 로그인까지는 ok')
-            navigate('/usermain');
-        } else {
-            alert('봉사자 로그인까지는 ok')
-            navigate('/volunteermain');
+                if (userType === 'elderly') {
+                    alert('✅ 이용자 로그인 OK');
+                    navigate('/usermain');
+                } else {
+                    alert('✅ 봉사자 로그인 OK');
+                    navigate('/volunteermain');
+                }
+            } catch (error) {
+                alert(`❌ 초기화 실패: ${error.message}`);
+            }
+        };
+
+        if (accessToken && userType) {
+            init();
         }
-    } catch (error) {
-
-        const e = error.message;
-        alert('초기화 실패:', e);
-    }
-};
-
-if (accessToken && userType) {
-    init();
-}
 
     }, [location.search, navigate]);
 
-return 
+    return
 }
 
