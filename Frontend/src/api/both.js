@@ -233,7 +233,6 @@ export const updateFcmToken = async (userType, accessToken) => {
             }
         );
 
-        console.log("✅ FCM 토큰 등록 성공:", response.data);
         return response.data;
     } catch (error) {
         const errorMessage = error.response?.data?.message || 'FCM 토큰 등록에 실패했습니다.';

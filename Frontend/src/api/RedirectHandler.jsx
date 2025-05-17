@@ -23,7 +23,7 @@ export default function RedirectHandler() {
             try {
                 // ✅ 1. 서비스워커 등록
                 const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                console.log('✅ Service Worker 등록 성공:', registration);
+                alert('✅ Service Worker 등록 성공:', registration);
 
                 // ✅ 2. 알림 권한 확인
                 if (Notification.permission === 'default') {
