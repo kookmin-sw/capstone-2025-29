@@ -18,13 +18,7 @@ export default function RedirectHandler() {
         if (userType) localStorage.setItem('userType', userType);
 
         const init = async () => {
-            alert('✅ init 함수 실행됨');
-
-            alert(`🌐 location.href: ${window.location.href}`);
-            alert(`🔍 location.search: ${location.search}`);
-            alert(`🔑 accessToken: ${accessToken}`);
-            alert(`🔐 refreshToken: ${refreshToken}`);
-            alert(`👤 userType: ${userType}`);
+            alert('✅ init 함수 실행됨')
 
             try {
 

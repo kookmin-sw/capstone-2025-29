@@ -92,16 +92,7 @@ function App() {
     }
   }, []);
 
-  // ✅ 포그라운드 푸시 알림 수신 처리
-  useEffect(() => {
-    if (!isOnMessageRegistered) {
-      onMessage(messaging, (payload) => {
-        console.log('📩 FCM 메시지 수신:', payload);
-        alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
-      });
-      isOnMessageRegistered = true;
-    }
-  }, []);
+
 
   // ✅ 2. 포그라운드 알림 수신 처리
   useEffect(() => {
