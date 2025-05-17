@@ -1,13 +1,12 @@
-// ✅ 필수 라이브러리 및 컴포넌트 import
-import { React, useEffect } from 'react';
+import { React,useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
-import { useQuery ,useQueryClient} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import styles from "./VolunteerMain.module.css";
 import Topbar from "../../components/Topbar";
 import { getUserInfo } from '../../api/VolunteerApi';
 import ongi from '../../assets/ongi.svg';
 
-// ✅ 포맷팅 함수들 (전화번호, 날짜, 시간)
+// 포맷 함수들
 const formatPhoneNumber = (phoneNumber) => {
     if (!phoneNumber) return '전화번호 없음';
     const cleaned = phoneNumber.replace(/\D/g, '');
@@ -29,29 +28,18 @@ const formatTime = (timeString) => {
 export default function VolunteerMain() {
     const navigate = useNavigate();
     const location = useLocation();
-    const queryClient = useQueryClient();
-    // ✅ Edit에서 수정 후 돌아온 경우만 invalidate
-    useEffect(() => {
-        if (location.state?.updated) {
-            queryClient.invalidateQueries(['userInfo']);
-            // ✅ 다시 돌아올 때 updated flag 초기화 (뒤로가기도 커버)
-            navigate(location.pathname, { replace: true });
-        }
-    }, [location, navigate, queryClient]);
-    
-    // ✅ React Query로 사용자 정보 fetch (캐싱 5분 유지)
+
     const { data: userInfo, isLoading, isError } = useQuery({
         queryKey: ['userInfo'],
         queryFn: getUserInfo,
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 5, // 5분 동안 fresh
         refetchOnMount: false,
         refetchOnWindowFocus: true,
     });
 
-    // ✅ 현재 매칭 상태 (PROGRESS / REVIEWING / COMPLETED 등)
+
     const volunteerStatus = userInfo?.currentMatching?.status || null;
 
-    // ✅ 매칭 버튼 클릭 시 경로 이동 처리
     const handleMatchingButton = () => {
         if (volunteerStatus === 'PROGRESS') {
             navigate('/matchingdetail', { state: { matchId: userInfo.currentMatching.matchingId } });
@@ -62,13 +50,9 @@ export default function VolunteerMain() {
         }
     };
 
-    // ✅ 로딩 중인 경우 렌더링 안 함
     if (isLoading) return null;
-
-    // ✅ 에러 발생 시 메시지 표시
     if (isError || !userInfo) return <div>데이터를 불러오지 못했습니다.</div>;
 
-    // ✅ 프로필 이미지 URL (edit에서 돌아온 경우 캐싱 무시)
     const profileImageUrl = userInfo?.volunteerInfo?.profileImage
         ? `${userInfo.volunteerInfo.profileImage}${location.state?.from === 'edit' ? `?v=${new Date().getTime()}` : ''}`
         : "/profile.svg";
@@ -76,7 +60,6 @@ export default function VolunteerMain() {
     return (
         <div className={styles.container}>
 
-            {/* ✅ 상단바 (로고 & 아이콘 버튼들) */}
             <div className={styles.topbar}>
                 <button className={styles.logo}><img src={ongi} alt="Logo" /></button>
                 <div className={styles.topRightButtons}>
@@ -89,7 +72,6 @@ export default function VolunteerMain() {
                 </div>
             </div>
 
-            {/* ✅ 프로필 카드 */}
             <div className={styles.profileCard}>
                 <img src={profileImageUrl} alt="Profile" className={styles.profileImage} />
                 <div className={styles.profileInfo}>
@@ -99,7 +81,6 @@ export default function VolunteerMain() {
                 </div>
             </div>
 
-            {/* ✅ 봉사 가능 시간 표시 */}
             <div className={styles.section}>
                 <p className={styles.sectionTitle}>나의 봉사 가능한 시간</p>
                 <div className={styles.divider} />
@@ -116,7 +97,6 @@ export default function VolunteerMain() {
                 </div>
             </div>
 
-            {/* ✅ 매칭 카드 (상태별 분기 렌더링) */}
             <div className={styles.matchCard}>
                 {volunteerStatus === "PROGRESS" && (
                     <>
@@ -161,7 +141,6 @@ export default function VolunteerMain() {
                 )}
             </div>
 
-            {/* ✅ 하단 네비게이션 */}
             <div className={styles.bottomNav}>
                 <div className={styles.navBox} onClick={() => navigate('/availableTime')}>
                     <img src="/clock.svg" alt="My Schedule" /><span>나의 일정</span>

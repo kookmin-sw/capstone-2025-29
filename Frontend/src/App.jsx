@@ -55,6 +55,7 @@ function App() {
           if (permission === 'granted') {
             requestFCMToken();
           } else {
+            Notification.requestPermission();
             console.warn('Notification permission denied');
           }
         });
