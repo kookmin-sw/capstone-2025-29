@@ -47,8 +47,7 @@ export default function Login() {
 
     // ✅ 카카오 로그인 리다이렉트 핸들러
     const handleKakaoLogin = () => {
-        const kakaoAuthUrl = 'https://coffeesupliers.shop/oauth2/authorization/kakao';
-        window.location.href = kakaoAuthUrl;
+        window.location.href ='https://coffeesupliers.shop/oauth2/authorization/kakao';
     };
 
 
