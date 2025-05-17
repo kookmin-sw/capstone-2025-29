@@ -43,30 +43,30 @@ let isOnMessageRegistered = false;
 /* 메인 App 컴포넌트 */
 function App() {
   useEffect(() => {
-    const isPWA = window.navigator.standalone; // iOS 홈화면 추가 여부
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     const isNotificationSupported = 'Notification' in window;
 
     if (isPWA && isNotificationSupported) {
+      const permission = Notification.permission;
 
-      if (Notification.permission === 'default') {
-        
-        Notification.requestPermission().then(permission => {
-          console.log("Notification permission:", permission);
-          if (permission === 'granted') {
-            requestFCMToken();
+      if (permission === 'default') {
+        Notification.requestPermission().then((result) => {
+          console.log("알림 권한 요청 결과:", result);
+          if (result === 'granted') {
+            requestFCMToken(); // ✅ 권한 허용 후 FCM 토큰 요청
           } else {
-            console.warn('Notification permission denied');
+            alert(
+              '알림 권한이 거부되었습니다.\n설정 > Safari > 알림 또는 홈 화면에 추가된 앱 > 알림에서 직접 허용해주세요.'
+            );
           }
         });
-      } else if (Notification.permission === 'granted') {
-        requestFCMToken();
-      } else if (Notification.permission === 'denied') {
-
+      } else if (permission === 'granted') {
+        requestFCMToken(); // ✅ 이미 허용된 경우 바로 요청
+      } else {
+        console.warn('알림 권한이 완전히 차단되었습니다.');
       }
-
     } else {
-      console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
-      // alert('홈화면에 추가하면 푸시 알림을 받을 수 있습니다.');
+      console.log("홈화면 추가 상태가 아니거나 알림 미지원 브라우저입니다.");
     }
   }, []);
 
