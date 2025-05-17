@@ -42,51 +42,64 @@ let isOnMessageRegistered = false;
 
 /* 메인 App 컴포넌트 */
 function App() {
+
   useEffect(() => {
     const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     const isNotificationSupported = 'Notification' in window;
 
-    // ✅ 서비스 워커 수동 등록
+    // ✅ 서비스 워커 등록 (모바일/데스크톱 공통)
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
         .then(registration => {
-          console.log('Service worker 등록 성공:', registration.scope);
+          console.log('✅ Service Worker 등록 성공:', registration.scope);
         })
-        .catch(err => {
-          console.error('Service worker 등록 실패:', err);
+        .catch(error => {
+          console.error('❌ Service Worker 등록 실패:', error);
         });
     }
 
-    // ✅ iOS PWA & 알림 지원 시
+    // ✅ PWA 환경일 때 알림 권한 요청
     if (isPWA && isNotificationSupported) {
-      console.log("PWA 환경에서 실행 중");
+      console.log('✅ iOS PWA 환경 감지됨');
+
+      const handleFCMRequest = async () => {
+        try {
+          await requestFCMToken();
+          console.log('✅ FCM 토큰 발급 성공');
+        } catch (err) {
+          alert('❌ FCM 토큰 요청 실패: ' + err.message);
+          console.error('FCM 요청 실패:', err);
+        }
+      };
 
       if (Notification.permission === 'default') {
-        alert('앱 실행 시 알림 허용이 필요합니다.\n설정 > Safari > 알림에서 변경 가능합니다.');
+        alert("📱 앱을 처음 실행했습니다. 알림 권한을 요청합니다.");
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
-            requestFCMToken()
-              .then(() => console.log('✅ FCM 토큰 요청 완료'))
-              .catch((err) => {
-                alert('FCM 토큰 요청 실패: ' + err.message);
-                console.error('FCM 요청 실패:', err);
-              });
+            handleFCMRequest();
           } else {
-            alert('알림 권한이 거부되었습니다. 알림 수신이 불가능합니다.');
+            alert("⚠️ 알림 권한이 거부되었습니다. 설정 > Safari > 알림에서 허용으로 변경해주세요.");
           }
         });
       } else if (Notification.permission === 'granted') {
-        requestFCMToken()
-          .then(() => console.log('✅ FCM 토큰 요청 완료'))
-          .catch((err) => {
-            alert('FCM 토큰 요청 실패: ' + err.message);
-            console.error('FCM 요청 실패:', err);
-          });
+        handleFCMRequest();
       } else if (Notification.permission === 'denied') {
-        alert('알림이 차단되어 있습니다.\n설정 > Safari > 알림에서 허용으로 변경해주세요.');
+        alert("🚫 알림이 차단되어 있습니다. 설정 > Safari > 알림에서 허용해주세요.");
       }
     } else {
-      console.log("PWA 환경 아님 or 알림 미지원");
+      console.log('❌ PWA 환경이 아니거나 알림을 지원하지 않는 브라우저입니다.');
+    }
+  }, []);
+
+  // ✅ 포그라운드 푸시 알림 수신 처리
+  useEffect(() => {
+    if (!isOnMessageRegistered) {
+      onMessage(messaging, (payload) => {
+        console.log('📩 FCM 메시지 수신:', payload);
+        alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
+      });
+      isOnMessageRegistered = true;
     }
   }, []);
 
