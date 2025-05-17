@@ -2,6 +2,7 @@
 import { messaging, getToken } from './firebase';
 
 export const requestFCMToken = async () => {
+    alert('fcmtoken!!!')
     try {
         const currentToken = await getToken(messaging, {
             vapidKey: "BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw"
