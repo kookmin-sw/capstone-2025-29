@@ -8,7 +8,6 @@ export default function Splash() {
     useEffect(() => {
         const askForNotificationPermission = async () => {
             if ('Notification' in window && Notification.permission === 'default') {
-                const wantsNotification = window.confirm('매칭 알림을 허용하시겠습니까?');
                 if (wantsNotification) {
                     const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
