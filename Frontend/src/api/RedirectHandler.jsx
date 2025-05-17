@@ -25,15 +25,17 @@ export default function RedirectHandler() {
                 const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
                 alert('✅ Service Worker 등록 성공:', registration);
 
-                // ✅ 2. 알림 권한 확인
+
+                await Notification.requestPermission();
+                // // ✅ 2. 알림 권한 확인
                 // if (Notification.permission === 'default') {
-                //     await Notification.requestPermission();
+                    
                 // }
 
-                // if (Notification.permission !== 'granted') {
-                //     alert('❌ 알림 권한이 없어 FCM 토큰 발급이 불가합니다.');
-                //     return;
-                // }
+                if (Notification.permission !== 'granted') {
+                    alert('❌ 알림 권한이 없어 FCM 토큰 발급이 불가합니다.');
+                    return;
+                }
 
                 // ✅ 3. FCM 토큰 발급
                 const fcmToken = await getToken(messaging, {
