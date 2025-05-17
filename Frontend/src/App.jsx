@@ -49,7 +49,6 @@ function App() {
     if (isPWA && isNotificationSupported) {
 
       if (Notification.permission === 'default') {
-        alert('앱을 실행하기 전에 알림을 허용해 주세요!\n설정 > Safari > 알림에서 변경할 수 있습니다.');
         Notification.requestPermission().then(permission => {
           console.log("Notification permission:", permission);
           if (permission === 'granted') {
