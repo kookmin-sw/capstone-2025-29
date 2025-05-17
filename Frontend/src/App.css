@@ -7,7 +7,7 @@ body {
     background-color: #fff;
     color: #000;         /* 검정 글씨 */
     color-scheme: light;  
-    min-height: 100vh;
+    min-height: 100vh   ;
 }
 
 /* 모든 div 요소에 대한 기본 스타일 */
@@ -31,3 +31,4 @@ button:focus {
     box-shadow: none;
 }
 
+    

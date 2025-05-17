@@ -146,7 +146,7 @@ export default function Edit() {
         try {
             await updateUserInfo(updatePayload);
             alert("정보가 수정되었습니다.");
-            navigate(userType === "volunteer" ? "/volunteermain" : "/usermain", { state: { from: 'edit' } });  // ✅ 최신화 반영 위해 state 전달
+            navigate('/volunteermain', { state: { updated: true } }); // ✅ 최신화 반영 위해 state 전달
         } catch (error) {
             alert("정보 수정 실패: " + error.message);
         } finally {

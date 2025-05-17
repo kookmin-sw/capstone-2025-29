@@ -1,7 +1,7 @@
 // ✅ 필수 라이브러리 및 컴포넌트 import
 import { React, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery ,useQueryClient} from '@tanstack/react-query';
 import styles from "./VolunteerMain.module.css";
 import Topbar from "../../components/Topbar";
 import { getUserInfo } from '../../api/VolunteerApi';
@@ -29,7 +29,16 @@ const formatTime = (timeString) => {
 export default function VolunteerMain() {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const queryClient = useQueryClient();
+    // ✅ Edit에서 수정 후 돌아온 경우만 invalidate
+    useEffect(() => {
+        if (location.state?.updated) {
+            queryClient.invalidateQueries(['userInfo']);
+            // ✅ 다시 돌아올 때 updated flag 초기화 (뒤로가기도 커버)
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location, navigate, queryClient]);
+    
     // ✅ React Query로 사용자 정보 fetch (캐싱 5분 유지)
     const { data: userInfo, isLoading, isError } = useQuery({
         queryKey: ['userInfo'],
