@@ -113,7 +113,7 @@ function App() {
           <Route path="/applyingdetail" element={<ApplyingDetail />} />
           <Route path="/setname" element={<SetName />} />
           <Route path="/chatcenter" element={<ChatCenter />} />
-          <Route path="/chatpage" element={<ChatPage />} />
+          <Route path=" /chatpage" element={<ChatPage />} />
           <Route path="/VolunteerRecommend" element={<VolunteerRecommend />} />
 
           {/* 리다이렉트 핸들러 - 로그인 후 리다이렉트 처리 */}
