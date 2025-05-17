@@ -207,7 +207,6 @@ export const kakaoLogin = async () => {
 // ✅ FCM 토큰 등록 API
 export const updateFcmToken = async (userType, accessToken) => {
 
-
     const fcmToken = localStorage.getItem("fcmToken");
     alert(`'fcmtoken', ${fcmToken}`)
     

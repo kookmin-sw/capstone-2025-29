@@ -18,8 +18,6 @@ export default function RedirectHandler() {
         if (userType) localStorage.setItem('userType', userType);
 
         const init = async () => {
-            alert('✅ init 함수 실행됨')
-
             try {
 
                 alert('updatefcmtoken!!')

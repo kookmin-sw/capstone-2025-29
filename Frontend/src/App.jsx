@@ -74,7 +74,7 @@ function App() {
       };
 
       if (Notification.permission === 'default') {
-        alert("📱 앱을 처음 실행했습니다. 알림 권한을 요청합니다.");
+
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             handleFCMRequest();
