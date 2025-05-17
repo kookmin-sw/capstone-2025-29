@@ -131,7 +131,7 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
               <b>이예원</b>
             </a> 
                        <br/>
-              ****3021
+              20213047
         </td>
                 <td style="min-width: 150px;">
             <a href="https://github.com/KimYooBin1">
@@ -170,7 +170,7 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
             <span style="font-size: 12px;">hariaus@kookmin.ac.kr</span>
         </td>
                 <td>
-            <span style="font-size: 12px;">chaews0327@gmail.com</span>
+            <span style="font-size: 12px;">kwn09032@kookmin.ac.kr</span>
         </td>
                 <td>
             <span style="font-size: 12px;">kyb1208tg@gmail.com</span>
