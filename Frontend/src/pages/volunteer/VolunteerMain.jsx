@@ -37,6 +37,7 @@ export default function VolunteerMain() {
         staleTime: 1000 * 60 * 5,
         refetchOnMount: false,
         refetchOnWindowFocus: true,
+        refetchInterval: 10000, // ✅ 5초마다 refetch
     });
 
 
@@ -77,7 +78,7 @@ export default function VolunteerMain() {
     };
 
 
-    
+
 
 
 
