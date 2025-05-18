@@ -5,7 +5,7 @@ export const requestFCMToken = async () => {
     alert("token 발급중!")
     try {
         const currentToken = await getToken(messaging, {
-            vapidKey: "BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw"
+            vapidKey: BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw
         });
 
         if (currentToken) {

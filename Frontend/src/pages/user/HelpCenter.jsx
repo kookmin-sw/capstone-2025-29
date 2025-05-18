@@ -22,7 +22,6 @@ function HelpCenter() {
             try {
                 const data = await fetchElderlyMatching(); // API 호출
 
-                console.log("매칭 데이터:", data); // API 응답 데이터 확인
                 if (data.currentMatching) {
                     setVolunteerStatus(data.currentMatching.status); // 상태 설정
                     setMatchName(data.currentMatching.otherName);

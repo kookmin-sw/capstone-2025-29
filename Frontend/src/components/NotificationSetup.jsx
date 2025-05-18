@@ -9,7 +9,7 @@ const NotificationSetup = () => {
                 if (permission === 'granted') {
                     // Get FCM token
                     getToken(messaging, {
-                        vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY
+                        vapidKey: "BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw"
                     })
                         .then((currentToken) => {
                             if (currentToken) {

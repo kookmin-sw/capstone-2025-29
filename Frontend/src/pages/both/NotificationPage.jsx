@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import Topbar from "../../components/Topbar";
 import NotificationCard from "../../components/NotificationCard";
 import styles from "./NotificationPage.module.css";
@@ -6,6 +6,7 @@ import { fetchUserNotifications } from "../../api/both"; // API 호출 함수 �
 
 export default function NotificationPage() {
     const [notifications, setNotifications] = useState([]);
+    const prevLengthRef = useRef(0); // 이전 알림 개수 저장용
 
     useEffect(() => {
         const loadNotifications = async () => {
@@ -13,12 +14,9 @@ export default function NotificationPage() {
                 const userType = localStorage.getItem('userType') || 'elderly';
                 const data = await fetchUserNotifications(userType);
 
-                console.log("알림 데이터:", data); // 응답 데이터 로그
-
-                // ✅ data가 배열이므로 바로 map 처리
-                const formattedNotifications = data.map((item, index) => ({
+                const formatted = data.map((item, index) => ({
                     id: item.id || index,
-                    icon: "/alarm.svg", // ✅ 고정 아이콘 사용
+                    icon: "/alarm.svg",
                     title: item.title || "알림 제목 없음",
                     date: new Date(item.createdAt).toLocaleString('ko-KR', {
                         year: 'numeric', month: 'long', day: 'numeric',
@@ -28,14 +26,24 @@ export default function NotificationPage() {
                     timeAgo: getTimeAgo(item.createdAt)
                 }));
 
-                setNotifications(formattedNotifications);
-            } catch (error) {
-                console.error("알림 불러오기 실패:", error);
+                // 🔥 이전 길이보다 많아졌으면 alert
+                if (prevLengthRef.current > 0 && formatted.length > prevLengthRef.current) {
+                    const newCount = formatted.length - prevLengthRef.current;
+                    alert(`🔔 새로운 알림 ${newCount}개가 도착했습니다.`);
+                }
+
+                prevLengthRef.current = formatted.length;
+                setNotifications(formatted);
+            } catch (err) {
+                console.error('알림 불러오기 실패:', err);
             }
         };
 
         loadNotifications();
+        const interval = setInterval(loadNotifications, 10000);
+        return () => clearInterval(interval);
     }, []);
+
 
     const getTimeAgo = (dateString) => {
         const now = new Date();
