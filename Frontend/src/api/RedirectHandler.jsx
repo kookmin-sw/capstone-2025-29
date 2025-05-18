@@ -27,31 +27,31 @@ export default function RedirectHandler() {
 
 
                 
-                // //✅ 2. 알림 권한 확인
-                // if (Notification.permission === 'default') {
-                //     await Notification.requestPermission();
-                // }
+                //✅ 2. 알림 권한 확인
+                if (Notification.permission === 'default') {
+                    await Notification.requestPermission();
+                }
 
-                // if (Notification.permission !== 'granted') {
-                //     alert('❌ 알림 권한이 없어 FCM 토큰 발급이 불가합니다.');
-                //     return;
-                // }
+                if (Notification.permission !== 'granted') {
+                    alert('❌ 알림 권한이 없어 FCM 토큰 발급이 불가합니다.');
+                    return;
+                }
 
-                // // ✅ 3. FCM 토큰 발급
-                // const fcmToken = await getToken(messaging, {
-                //     vapidKey: 'BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw',
-                // });
+                // ✅ 3. FCM 토큰 발급
+                const fcmToken = await getToken(messaging, {
+                    vapidKey: 'BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw',
+                });
 
-                // if (!fcmToken) {
-                //     alert('❌ FCM 토큰이 발급되지 않았습니다.');
-                //     return;
-                // }
+                if (!fcmToken) {
+                    alert('❌ FCM 토큰이 발급되지 않았습니다.');
+                    return;
+                }
 
-                // alert('✅ FCM 토큰 발급:', fcmToken);
+                alert('✅ FCM 토큰 발급:', fcmToken);
 
-                // // ✅ 4. 서버에 FCM 토큰 저장
-                // await updateFcmToken(userType, accessToken, fcmToken);
-                // alert('✅ FCM 토큰 저장 성공');
+                // ✅ 4. 서버에 FCM 토큰 저장
+                await updateFcmToken(userType, accessToken, fcmToken);
+                alert('✅ FCM 토큰 저장 성공');
 
                 // ✅ 5. 사용자 타입에 따라 이동
                 if (userType === 'elderly') {

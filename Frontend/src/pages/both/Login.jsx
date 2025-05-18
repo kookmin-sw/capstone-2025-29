@@ -53,6 +53,22 @@ export default function Login() {
     };
 
 
+
+    // ✅ 뒤로가기 스와이프 방지
+    useEffect(() => {
+        const handleTouchStart = (e) => {
+            if (e.touches[0].clientX < 30) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart);
+        };
+    }, []);
+    
     return (
         <div className={styles.container}>
             <div className={styles.topHalf}>
