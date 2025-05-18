@@ -159,12 +159,12 @@ export default function AvailableTime() {
                                         value={timeRanges[day]?.start || ""}
                                         onChange={(e) => handleTimeChange(day, e.target.value)}
                                     >
-                                        <option value="" disabled hidden>시간 선택</option>
+                                        <option value="" disabled hidden>시작 시간을 선택하세요</option>
                                         {timeOptions.map(({ value, display }) => (
                                             <option key={value} value={value}>{display}</option>
                                         ))}
                                     </select>
-                                    <span className={styles.tilde}>~</span>
+                                    {/* <span className={styles.tilde}>~</span>
                                     <span className={styles.endDisplay}>
                                         {timeRanges[day]?.end
                                             ? (() => {
@@ -176,7 +176,7 @@ export default function AvailableTime() {
                                                 return `오후 ${endHour - 12}시 ${formattedMinute}분`;
                                             })()
                                             : "--:--"}
-                                    </span>
+                                    </span> */}
                                 </div>
                             </div>
                         );
