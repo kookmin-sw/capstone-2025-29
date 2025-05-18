@@ -39,7 +39,7 @@ export default function VolunteerMain() {
                 refetch(); // 상태가 바뀐 경우만 다시 가져오기
             }
         },
-        staleTime: 1000 * 60 * 1,
+        staleTime: 0,
         refetchOnMount: true,
         refetchOnWindowFocus: true,
 
