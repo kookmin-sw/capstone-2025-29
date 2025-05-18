@@ -5,6 +5,7 @@ import { requestFCMToken } from './fcm';   // ✅ 토큰 요청 함수
 import { messaging, onMessage } from './firebase'; // ✅ 포그라운드 알림 수신
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useQueryClient } from '@tanstack/react-query'; // 🔸 추가
 
 /* 페이지 컴포넌트 import */
 // 공통 페이지
@@ -68,15 +69,23 @@ function App() {
   }, []);
 
   // ✅ 2. 포그라운드 알림 수신 처리
-  useEffect(() => {
-    if (!isOnMessageRegistered) {
-      onMessage(messaging, (payload) => {
-        console.log('Message received. ', payload);
-        alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
-      });
-      isOnMessageRegistered = true;
-    }
-  }, []);
+useEffect(() => {
+  const queryClient = useQueryClient(); // 🔸 추가
+
+  if (!isOnMessageRegistered) {
+    onMessage(messaging, (payload) => {
+      console.log('📩 Message received: ', payload);
+
+      // ✅ userInfo 강제 새로고침
+      queryClient.invalidateQueries(['userInfo']);  // 🔥 핵심 한 줄
+
+      alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
+    });
+
+    isOnMessageRegistered = true;
+  }
+}, []);
+
 
   return (
     <>
