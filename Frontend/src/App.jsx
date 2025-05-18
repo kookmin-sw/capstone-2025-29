@@ -69,23 +69,15 @@ function App() {
   }, []);
 
   // ✅ 2. 포그라운드 알림 수신 처리
-useEffect(() => {
-  const queryClient = useQueryClient(); // 🔸 추가
-
-  if (!isOnMessageRegistered) {
-    onMessage(messaging, (payload) => {
-      console.log('📩 Message received: ', payload);
-
-      // ✅ userInfo 강제 새로고침
-      queryClient.invalidateQueries(['userInfo']);  // 🔥 핵심 한 줄
-
-      alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
-    });
-
-    isOnMessageRegistered = true;
-  }
-}, []);
-
+  useEffect(() => {
+    if (!isOnMessageRegistered) {
+      onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+        alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
+      });
+      isOnMessageRegistered = true;
+    }
+  }, []);
 
   return (
     <>
