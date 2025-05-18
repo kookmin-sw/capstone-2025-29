@@ -80,6 +80,7 @@ export default function Edit() {
                 setIsLoading(true);
                 setImageLoading(true);
 
+                // ✅ 5초 타이머 시작
                 timeoutId = setTimeout(() => {
                     alert("사진 업로드가 오래 걸리고 있습니다. 다시 시도해주세요.");
                 }, 3000);
@@ -89,14 +90,13 @@ export default function Edit() {
                     headers: { 'Content-Type': file.type || 'application/octet-stream' }
                 });
 
-                const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
+                const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}?v=${Date.now()}`;
                 setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
-                setImageKey(Date.now()); // key 변경 → img 강제 리렌더링
 
             } catch (error) {
                 alert("사진 업로드 실패: " + error.message);
             } finally {
-                clearTimeout(timeoutId);
+                clearTimeout(timeoutId); // ✅ 타이머 제거
                 setIsLoading(false);
                 setImageLoading(false);
             }
@@ -169,8 +169,7 @@ export default function Edit() {
             <form className={styles.form} onSubmit={handleInfoSubmit}>
                 <div className={styles.profileImageWrapper} onClick={handleImageClick}>
                     <img
-                        key={imageKey} // ✅ 이미지 변경 강제 반영
-                        src={`${formData.profileImage}?v=${imageKey}`}
+                        src={formData.profileImage || "/profile.svg"}
                         alt="Profile"
                         className={styles.profileImage}
                         onLoad={() => {
@@ -180,7 +179,6 @@ export default function Edit() {
                             }
                         }}
                     />
-
                 </div>
 
                 {["name", "age", "phone", "district", "detail"].map(field => (
