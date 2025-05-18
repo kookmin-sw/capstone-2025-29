@@ -34,10 +34,15 @@ export default function VolunteerMain() {
     const { data: userInfo, isLoading, isError, refetch, isFetching } = useQuery({
         queryKey: ['userInfo'],
         queryFn: getUserInfo,
+        onSuccess: (data) => {
+            if (data?.currentMatching?.status !== volunteerStatus) {
+                refetch(); // 상태가 바뀐 경우만 다시 가져오기
+            }
+        },
         staleTime: 1000 * 60 * 5,
         refetchOnMount: false,
         refetchOnWindowFocus: true,
-        refetchInterval: 10000, // ✅ 5초마다 refetch
+
     });
 
 

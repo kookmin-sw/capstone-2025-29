@@ -63,13 +63,10 @@
     font-weight: bold;
 }
 
-.hours {
+.hours, .phone {
     font-size: 0.95rem;
 }
 
-.phone {
-    font-size: 0.95rem;
-}
 
 /* 구분선 */
 .divider {
