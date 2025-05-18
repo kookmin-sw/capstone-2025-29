@@ -175,6 +175,8 @@ function HelpCenter() {
                     <button className={styles.guideBtn}>가이드 영상 보러가기</button>
                 </div>
             </div>
+
+
         </div>
     );
 }

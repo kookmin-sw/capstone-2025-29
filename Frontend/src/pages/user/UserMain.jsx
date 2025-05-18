@@ -2,11 +2,16 @@ import React, { useEffect } from "react";
 import styles from "./UserMain.module.css";
 import ongi from "../../assets/ongi.svg";
 import { useNavigate } from "react-router-dom";
-import { fetchChatBotName } from "../../api/ChatApi"; // 챗봇 이름 불러오기 API
+import { fetchChatBotName } from "../../api/ChatApi";
 import { fetchUserInfo } from "../../api/both";
 
-export default function UserMain() {
+export default function UserMain({ isNewNotification, setIsNewNotification }) {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // 알림 확인 시 알림 상태 초기화
+        setIsNewNotification?.(false);
+    }, [setIsNewNotification]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -16,8 +21,7 @@ export default function UserMain() {
             console.log("userInfo", data);
             localStorage.setItem('username', data.name);
             localStorage.setItem('useraddress', JSON.stringify(data.address));
-            console.log("userInfo", data);
-        }
+        };
 
         getuserinfo();
     }, []);
@@ -26,10 +30,8 @@ export default function UserMain() {
         try {
             const chatbotData = await fetchChatBotName();
             if (chatbotData) {
-                // 데이터가 있으면 /ChatCenter로 이동
                 navigate('/ChatCenter', { state: { chatBotName: chatbotData.chatBotName } });
             } else {
-                // 데이터가 없으면 /SetName으로 이동
                 navigate('/SetName');
             }
         } catch (error) {
@@ -49,7 +51,10 @@ export default function UserMain() {
                         <img src="/profileedit.svg" alt="프로필 편집" />
                     </button>
                     <button className={styles.iconBtn} onClick={() => navigate('/notification')}>
-                        <img src="/alarm.svg" alt="알람" />
+                        <img
+                            src={isNewNotification ? "/alarm-red.svg" : "/alarm.svg"}
+                            alt="알람"
+                        />
                     </button>
                 </div>
             </div>

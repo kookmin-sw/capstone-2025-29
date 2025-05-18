@@ -21,37 +21,37 @@ export default function RedirectHandler() {
 
         const init = async () => {
             try {
-                // ✅ 1. 서비스워커 등록
-                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                alert('✅ Service Worker 등록 성공:', registration);
+                // // ✅ 1. 서비스워커 등록
+                // const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                // alert('✅ Service Worker 등록 성공:', registration);
 
 
                 
-                //✅ 2. 알림 권한 확인
-                if (Notification.permission === 'default') {
-                    await Notification.requestPermission();
-                }
+                // //✅ 2. 알림 권한 확인
+                // if (Notification.permission === 'default') {
+                //     await Notification.requestPermission();
+                // }
 
-                if (Notification.permission !== 'granted') {
-                    alert('❌ 알림 권한이 없어 FCM 토큰 발급이 불가합니다.');
-                    return;
-                }
+                // if (Notification.permission !== 'granted') {
+                //     alert('❌ 알림 권한이 없어 FCM 토큰 발급이 불가합니다.');
+                //     return;
+                // }
 
-                // ✅ 3. FCM 토큰 발급
-                const fcmToken = await getToken(messaging, {
-                    vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
-                });
+                // // ✅ 3. FCM 토큰 발급
+                // const fcmToken = await getToken(messaging, {
+                //     vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
+                // });
 
-                if (!fcmToken) {
-                    alert('❌ FCM 토큰이 발급되지 않았습니다.');
-                    return;
-                }
+                // if (!fcmToken) {
+                //     alert('❌ FCM 토큰이 발급되지 않았습니다.');
+                //     return;
+                // }
 
-                alert('✅ FCM 토큰 발급:', fcmToken);
+                // alert('✅ FCM 토큰 발급:', fcmToken);
 
-                // ✅ 4. 서버에 FCM 토큰 저장
-                await updateFcmToken(userType, accessToken, fcmToken);
-                alert('✅ FCM 토큰 저장 성공');
+                // // ✅ 4. 서버에 FCM 토큰 저장
+                // await updateFcmToken(userType, accessToken, fcmToken);
+                // alert('✅ FCM 토큰 저장 성공');
 
                 // ✅ 5. 사용자 타입에 따라 이동
                 if (userType === 'elderly') {

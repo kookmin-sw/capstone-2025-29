@@ -4,8 +4,12 @@ import NotificationCard from "../../components/NotificationCard";
 import styles from "./NotificationPage.module.css";
 import { fetchUserNotifications } from "../../api/both"; // API 호출 함수 가져오기 
 
-export default function NotificationPage() {
+export default function NotificationPage({ setIsNewNotification }) {
     const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        setIsNewNotification?.(false); // 알림 확인 시 알림 상태 초기화
+    }, [setIsNewNotification]);
 
     useEffect(() => {
         const loadNotifications = async () => {
@@ -58,7 +62,7 @@ export default function NotificationPage() {
                 ) : (
                     notifications.map((notification) => (
                         <NotificationCard
-                            key={`${notification.id}-${notification.date}`}
+                            key={`${notification.id}-${notification.createdAt}`}
                             {...notification}
                         />
                     ))

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { requestFCMToken } from './fcm';
 import { messaging, onMessage } from './firebase';
 import './App.css';
@@ -36,26 +35,58 @@ import VolunteerRecommend from './pages/user/VolunteerRecommend';
 // 기타
 import RedirectHandler from './api/RedirectHandler';
 import LoadingModalTest from './components/LoadingModalTest';
+import NotificationWatcher from './components/NotificationWatcher';
 
-let isOnMessageRegistered = false;
+// let isOnMessageRegistered = false;
 
-// ✅ 라우팅 애니메이션을 위한 래퍼
-function AnimatedRoutes() {
-  const location = useLocation();
+function App() {
+  const [isNewNotification, setIsNewNotification] = useState(false);
+
+  // useEffect(() => {
+  //   const isPWA = window.navigator.standalone;
+  //   const isNotificationSupported = 'Notification' in window;
+
+  //   if (isPWA && isNotificationSupported) {
+  //     if (Notification.permission === 'default') {
+  //       Notification.requestPermission().then(permission => {
+  //         console.log("Notification permission:", permission);
+  //         if (permission === 'granted') requestFCMToken();
+  //       });
+  //     } else if (Notification.permission === 'granted') {
+  //       requestFCMToken();
+  //     } else if (Notification.permission === 'denied') {
+  //       alert('알림을 허용해야 매칭 알림을 받을 수 있습니다.\n설정 > Safari > 알림에서 변경해주세요.');
+  //     }
+  //   } else {
+  //     console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!isOnMessageRegistered) {
+  //     onMessage(messaging, (payload) => {
+  //       console.log('Message received. ', payload);
+  //       alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
+  //       setIsNewNotification(true);
+  //     });
+  //     isOnMessageRegistered = true;
+  //   }
+  // }, []);
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+    <Router>
+      <NotificationWatcher onNewNotification={() => setIsNewNotification(true)} />
+      <Routes>
         {/* 공통 */}
         <Route path="/" element={<Splash />} />
         <Route path="/login" element={<Login />} />
         <Route path="/roleselect" element={<RoleSelect />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/edit" element={<Edit />} />
-        <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/notification" element={<NotificationPage setIsNewNotification={setIsNewNotification} />} />
 
         {/* 봉사자 */}
-        <Route path="/volunteermain" element={<VolunteerMain />} />
+        <Route path="/volunteermain" element={<VolunteerMain isNewNotification={isNewNotification} setIsNewNotification={setIsNewNotification} />} />
         <Route path="/writereview" element={<WriteReview />} />
         <Route path="/availabletime" element={<AvailableTime />} />
         <Route path="/matchinglist" element={<MatchingList />} />
@@ -64,7 +95,10 @@ function AnimatedRoutes() {
         <Route path="/reviewdetail" element={<ReviewDetail />} />
 
         {/* 사용자 */}
-        <Route path="/usermain" element={<UserMain />} />
+        <Route path="/usermain" element={<UserMain
+          isNewNotification={isNewNotification}
+          setIsNewNotification={setIsNewNotification}
+        />} />
         <Route path="/helpcenter" element={<HelpCenter />} />
         <Route path="/requestform" element={<RequestForm />} />
         <Route path="/applyinglist" element={<ApplyingList />} />
@@ -79,45 +113,6 @@ function AnimatedRoutes() {
         <Route path="/loadingmodaltest" element={<LoadingModalTest />} />
         <Route path="*" element={<div>not found</div>} />
       </Routes>
-    </AnimatePresence>
-  );
-}
-
-// ✅ 메인 App 컴포넌트
-function App() {
-  useEffect(() => {
-    const isPWA = window.navigator.standalone;
-    const isNotificationSupported = 'Notification' in window;
-
-    if (isPWA && isNotificationSupported) {
-      if (Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-          console.log("Notification permission:", permission);
-          if (permission === 'granted') requestFCMToken();
-        });
-      } else if (Notification.permission === 'granted') {
-        requestFCMToken();
-      } else if (Notification.permission === 'denied') {
-        alert('알림을 허용해야 매칭 알림을 받을 수 있습니다.\n설정 > Safari > 알림에서 변경해주세요.');
-      }
-    } else {
-      console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isOnMessageRegistered) {
-      onMessage(messaging, (payload) => {
-        console.log('Message received. ', payload);
-        alert(`📩 ${payload.notification.title}: ${payload.notification.body}`);
-      });
-      isOnMessageRegistered = true;
-    }
-  }, []);
-
-  return (
-    <Router>
-      <AnimatedRoutes />
     </Router>
   );
 }
