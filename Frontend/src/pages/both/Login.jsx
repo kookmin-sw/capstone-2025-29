@@ -54,23 +54,7 @@ export default function Login() {
 
 
 
-    useEffect(() => {
-        const handleTouchStart = (e) => {
-            // 왼쪽 30px 이내에서 터치 시작 시 → 기본 동작 막기
-            if (e.touches[0].clientX < 30) {
-                e.preventDefault();
-            }
-        };
-
-        // iOS 사파리에서 back-swipe 방지
-        window.addEventListener("touchstart", handleTouchStart, { passive: false });
-
-        return () => {
-            window.removeEventListener("touchstart", handleTouchStart);
-        };
-    }, []);
-
-
+    
     return (
         <div className={styles.container}>
             <div className={styles.topHalf}>
