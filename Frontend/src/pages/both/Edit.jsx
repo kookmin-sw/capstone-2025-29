@@ -84,7 +84,8 @@ export default function Edit() {
                 // ✅ 5초 타이머 시작
                 timeoutId = setTimeout(() => {
                     alert("사진 업로드가 오래 걸리고 있습니다. 다시 시도해주세요.");
-                }, 5000);
+                    setImageLoading(false);
+                }, 10000);
 
                 const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
                 await axios.put(preSignedUrl, file, {
@@ -177,6 +178,7 @@ export default function Edit() {
                             if (imageLoading) {
                                 setIsLoading(false);
                                 setImageLoading(false);
+                                alert("이미지가 선택되었습니다.");
                             }
                         }}
                     />

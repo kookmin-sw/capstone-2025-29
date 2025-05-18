@@ -28,8 +28,6 @@ export default function Login() {
         try {
             const requestData = await login(formValues.username, formValues.password, userType);
 
-            console.log('로그인 성공:', requestData);
-
             localStorage.setItem('userName', requestData.name);
             localStorage.setItem('userAddress', JSON.stringify(requestData.address));
 

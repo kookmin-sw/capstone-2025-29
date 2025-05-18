@@ -50,7 +50,6 @@ const ChatPage = () => {
             },
         ]);
 
-        // ✅ 페이지 떠날 때 음성인식 강제 종료
         return () => {
             if (recognition.current) {
                 console.log("🔴 페이지 나감 → 음성인식 강제 종료");
@@ -76,6 +75,10 @@ const ChatPage = () => {
             recognition.current.start();
             setIsListening(true);
 
+            recognition.current.onstart = () => {
+                console.log("🟢 음성 인식이 시작되었습니다.");
+            };
+
             recognition.current.onresult = (event) => {
                 const transcript = Array.from(event.results)
                     .map(result => result[0].transcript)
@@ -98,7 +101,6 @@ const ChatPage = () => {
     const sendMessage = async () => {
         if (input.trim() === "" || isSending) return;
 
-        // 음성 중이면 끄기
         if (isListening && recognition.current) {
             recognition.current.onend = null;
             recognition.current.stop();

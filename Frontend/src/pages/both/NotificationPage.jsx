@@ -13,8 +13,6 @@ export default function NotificationPage() {
                 const userType = localStorage.getItem('userType') || 'elderly';
                 const data = await fetchUserNotifications(userType);
 
-                console.log("알림 데이터:", data); // 응답 데이터 로그
-
                 // ✅ data가 배열이므로 바로 map 처리
                 const formattedNotifications = data.map((item, index) => ({
                     id: item.id || index,
