@@ -159,7 +159,7 @@ export default function AvailableTime() {
                                         value={timeRanges[day]?.start || ""}
                                         onChange={(e) => handleTimeChange(day, e.target.value)}
                                     >
-                                        <option value="" disabled hidden>시작 시간을 선택하세요</option>
+                                        <option value="" disabled hidden>시작 시간 선택</option>
                                         {timeOptions.map(({ value, display }) => (
                                             <option key={value} value={value}>{display}</option>
                                         ))}

@@ -45,9 +45,7 @@ export default function VolunteerMain() {
 
     });
 
-
     const [profileImageUrl, setProfileImageUrl] = useState("/profile.svg");
-
 
     // ✅ 뒤로가기 스와이프 방지
     useEffect(() => {

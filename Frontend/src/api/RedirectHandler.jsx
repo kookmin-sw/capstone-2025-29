@@ -39,7 +39,7 @@ export default function RedirectHandler() {
 
                 // ✅ 3. FCM 토큰 발급
                 const fcmToken = await getToken(messaging, {
-                    vapidKey: 'BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw',
+                    vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
                 });
 
                 if (!fcmToken) {

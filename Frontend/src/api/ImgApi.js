@@ -41,7 +41,7 @@ export const getReviewPreSignedUrls = async (count) => {
             }
         });
 
-        console.log('Review PreSigned URLs:', response.data);
+
         return response.data;  // [{ preSignedUrl, key }, ...]
     } catch (error) {
         const errorMessage = error.response?.data?.message || '리뷰 이미지 업로드 URL 발급 실패';

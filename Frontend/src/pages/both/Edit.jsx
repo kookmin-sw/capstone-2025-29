@@ -7,6 +7,7 @@ import { fetchUserInfo, updateUserInfo, checkPassword, updatePassword } from "..
 import { getPreSignedUrl } from "../../api/ImgApi";
 import axios from "axios";
 import styles from "./Edit.module.css";
+import { motion } from 'framer-motion';
 
 export default function Edit() {
     const navigate = useNavigate();
@@ -90,7 +91,7 @@ export default function Edit() {
                     headers: { 'Content-Type': file.type || 'application/octet-stream' }
                 });
 
-                const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}?v=${Date.now()}`;
+                const uploadedUrl = `${import.meta.env.VITE_S3_BASE_URL}/${key}?v=${Date.now()}`;
                 setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
 
             } catch (error) {
