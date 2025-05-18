@@ -66,34 +66,44 @@ export default function Edit() {
     };
 
     const handleImageClick = () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
 
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-            try {
-                setIsLoading(true);
-                setImageLoading(true);
+        let timeoutId;
+        try {
+            setIsLoading(true);
+            setImageLoading(true);
 
-                const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
-                await axios.put(preSignedUrl, file, {
-                    headers: { 'Content-Type': file.type || 'application/octet-stream' }
-                });
+            // ✅ 5초 타이머 시작
+            timeoutId = setTimeout(() => {
+                alert("사진 업로드가 오래 걸리고 있습니다. 다시 시도해주세요.");
+            }, 5000);
 
-                const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}?v=${Date.now()}`;
-                setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
+            const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
+            await axios.put(preSignedUrl, file, {
+                headers: { 'Content-Type': file.type || 'application/octet-stream' }
+            });
 
-            } catch (error) {
-                alert("사진 업로드 실패: " + error.message);
-                setIsLoading(false);
-            }
-        };
+            const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}?v=${Date.now()}`;
+            setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
 
-        input.click();
+        } catch (error) {
+            alert("사진 업로드 실패: " + error.message);
+        } finally {
+            clearTimeout(timeoutId); // ✅ 타이머 제거
+            setIsLoading(false);
+            setImageLoading(false);
+        }
     };
+
+    input.click();
+};
+
 
     const handleInfoSubmit = async (e) => {
         e.preventDefault();
