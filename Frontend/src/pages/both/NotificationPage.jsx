@@ -9,6 +9,9 @@ export default function NotificationPage({ setIsNewNotification }) {
 
     useEffect(() => {
         localStorage.setItem("isNewNotification", "false");
+        if (typeof setIsNewNotification === 'function') {
+            setIsNewNotification(false); // ✅ 종 초기화는 여기서만
+        }
     }, []);
 
     useEffect(() => {

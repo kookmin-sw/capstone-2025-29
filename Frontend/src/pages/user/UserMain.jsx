@@ -8,10 +8,7 @@ import { fetchUserInfo } from "../../api/both";
 export default function UserMain({ isNewNotification, setIsNewNotification }) {
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // 알림 확인 시 알림 상태 초기화
-        setIsNewNotification?.(false);
-    }, [setIsNewNotification]);
+    
 
     const [hasNewNotification, setHasNewNotification] = useState(false);
     // 앱 진입 시 localStorage에서 상태 복구

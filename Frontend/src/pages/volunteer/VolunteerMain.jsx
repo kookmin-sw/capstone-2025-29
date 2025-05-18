@@ -26,13 +26,6 @@ const formatTime = (timeString) => {
 export default function VolunteerMain({ isNewNotification, setIsNewNotification }) {
 
 
-    useEffect(() => {
-        console.log("🔁 VolunteerMain 렌더링됨, isNewNotification:", isNewNotification);
-    }, [isNewNotification]);
-
-
-
-
     const navigate = useNavigate();
     const location = useLocation();
     const { data: userInfo, isLoading, isError, refetch } = useQuery({
@@ -76,13 +69,26 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
         }
     }, [location, refetch, navigate]);
 
+
+    // ✅ 알림 상태를 localStorage 기준으로 복원
     useEffect(() => {
-    if (isNewNotification) {
-        refetch().then(() => {
-            setIsNewNotification(false);  // ✅ refetch 이후 상태 초기화
-        });
-    }
-}, [isNewNotification, refetch, setIsNewNotification]);
+        const stored = localStorage.getItem("isNewNotification");
+        if (stored === "true") {
+            setHasNewNotification(true);
+        }
+    }, [isNewNotification]);
+
+    // ✅ 알림에 의해 리렌더링 필요 시 1회만 refetch 후 상태 초기화
+    useEffect(() => {
+        const handleUpdate = async () => {
+            if (isNewNotification) {
+                await refetch();
+                setIsNewNotification(false);
+            }
+        };
+        handleUpdate();
+    }, [isNewNotification, refetch, setIsNewNotification]);
+
 
     const volunteerStatus = userInfo?.currentMatching?.status || null;
 
