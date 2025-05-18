@@ -34,8 +34,8 @@ export default function NotificationWatcher({ onNewNotification }) {
                             onNewNotification(); // 🔔 종 아이콘 업데이트
                         }
 
-                        // 🚫 필요하면 toast 띄우기 (alert은 모바일에서 피하세요)
-                        // toast(`${latest.title}: ${latest.body || ''}`);
+                        // ✅ 여기서 alert 띄우기
+                        alert(`🔔 ${latest.title}\n${latest.body || ''}`);
                     }
                 }
 

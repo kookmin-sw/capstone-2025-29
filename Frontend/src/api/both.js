@@ -166,7 +166,7 @@ export const updatePassword = async (password, userType) => {
 // ✅ 유저 알림 목록 가져오기 API
 export const fetchUserNotifications = async (userType) => {
     const accessToken = localStorage.getItem("accessToken");
-
+    console.log('12312')
     try {
         const response = await axios.get(`/api/user/notification`, {
             params: { userType },
