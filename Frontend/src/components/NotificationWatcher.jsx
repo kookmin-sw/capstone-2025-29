@@ -5,14 +5,14 @@ export default function NotificationWatcher({ onNewNotification }) {
     const lastTimestampRef = useRef(null);
 
     useEffect(() => {
-        console.log("✅ NotificationWatcher 시작됨");
+
 
         const userType = localStorage.getItem("userType") || "volunteer";
 
         const checkNewNotifications = async () => {
             try {
                 const data = await fetchUserNotifications(userType);
-                console.log("📬 가져온 알림:", data);
+
 
                 if (!Array.isArray(data) || data.length === 0) return;
 
@@ -32,6 +32,10 @@ export default function NotificationWatcher({ onNewNotification }) {
 
                     alert(`🔔 ${latest.title}\n${latest.body || ""}`); // ✅ alert 표시
 
+
+                    // ✅ 로컬 저장소에 상태 저장
+                    localStorage.setItem("isNewNotification", "true");
+
                     if (typeof onNewNotification === "function") {
                         onNewNotification();
                     }
@@ -42,7 +46,7 @@ export default function NotificationWatcher({ onNewNotification }) {
         };
 
         checkNewNotifications();
-        const interval = setInterval(checkNewNotifications, 5000);
+        const interval = setInterval(checkNewNotifications, 10000);
         return () => clearInterval(interval);
     }, [onNewNotification]);
 

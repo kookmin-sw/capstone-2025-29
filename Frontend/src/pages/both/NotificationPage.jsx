@@ -8,8 +8,8 @@ export default function NotificationPage({ setIsNewNotification }) {
     const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        setIsNewNotification?.(false); // 알림 확인 시 알림 상태 초기화
-    }, [setIsNewNotification]);
+        localStorage.setItem("isNewNotification", "false");
+    }, []);
 
     useEffect(() => {
         const loadNotifications = async () => {

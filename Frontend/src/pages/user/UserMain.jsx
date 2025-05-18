@@ -13,6 +13,15 @@ export default function UserMain({ isNewNotification, setIsNewNotification }) {
         setIsNewNotification?.(false);
     }, [setIsNewNotification]);
 
+    const [hasNewNotification, setHasNewNotification] = useState(false);
+    // 앱 진입 시 localStorage에서 상태 복구
+    useEffect(() => {
+        const stored = localStorage.getItem("isNewNotification");
+        if (stored === "true") {
+            setHasNewNotification(true);
+        }
+    }, []);
+
     useEffect(() => {
         window.scrollTo(0, 0);
 
