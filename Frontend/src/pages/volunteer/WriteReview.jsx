@@ -71,6 +71,11 @@ export default function WriteReview() {
             return;
         }
 
+        if (images.length === 0) {
+            alert("하나 이상의 사진을 첨부해주세요.");
+            return;
+        }
+        
         const reviewData = {
             volunteerActivityId: currentMatching.matchingId, // 매칭 ID
             content: reviewText,                             // 작성된 후기 텍스트

@@ -116,12 +116,12 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                     <button className={styles.iconBtn} onClick={() => navigate('/notification')}>
                         <img
                             src={
-                                isNewNotification
+                                hasNewNotification
                                     ? `/alarm-red.svg?v=${Date.now()}`
                                     : `/alarm.svg?v=${Date.now()}`
                             }
-                            alt="Alarm"
                         />
+
 
                     </button>
                 </div>
