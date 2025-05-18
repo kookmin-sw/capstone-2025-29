@@ -28,6 +28,9 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
 
     const navigate = useNavigate();
     const location = useLocation();
+    const [hasNewNotification, setHasNewNotification] = useState(false);
+
+
     const { data: userInfo, isLoading, isError, refetch } = useQuery({
         queryKey: ['userInfo'],
         queryFn: getUserInfo,
