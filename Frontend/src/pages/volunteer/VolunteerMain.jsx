@@ -48,6 +48,22 @@ export default function VolunteerMain() {
 
     const [profileImageUrl, setProfileImageUrl] = useState("/profile.svg");
 
+
+    // ✅ 뒤로가기 스와이프 방지
+    useEffect(() => {
+        const handleTouchStart = (e) => {
+            if (e.touches[0].clientX < 30) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart);
+        };
+    }, []);
+    
     // ✅ 최초 로딩 시 세팅 (캐시 기반)
     useEffect(() => {
         if (userInfo?.volunteerInfo?.profileImage) {

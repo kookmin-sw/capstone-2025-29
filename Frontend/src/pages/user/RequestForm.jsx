@@ -23,7 +23,7 @@ export default function RequestForm() {
     const userAddress = JSON.parse(localStorage.getItem('useraddress')) || { district: "", detail: "" };
 
 
-    console.log(userName, userAddress);
+
     const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
 
     const districtMap = {
@@ -191,7 +191,7 @@ export default function RequestForm() {
             const recommendedVolunteers = await fetchRecommendedVolunteers(requestBody); // 추천 봉사자 데이터 가져오기
 
 
-            console.log("추천 봉사자 데이터:", recommendedVolunteers);
+
 
             alert("신청서가 제출되었습니다.");
             navigate("/volunteerRecommend", { state: { volunteersData: recommendedVolunteers } }); // 데이터와 함께 페이지 이동

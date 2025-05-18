@@ -32,6 +32,7 @@ export default function Edit() {
     const [passwordError, setPasswordError] = useState(false);
     const [matchError, setMatchError] = useState(false);
     const [imageLoading, setImageLoading] = useState(false);
+    const [imageKey, setImageKey] = useState(Date.now()); // 이미지 강제 리렌더링용 key 추가
 
     useEffect(() => {
         const loadUserInfo = async () => {
@@ -66,43 +67,43 @@ export default function Edit() {
     };
 
     const handleImageClick = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
 
-    input.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-        let timeoutId;
-        try {
-            setIsLoading(true);
-            setImageLoading(true);
+            let timeoutId;
+            try {
+                setIsLoading(true);
+                setImageLoading(true);
 
-            // ✅ 5초 타이머 시작
-            timeoutId = setTimeout(() => {
-                alert("사진 업로드가 오래 걸리고 있습니다. 다시 시도해주세요.");
-            }, 3000);
+                timeoutId = setTimeout(() => {
+                    alert("사진 업로드가 오래 걸리고 있습니다. 다시 시도해주세요.");
+                }, 3000);
 
-            const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
-            await axios.put(preSignedUrl, file, {
-                headers: { 'Content-Type': file.type || 'application/octet-stream' }
-            });
+                const { preSignedUrl, key } = await getPreSignedUrl('profile', userType);
+                await axios.put(preSignedUrl, file, {
+                    headers: { 'Content-Type': file.type || 'application/octet-stream' }
+                });
 
-            const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}?v=${Date.now()}`;
-            setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
+                const uploadedUrl = `https://ongi-s3.s3.ap-northeast-2.amazonaws.com/${key}`;
+                setFormData((prev) => ({ ...prev, profileImage: uploadedUrl }));
+                setImageKey(Date.now()); // key 변경 → img 강제 리렌더링
 
-        } catch (error) {
-            alert("사진 업로드 실패: " + error.message);
-        } finally {
-            clearTimeout(timeoutId); // ✅ 타이머 제거
-            setIsLoading(false);
-            setImageLoading(false);
-        }
+            } catch (error) {
+                alert("사진 업로드 실패: " + error.message);
+            } finally {
+                clearTimeout(timeoutId);
+                setIsLoading(false);
+                setImageLoading(false);
+            }
+        };
+
+        input.click();
     };
-
-    input.click();
-};
 
 
     const handleInfoSubmit = async (e) => {
@@ -168,7 +169,8 @@ export default function Edit() {
             <form className={styles.form} onSubmit={handleInfoSubmit}>
                 <div className={styles.profileImageWrapper} onClick={handleImageClick}>
                     <img
-                        src={formData.profileImage || "/profile.svg"}
+                        key={imageKey} // ✅ 이미지 변경 강제 반영
+                        src={`${formData.profileImage}?v=${imageKey}`}
                         alt="Profile"
                         className={styles.profileImage}
                         onLoad={() => {
@@ -178,6 +180,7 @@ export default function Edit() {
                             }
                         }}
                     />
+
                 </div>
 
                 {["name", "age", "phone", "district", "detail"].map(field => (
