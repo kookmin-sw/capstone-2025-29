@@ -24,6 +24,8 @@ const formatTime = (timeString) => {
 };
 
 export default function VolunteerMain({ isNewNotification, setIsNewNotification }) {
+
+
     useEffect(() => {
         console.log("🔁 VolunteerMain 렌더링됨, isNewNotification:", isNewNotification);
     }, [isNewNotification]);
@@ -75,10 +77,12 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
     }, [location, refetch, navigate]);
 
     useEffect(() => {
-        if (isNewNotification) {
-            refetch();
-        }
-    }, [isNewNotification, refetch, setIsNewNotification]);
+    if (isNewNotification) {
+        refetch().then(() => {
+            setIsNewNotification(false);  // ✅ refetch 이후 상태 초기화
+        });
+    }
+}, [isNewNotification, refetch, setIsNewNotification]);
 
     const volunteerStatus = userInfo?.currentMatching?.status || null;
 

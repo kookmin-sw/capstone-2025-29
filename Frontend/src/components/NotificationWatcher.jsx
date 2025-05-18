@@ -12,7 +12,7 @@ export default function NotificationWatcher({ onNewNotification }) {
         const checkNewNotifications = async () => {
             try {
                 const data = await fetchUserNotifications(userType);
-
+                console.log("📬 가져온 알림:", data);
 
                 if (!Array.isArray(data) || data.length === 0) return;
 
@@ -21,32 +21,31 @@ export default function NotificationWatcher({ onNewNotification }) {
                 )[0];
                 const latestTime = new Date(latest.createdAt).getTime();
 
-                if (!lastTimestampRef.current) {
-                    lastTimestampRef.current = latestTime;
-                    return;
-                }
-
-                if (latestTime > lastTimestampRef.current) {
-                    console.log("🆕 새 알림 감지됨:", latest);
+                if (!lastTimestampRef.current || latestTime > lastTimestampRef.current) {
                     lastTimestampRef.current = latestTime;
 
-                    alert(`🔔 ${latest.title}\n${latest.body || ""}`); // ✅ alert 표시
+                    const storedTime = localStorage.getItem("lastNotificationTime");
+                    if (!storedTime || latestTime > new Date(storedTime).getTime()) {
+                        // ✅ 새 알림 감지됨
+                        localStorage.setItem("isNewNotification", "true");
+                        localStorage.setItem("lastNotificationTime", new Date(latestTime).toISOString());
 
+                        if (typeof onNewNotification === "function") {
+                            onNewNotification(); // 🔔 종 아이콘 업데이트
+                        }
 
-                    // ✅ 로컬 저장소에 상태 저장
-                    localStorage.setItem("isNewNotification", "true");
-
-                    if (typeof onNewNotification === "function") {
-                        onNewNotification();
+                        // 🚫 필요하면 toast 띄우기 (alert은 모바일에서 피하세요)
+                        // toast(`${latest.title}: ${latest.body || ''}`);
                     }
                 }
+
             } catch (err) {
                 console.error("❌ 알림 감시 에러:", err);
             }
         };
 
         checkNewNotifications();
-        const interval = setInterval(checkNewNotifications, 10000);
+        const interval = setInterval(checkNewNotifications, 30000);
         return () => clearInterval(interval);
     }, [onNewNotification]);
 
