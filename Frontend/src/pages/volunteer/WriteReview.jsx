@@ -42,7 +42,7 @@ export default function WriteReview() {
 
                     console.log("imageUrl URLs:", imageUrl);
 
-                    
+
                     uploadedUrls.push(imageUrl);
                 }
 
@@ -71,7 +71,7 @@ export default function WriteReview() {
         try {
             await submitReview(reviewData);
             alert("후기가 성공적으로 작성되었습니다.");
-            navigate("/volunteermain");
+            navigate("/volunteermain", { state: { updated: true } });
         } catch (error) {
             console.error("후기 작성 실패:", error);
             alert(error.message || "후기 작성에 실패했습니다.");

@@ -22,7 +22,6 @@ function HelpCenter() {
             try {
                 const data = await fetchElderlyMatching(); // API 호출
 
-                console.log("매칭 데이터:", data); // API 응답 데이터 확인
                 if (data.currentMatching) {
                     setVolunteerStatus(data.currentMatching.status); // 상태 설정
                     setMatchName(data.currentMatching.otherName);
@@ -48,9 +47,17 @@ function HelpCenter() {
                 }
             } catch (error) {
                 console.error("Failed to load matching data:", error);
-            }finally {
+            } finally {
                 setIsLoading(false); // 로딩 상태 종료
-            }   
+            }
+
+            // ✅ location.state에 updated가 true일 경우 재요청
+            if (location.state?.updated) {
+                loadMatchingData();
+                navigate(location.pathname, { replace: true, state: {} }); // 상태 초기화
+            } else {
+                loadMatchingData(); // 최초 진입 시에도 호출
+            }
         };
 
         loadMatchingData();

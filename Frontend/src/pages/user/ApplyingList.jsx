@@ -63,25 +63,26 @@ export default function ApplyingList() {
         loadApplyingList();
     }, []);
 
-    console.log("matchData", matchData);
     return (
-        <div className={styles.container}>
-            <Topbar title="나의 매칭내역" />
-            {loading ? (
-                <p className={styles.message}>내역이 없습니다.</p>
-            ) : matchData.length === 0 ? (
+    <div className={styles.container}>
+        <Topbar title="나의 신청내역" />
+
+        {isLoading ? null : (
+            matchData.length === 0 ? (
                 <p className={styles.message}>매칭 내역이 없습니다</p>
             ) : (
                 matchData.map((match) => (
                     <MatchCard
                         key={match.id}
                         {...match}
-                        onClick={() => navigate("/applyingdetail", { state: { matchId: match.id } })} // match.id를 state로 전달
+                        onClick={() => navigate("/applyingdetail", { state: { matchId: match.id } })}
                     />
                 ))
-            )}
+            )
+        )}
 
-            <LoadingModal isLoading={isLoading} message="" />
-        </div>
-    );
+        <LoadingModal isOpen={isLoading} message="" />
+    </div>
+);
+
 }

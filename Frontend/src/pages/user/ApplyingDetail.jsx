@@ -31,6 +31,14 @@ export default function ApplyingDetail() {
         null: null
     };
 
+    const formatPhoneNumber = (phoneNumber) => {
+        if (!phoneNumber) return '전화번호 없음';
+        const cleaned = phoneNumber.replace(/\D/g, '');
+        return cleaned.length === 11
+            ? `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7)}`
+            : phoneNumber;
+    };
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return "----년 --월 --일";
@@ -67,9 +75,7 @@ export default function ApplyingDetail() {
         }
 
         const confirmed = window.confirm("신청 취소하시겠습니까?");
-        if (!confirmed) {
-            return; // 취소 누르면 아무것도 안함
-        }
+        if (!confirmed) return;
 
         try {
             await cancelMatching(matchId);
@@ -80,15 +86,15 @@ export default function ApplyingDetail() {
             alert("취소 요청에 실패했습니다. 다시 시도해주세요.");
         }
     };
+
     if (loading || error || !activityDetail) return null;
 
     const koreanDistrict = districtMap[userAddress.district] || userAddress.district;
-    const koreanAnimalType = animalTypeMap[activityDetail.animalType] || null;
-
+    const koreanAnimalType = animalTypeMap[activityDetail.animalType] || "없음";
     const isMatched = !!activityDetail.matchedUserInfo?.volunteerName;
 
-    console.log("상세 매칭 데이터:", activityDetail);
 
+    console.log(activityDetail)
     return (
         <div className={styles.container}>
             <Topbar title="신청 상세 내역" />
@@ -118,12 +124,33 @@ export default function ApplyingDetail() {
 
                     <div className={styles.section}>
                         <h3 className={styles.label}>반려동물 여부</h3>
-                        <p>{koreanAnimalType || "없음"}</p>
+                        <p>{koreanAnimalType}</p>
                     </div>
 
                     <div className={styles.section}>
                         <h3 className={styles.label}>추가 요청사항</h3>
                         <p className={styles.requestText}>{activityDetail.addDescription || "요청사항 없음"}</p>
+                    </div>
+
+                    
+
+                    <div className={styles.volunteerCard}>
+                        <img
+                            src={activityDetail.matchedUserInfo.profileImage || "/profile.svg"}
+                            alt="Profile"
+                            className={styles.volunteerImage}
+                        />
+                        <div className={styles.volunteerInfo}>
+                            <div className={styles.volunteerName}>
+                                {activityDetail.matchedUserInfo.volunteerName} 님
+                            </div>
+                            <div className={styles.volunteerHours}>
+                                봉사시간 <strong>{activityDetail.matchedUserInfo.volunteerActivityTime}</strong> 시간
+                            </div>
+                            <div className={styles.volunteerPhone}>
+                                {formatPhoneNumber(activityDetail.matchedUserInfo.phone)}
+                            </div>
+                        </div>
                     </div>
                 </>
             )}

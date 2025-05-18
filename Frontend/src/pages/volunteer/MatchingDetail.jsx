@@ -39,6 +39,8 @@ export default function MatchingDetail() {
             try {
                 if (!matchId) throw new Error("유효한 matchId가 없습니다.");
                 const data = await fetchMatchingDetail(matchId);
+
+                console.log("Fetched matching detail:", data);
                 setDetailData(data);
             } catch (err) {
                 console.error("Failed to fetch matching detail:", err);
@@ -52,14 +54,20 @@ export default function MatchingDetail() {
     }, [matchId]);
 
     const handleCancelRequest = async () => {
+        if (!matchId) {
+            alert("유효한 matchId가 없습니다.");
+            return;
+        }
+
+        const confirmed = window.confirm("신청 취소하시겠습니까?");
+        if (!confirmed) {
+            return; // 취소 누르면 아무것도 안함
+        }
+
         try {
-            if (!matchId) {
-                alert("유효한 matchId가 없습니다.");
-                return;
-            }
             await cancelMatching(matchId);
             alert("취소 요청이 완료되었습니다.");
-            navigate("/volunteermain");
+            navigate("/volunteermain" , { state: { updated: true } });
         } catch (err) {
             console.error("Failed to cancel matching:", err);
             alert("취소 요청에 실패했습니다. 다시 시도해주세요.");
@@ -76,7 +84,6 @@ export default function MatchingDetail() {
     const isPastStartTime = now >= startTime;  // ✅ 현재 시간이 시작 시간 이후인지 체크
 
 
-
     return (
         <div className={styles.container}>
             <Topbar title="내역상세" />
@@ -89,9 +96,9 @@ export default function MatchingDetail() {
                 tags={[detailData.type, koreanDistrict]}
                 icon={
                     detailData.type === "EDUCATION" ? "/education.svg" :
-                    detailData.type === "HOUSING" ? "/housing.svg" :
-                    detailData.type === "CULTURE" ? "/culture.svg" :
-                    "/medical.svg"
+                        detailData.type === "HOUSING" ? "/housing.svg" :
+                            detailData.type === "CULTURE" ? "/culture.svg" :
+                                "/medical.svg"
                 }
             />
 

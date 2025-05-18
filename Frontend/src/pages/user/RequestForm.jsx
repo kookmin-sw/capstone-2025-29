@@ -23,7 +23,7 @@ export default function RequestForm() {
     const userAddress = JSON.parse(localStorage.getItem('useraddress')) || { district: "", detail: "" };
 
 
-    console.log(userName, userAddress);
+
     const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
 
     const districtMap = {
@@ -116,15 +116,29 @@ export default function RequestForm() {
             alert("신청 유형을 선택해주세요.");
             return;
         }
+        if (step === 2) {
+            // 날짜, 시간 유효성 체크
+            if (!formValues.year || !formValues.month || !formValues.day || !formData.time) {
+                alert("날짜와 시간을 모두 선택해주세요.");
+                return;
+            }
+
+            // 현재 시간 이후인지 체크
+            const selectedDateTime = new Date(`${formValues.year}-${String(formValues.month).padStart(2, '0')}-${String(formValues.day).padStart(2, '0')}T${formData.time}:00`);
+            const now = new Date();
+
+            if (selectedDateTime <= now) {
+                alert("현재 시각 이후의 시간만 선택할 수 있습니다.");
+                return;
+            }
+        }
         if (step === 4) return;
 
         setStep(step + 1);
     };
 
     /**
-     * 폼 데이터 변경 핸들러
-     * - 반려동물 선택은 다중 선택 가능
-     * - 그 외 필드는 단일 값으로 업데이트
+
      */
     const handleChange = (key, value) => {
         if (key === "pet") {
@@ -177,7 +191,7 @@ export default function RequestForm() {
             const recommendedVolunteers = await fetchRecommendedVolunteers(requestBody); // 추천 봉사자 데이터 가져오기
 
 
-            console.log("추천 봉사자 데이터:", recommendedVolunteers);
+
 
             alert("신청서가 제출되었습니다.");
             navigate("/volunteerRecommend", { state: { volunteersData: recommendedVolunteers } }); // 데이터와 함께 페이지 이동

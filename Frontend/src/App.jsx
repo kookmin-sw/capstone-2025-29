@@ -5,6 +5,7 @@ import { requestFCMToken } from './fcm';   // ✅ 토큰 요청 함수
 import { messaging, onMessage } from './firebase'; // ✅ 포그라운드 알림 수신
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useQueryClient } from '@tanstack/react-query'; // 🔸 추가
 
 /* 페이지 컴포넌트 import */
 // 공통 페이지
@@ -42,35 +43,29 @@ let isOnMessageRegistered = false;
 
 /* 메인 App 컴포넌트 */
 function App() {
-
   useEffect(() => {
-    // 홈화면 추가 여부 확인 (iOS PWA)
-    if (window.navigator.standalone) {
-      console.log("PWA로 실행 중 (홈화면 추가됨)");
+    const isPWA = window.navigator.standalone; // iOS 홈화면 추가 여부
+    const isNotificationSupported = 'Notification' in window;
 
-      // 알림 권한 요청
-      if ('Notification' in window) {
+    if (isPWA && isNotificationSupported) {
+      if (Notification.permission === 'default') {
+
         Notification.requestPermission().then(permission => {
           console.log("Notification permission:", permission);
-          if (permission !== 'granted') {
-            alert('알림을 허용해야 매칭 알림을 받을 수 있습니다. 설정 > Safari > 알림에서 변경해주세요.');
-          }
+          if (permission === 'granted') {
+            requestFCMToken();
+          } 
         });
+      } else if (Notification.permission === 'granted') {
+        requestFCMToken();
+      } else if (Notification.permission === 'denied') {
+        alert('알림을 허용해야 매칭 알림을 받을 수 있습니다.\n설정 > Safari > 알림에서 변경해주세요.');
       }
+
     } else {
-      // 홈화면 추가 안 된 경우 UX 안내
       console.log("홈화면 추가 안 됨 (Safari 브라우저 실행 중)");
       // alert('홈화면에 추가하면 푸시 알림을 받을 수 있습니다.');
     }
-  }, []);
-  useEffect(() => {
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        requestFCMToken();
-      } else {
-        console.warn('Notification permission denied');
-      }
-    });
   }, []);
 
   // ✅ 2. 포그라운드 알림 수신 처리

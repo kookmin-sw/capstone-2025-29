@@ -108,13 +108,19 @@
 .analysisDate {
     font-size: 1rem;
     font-weight: bold;
-    margin: 0 0 1vh 0 ;
+    margin: 0 0 1vh 0;
 }
 
 /* 차트 크기 조절 */
 .chartWrapper {
-    width: 120px;
-    height: 120px;
+    width: 90px;
+    height: 90px;
+}
+
+
+.feedbackBox {
+    font-size: 0.8rem;
+    text-align: center;
 }
 
 /* 오른쪽 감정 목록 */
@@ -173,4 +179,88 @@
 
 .color4 {
     background-color: #CFFF47;
+}
+
+.analysisCard {
+    background-color: #e5e6fe;
+    border-radius: 20px;
+    padding: 3vh 4vw;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    width: 100%;
+}
+
+/* 차트와 퍼센트 나란히 배치 */
+.chartAndLegend {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+}
+
+/* 왼쪽 섹션: 날짜 + 차트 */
+.chartSection {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 날짜 텍스트 */
+.analysisDate {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1vh;
+}
+
+/* 차트 래퍼 */
+.chartWrapper {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+
+/* 오른쪽 감정 목록 */
+.legendBox {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.colorDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.6vw;
+}
+
+/* 피드백 박스 */
+.feedbackBox {
+    background-color: white;
+    padding: 1vh 2vw;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.feedbackText {
+    margin: 0;
+    color: #333;
+    line-height: 1.5;
 }

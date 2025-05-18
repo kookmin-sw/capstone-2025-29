@@ -52,19 +52,26 @@ export default function AvailableTime() {
         if (selectedDays.length === 0) return alert("요일을 선택해주세요.");
         if (selectedTypes.length === 0) return alert("봉사 유형을 선택해주세요.");
 
-        const schedules = selectedDays.map((day) => {
-            const timeInfo = timeRanges[day];
-            if (!timeInfo?.start) return null;
+        // ✅ 시간 설정이 안 된 요일 체크
+        const unselectedDays = selectedDays.filter(day => !timeRanges[day]?.start);
 
+        if (unselectedDays.length > 0) {
+            const sortedUnselected = [...unselectedDays].sort((a, b) => weekDays.indexOf(a) - weekDays.indexOf(b));
+            const dayNames = sortedUnselected.map(day => korDays[weekDays.indexOf(day)]).join(', ');
+            return alert(`시간을 선택해주세요 (${dayNames})`);
+        }
+
+        // ✅ 요일 정렬 후 제출
+        const sortedDays = [...selectedDays].sort((a, b) => weekDays.indexOf(a) - weekDays.indexOf(b));
+
+        const schedules = sortedDays.map((day) => {
             const dayOfWeekMap = {
                 Mon: "MONDAY", Tue: "TUESDAY", Wed: "WEDNESDAY",
                 Thu: "THURSDAY", Fri: "FRIDAY", Sat: "SATURDAY", Sun: "SUNDAY"
             };
 
-            return { dayOfWeek: dayOfWeekMap[day], time: timeInfo.start };
-        }).filter(Boolean);
-
-        if (schedules.length === 0) return alert("시간을 선택해주세요.");
+            return { dayOfWeek: dayOfWeekMap[day], time: timeRanges[day].start };
+        });
 
         const categoryMapping = { medical: 1, culture: 2, education: 4, housing: 8 };
         const category = selectedTypes.reduce((sum, type) => sum + categoryMapping[type], 0);
@@ -72,7 +79,7 @@ export default function AvailableTime() {
         try {
             await setAvailableTimes({ schedules, category });
             alert("신청이 완료되었습니다!");
-            navigate('/volunteermain');
+            navigate('/volunteermain', { state: { updated: true } });
         } catch (error) {
             console.error('스케줄 설정 실패:', error);
             alert('스케줄 설정에 실패했습니다. 다시 시도해주세요.');
@@ -84,9 +91,9 @@ export default function AvailableTime() {
         const minute = i % 2 === 0 ? "00" : "30";
         const value = `${String(hour).padStart(2, "0")}:${minute}`;
         const display = hour === 0 ? `오전 12시 ${minute}분` :
-                        hour < 12 ? `오전 ${hour}시 ${minute}분` :
-                        hour === 12 ? `오후 12시 ${minute}분` :
-                        `오후 ${hour - 12}시 ${minute}분`;
+            hour < 12 ? `오전 ${hour}시 ${minute}분` :
+                hour === 12 ? `오후 12시 ${minute}분` :
+                    `오후 ${hour - 12}시 ${minute}분`;
         return { value, display };
     });
 
@@ -97,16 +104,28 @@ export default function AvailableTime() {
             <div className={styles.section}>
                 <h3 className={styles.title}>봉사 유형 선택 (중복가능)</h3>
                 <div className={styles.volunteerTypeBox}>
-                    {volunteerTypes.map((type) => (
-                        <div
-                            key={type.id}
-                            className={`${styles.typeCard} ${selectedTypes.includes(type.id) ? styles.selected : ""}`}
-                            onClick={() => toggleType(type.id)}
-                        >
-                            <img src={selectedTypes.includes(type.id) ? type.selectedIcon : type.icon} alt={type.label} />
-                            <span>{type.label}</span>
-                        </div>
-                    ))}
+                    {volunteerTypes.map((type) => {
+                        const isSelected = selectedTypes.includes(type.id);
+
+                        // ✅ 캐시 무효화를 위한 간단한 key (선택 상태에 따라만 바뀜)
+                        const cacheBuster = isSelected ? 'selected' : 'normal';
+
+                        const iconSrc = isSelected
+                            ? `${type.selectedIcon}?v=${cacheBuster}`
+                            : `${type.icon}?v=${cacheBuster}`;
+
+                        return (
+                            <div
+                                key={type.id}
+                                className={`${styles.typeCard} ${isSelected ? styles.selected : ""}`}
+                                onClick={() => toggleType(type.id)}
+                            >
+                                <img src={iconSrc} alt={type.label} />
+                                <span>{type.label}</span>
+                            </div>
+                        );
+                    })}
+
                 </div>
             </div>
 
@@ -127,39 +146,41 @@ export default function AvailableTime() {
 
             <div className={styles.section}>
                 <h3 className={styles.title}>가능한 시간</h3>
-                {selectedDays.map((day) => {
-                    const kor = korDays[weekDays.indexOf(day)];
-                    return (
-                        <div key={day} className={styles.timeRow}>
-                            <span className={styles.dayLabel}>{kor}</span>
-                            <div className={styles.timeGroup}>
-                                <select
-                                    className={styles.timeSelect}
-                                    value={timeRanges[day]?.start || ""}
-                                    onChange={(e) => handleTimeChange(day, e.target.value)}
-                                >
-                                    <option value="" disabled hidden>시간 선택</option>
-                                    {timeOptions.map(({ value, display }) => (
-                                        <option key={value} value={value}>{display}</option>
-                                    ))}
-                                </select>
-                                <span className={styles.tilde}>~</span>
-                                <span className={styles.endDisplay}>
-                                    {timeRanges[day]?.end
-                                        ? (() => {
-                                            const [endHour, endMinute] = timeRanges[day].end.split(":").map(Number);
-                                            const formattedMinute = String(endMinute).padStart(2, '0');
-                                            if (endHour === 0) return `오전 12시 ${formattedMinute}분`;
-                                            if (endHour < 12) return `오전 ${endHour}시 ${formattedMinute}분`;
-                                            if (endHour === 12) return `오후 12시 ${formattedMinute}분`;
-                                            return `오후 ${endHour - 12}시 ${formattedMinute}분`;
-                                        })()
-                                        : "--:--"}
-                                </span>
+                {[...selectedDays]
+                    .sort((a, b) => weekDays.indexOf(a) - weekDays.indexOf(b)) // ✅ 항상 요일 정렬
+                    .map((day) => {
+                        const kor = korDays[weekDays.indexOf(day)];
+                        return (
+                            <div key={day} className={styles.timeRow}>
+                                <span className={styles.dayLabel}>{kor}</span>
+                                <div className={styles.timeGroup}>
+                                    <select
+                                        className={styles.timeSelect}
+                                        value={timeRanges[day]?.start || ""}
+                                        onChange={(e) => handleTimeChange(day, e.target.value)}
+                                    >
+                                        <option value="" disabled hidden>시간 선택</option>
+                                        {timeOptions.map(({ value, display }) => (
+                                            <option key={value} value={value}>{display}</option>
+                                        ))}
+                                    </select>
+                                    <span className={styles.tilde}>~</span>
+                                    <span className={styles.endDisplay}>
+                                        {timeRanges[day]?.end
+                                            ? (() => {
+                                                const [endHour, endMinute] = timeRanges[day].end.split(":").map(Number);
+                                                const formattedMinute = String(endMinute).padStart(2, '0');
+                                                if (endHour === 0) return `오전 12시 ${formattedMinute}분`;
+                                                if (endHour < 12) return `오전 ${endHour}시 ${formattedMinute}분`;
+                                                if (endHour === 12) return `오후 12시 ${formattedMinute}분`;
+                                                return `오후 ${endHour - 12}시 ${formattedMinute}분`;
+                                            })()
+                                            : "--:--"}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
             </div>
 
             <div className={styles.submitArea}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import ongi_login from '../../assets/ongi_login.svg';
@@ -33,7 +33,6 @@ export default function Login() {
             localStorage.setItem('userName', requestData.name);
             localStorage.setItem('userAddress', JSON.stringify(requestData.address));
 
-            // 사용자 타입에 따라 이동
             if (userType === 'volunteer') {
                 navigate('/volunteermain');
             } else {
@@ -48,15 +47,24 @@ export default function Login() {
     // ✅ 카카오 로그인 리다이렉트 핸들러
     const handleKakaoLogin = () => {
         const kakaoAuthUrl = 'https://coffeesupliers.shop/oauth2/authorization/kakao';
-    
-        // ✅ iOS PWA 대응 (window.open 사용)
-        const newWindow = window.open(kakaoAuthUrl, '_blank', 'noopener,noreferrer');
-    
-        if (!newWindow) {
-            alert('팝업 차단 해제 후 다시 시도해주세요.');
-        }
+        window.open(kakaoAuthUrl);
     };
-    
+
+    // ✅ iOS 스와이프 뒤로가기 방지
+    useEffect(() => {
+        const handleTouchStart = (e) => {
+            const isEdgeSwipe = e.touches[0].clientX < 20 && document.body.scrollWidth <= window.innerWidth;
+            if (isEdgeSwipe) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener("touchstart", handleTouchStart, { passive: false });
+
+        return () => {
+            window.removeEventListener("touchstart", handleTouchStart);
+        };
+    }, []);
 
     return (
         <div className={styles.container}>
@@ -118,7 +126,7 @@ export default function Login() {
                     </button>
                 </div>
 
-                {/* ✅ 카카오 로그인 버튼 */}
+                {/* 카카오 로그인 버튼 */}
                 <button className={styles.kakaoBtn} onClick={handleKakaoLogin}>
                     <img src="/login_kakko.svg" alt="카카오 아이콘" className={styles.icon} />
                     카카오로 시작하기
