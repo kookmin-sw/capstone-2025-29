@@ -49,7 +49,6 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
   const onNewNotification = () => {
     // 초기 실행 때는 alert 금지
     if (!isInitialLaunch && allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
-      alert("🔔 새로운 알림이 도착했습니다.");
     }
 
     setIsNewNotification(true);

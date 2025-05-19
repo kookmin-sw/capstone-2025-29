@@ -103,6 +103,8 @@ export default function ApplyingDetail() {
     const koreanAnimalType = animalTypeMap[activityDetail.animalType] || "없음";
     const isMatched = !!activityDetail.matchedUserInfo?.volunteerName;
 
+
+    console.log(activityDetail)
     return (
         <div className={styles.container}>
             <Topbar title="신청 상세 내역" />
