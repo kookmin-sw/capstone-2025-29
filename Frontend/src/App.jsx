@@ -44,23 +44,23 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
 
   // 알림이 왔을 때 alert 띄울 화면 경로 목록
   const allowedPaths = ['/volunteermain', '/usermain', '/helpcenter'];
+  const [isInitialLaunch, setIsInitialLaunch] = useState(true);
 
-  // accessToken으로 key 생성 (예: 앞 10자리)
-  const accessToken = localStorage.getItem('accessToken') || 'guest';
-  const notificationKey = `isNewNotification_${accessToken.slice(0, 10)}`;
-
-  
   const onNewNotification = () => {
-    // 화면이 알림 허용 경로이고, 앱이 포그라운드 상태일 때만 alert 띄우기
-    if (allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
-
+    // 초기 실행 때는 alert 금지
+    if (!isInitialLaunch && allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
+      alert("🔔 새로운 알림이 도착했습니다.");
     }
 
-    // 빨간 종 상태는 무조건 true로 바꿈
     setIsNewNotification(true);
     localStorage.setItem('isNewNotification', 'true');
   };
 
+  useEffect(() => {
+    if (allowedPaths.includes(location.pathname)) {
+      setIsInitialLaunch(false); // 초기 진입 끝, 이후부터 alert 허용
+    }
+  }, [location.pathname]);
   return (
     <>
       <NotificationWatcher onNewNotification={onNewNotification} />
@@ -107,7 +107,6 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
 
 function App() {
   const [isNewNotification, setIsNewNotification] = useState(false);
-  const [isInitialLaunch, setIsInitialLaunch] = useState(true);
 
   // useEffect(() => {
   //   const isPWA = window.navigator.standalone;
