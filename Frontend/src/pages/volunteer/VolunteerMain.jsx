@@ -73,15 +73,13 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
     }, [location, refetch, navigate]);
 
 
-    // accessToken 기반 key 생성
-    const accessToken = localStorage.getItem('accessToken') || 'guest';
-    const notificationKey = `isNewNotification_${accessToken.slice(0, 10)}`;
-
+    // ✅ 알림 상태를 localStorage 기준으로 복원
     useEffect(() => {
-        const stored = localStorage.getItem(notificationKey);
-        setHasNewNotification(stored === "true");
-    }, [notificationKey]);
-
+        const stored = localStorage.getItem("isNewNotification");
+        if (stored === "true") {
+            setHasNewNotification(true);
+        }
+    }, [isNewNotification]);
 
     // ✅ 알림에 의해 리렌더링 필요 시 1회만 refetch 후 상태 초기화
     useEffect(() => {
@@ -122,8 +120,8 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                                     ? `/alarm-red.svg?v=${Date.now()}`
                                     : `/alarm.svg?v=${Date.now()}`
                             }
+                            alt="Alarm"
                         />
-
 
                     </button>
                 </div>

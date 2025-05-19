@@ -49,21 +49,17 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
   const accessToken = localStorage.getItem('accessToken') || 'guest';
   const notificationKey = `isNewNotification_${accessToken.slice(0, 10)}`;
 
-  const [isInitialLaunch, setIsInitialLaunch] = useState(true);
+  
   const onNewNotification = () => {
     // 화면이 알림 허용 경로이고, 앱이 포그라운드 상태일 때만 alert 띄우기
-    if (!isInitialLaunch && allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
+    if (allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
 
     }
-    localStorage.setItem(notificationKey, "true");
+
+    // 빨간 종 상태는 무조건 true로 바꿈
     setIsNewNotification(true);
-
-  }
-
-  // 빨간 종 상태는 무조건 true로 바꿈
-  setIsNewNotification(true);
-  localStorage.setItem('isNewNotification', 'true');
-
+    localStorage.setItem('isNewNotification', 'true');
+  };
 
   return (
     <>
@@ -105,12 +101,13 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
       </Routes>
     </>
   );
-
-
 }
+
+
+
 function App() {
   const [isNewNotification, setIsNewNotification] = useState(false);
-
+  const [isInitialLaunch, setIsInitialLaunch] = useState(true);
 
   // useEffect(() => {
   //   const isPWA = window.navigator.standalone;
