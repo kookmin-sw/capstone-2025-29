@@ -73,13 +73,15 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
     }, [location, refetch, navigate]);
 
 
-    // ✅ 알림 상태를 localStorage 기준으로 복원
+    // accessToken 기반 key 생성
+    const accessToken = localStorage.getItem('accessToken') || 'guest';
+    const notificationKey = `isNewNotification_${accessToken.slice(0, 10)}`;
+
     useEffect(() => {
-        const stored = localStorage.getItem("isNewNotification");
-        if (stored === "true") {
-            setHasNewNotification(true);
-        }
-    }, [isNewNotification]);
+        const stored = localStorage.getItem(notificationKey);
+        setHasNewNotification(stored === "true");
+    }, [notificationKey]);
+
 
     // ✅ 알림에 의해 리렌더링 필요 시 1회만 refetch 후 상태 초기화
     useEffect(() => {

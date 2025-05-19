@@ -4,16 +4,15 @@ import NotificationCard from "../../components/NotificationCard";
 import styles from "./NotificationPage.module.css";
 import { fetchUserNotifications } from "../../api/both"; // API 호출 함수 가져오기 
 
-export default function NotificationPage({ setIsNewNotification }) {
+export default function NotificationPage({ notificationKey,setIsNewNotification }) {
     const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        // 알림 페이지 들어오면 알림 확인한 것으로 처리
         setIsNewNotification(false);
-        localStorage.setItem("isNewNotification", "false");
-    }, [setIsNewNotification]);
+        localStorage.setItem(notificationKey, "false");
+    }, [notificationKey, setIsNewNotification]);
 
-    
+
     useEffect(() => {
         const loadNotifications = async () => {
             try {

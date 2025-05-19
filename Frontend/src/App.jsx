@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route ,useLocation} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { requestFCMToken } from './fcm';
 import { messaging, onMessage } from './firebase';
 import './App.css';
@@ -45,16 +45,25 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
   // 알림이 왔을 때 alert 띄울 화면 경로 목록
   const allowedPaths = ['/volunteermain', '/usermain', '/helpcenter'];
 
+  // accessToken으로 key 생성 (예: 앞 10자리)
+  const accessToken = localStorage.getItem('accessToken') || 'guest';
+  const notificationKey = `isNewNotification_${accessToken.slice(0, 10)}`;
+
+  const [isInitialLaunch, setIsInitialLaunch] = useState(true);
   const onNewNotification = () => {
     // 화면이 알림 허용 경로이고, 앱이 포그라운드 상태일 때만 alert 띄우기
-    if (allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
+    if (!isInitialLaunch && allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
 
     }
-
-    // 빨간 종 상태는 무조건 true로 바꿈
+    localStorage.setItem(notificationKey, "true");
     setIsNewNotification(true);
-    localStorage.setItem('isNewNotification', 'true');
-  };
+
+  }
+
+  // 빨간 종 상태는 무조건 true로 바꿈
+  setIsNewNotification(true);
+  localStorage.setItem('isNewNotification', 'true');
+
 
   return (
     <>
@@ -96,12 +105,12 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
       </Routes>
     </>
   );
+
+
 }
-
-
-
 function App() {
   const [isNewNotification, setIsNewNotification] = useState(false);
+
 
   // useEffect(() => {
   //   const isPWA = window.navigator.standalone;

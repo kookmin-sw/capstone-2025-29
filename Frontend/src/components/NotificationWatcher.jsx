@@ -12,9 +12,7 @@ export default function NotificationWatcher({ onNewNotification }) {
                 const data = await fetchUserNotifications(userType);
                 if (!Array.isArray(data) || data.length === 0) return;
 
-                const latest = data.sort(
-                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-                )[0];
+                const latest = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
                 const latestTime = new Date(latest.createdAt).getTime();
 
                 if (!lastTimestampRef.current || latestTime > lastTimestampRef.current) {
@@ -22,18 +20,12 @@ export default function NotificationWatcher({ onNewNotification }) {
                     if (!storedTime || latestTime > new Date(storedTime).getTime()) {
                         lastTimestampRef.current = latestTime;
 
-                        // ✅ 저장
                         localStorage.setItem("isNewNotification", "true");
                         localStorage.setItem("lastNotificationTime", new Date(latestTime).toISOString());
 
                         if (typeof onNewNotification === "function") {
                             onNewNotification();
                         }
-
-                        // ✅ alert (setTimeout으로 안정화)
-                        setTimeout(() => {
-                            alert(`🔔 ${latest.title}\n${latest.body || ''}`);
-                        }, 500);
                     }
                 }
             } catch (err) {
@@ -42,7 +34,7 @@ export default function NotificationWatcher({ onNewNotification }) {
         };
 
         checkNewNotifications();
-        const interval = setInterval(checkNewNotifications, 5000);
+        const interval = setInterval(checkNewNotifications, 30000);
         return () => clearInterval(interval);
     }, [onNewNotification]);
 

@@ -9,11 +9,14 @@ export default function UserMain({ isNewNotification, setIsNewNotification }) {
     const navigate = useNavigate();
     const [hasNewNotification, setHasNewNotification] = useState(false);
 
-    // 앱 진입 시 localStorage에서 상태 복구
+    // accessToken 기반 key 생성
+    const accessToken = localStorage.getItem('accessToken') || 'guest';
+    const notificationKey = `isNewNotification_${accessToken.slice(0, 10)}`;
+
     useEffect(() => {
-        const stored = localStorage.getItem("isNewNotification");
+        const stored = localStorage.getItem(notificationKey);
         setHasNewNotification(stored === "true");
-    }, []);
+    }, [notificationKey]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
