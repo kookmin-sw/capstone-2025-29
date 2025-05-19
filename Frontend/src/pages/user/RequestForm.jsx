@@ -17,15 +17,26 @@ export default function RequestForm() {
     const navigate = useNavigate();
     const [currentDate, setCurrentDate] = useState('');
     const [currentTime, setCurrentTime] = useState('');
+<<<<<<< HEAD
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+=======
+    const [isLoading, setIsLoading] = useState(false); // 로딩 모달 상태
+>>>>>>> main
 
     const userName = localStorage.getItem('username') || "이름 없음";
     const userAddress = JSON.parse(localStorage.getItem('useraddress')) || { district: "", detail: "" };
 
+<<<<<<< HEAD
 
     console.log(userName, userAddress);
     const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
 
+=======
+    // 시간 선택용 배열 (00:00 ~ 23:00)
+    const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
+
+    // 주소 맵핑용 객체
+>>>>>>> main
     const districtMap = {
         GANGNAM: "강남구", GANGDONG: "강동구", GANGBUK: "강북구", GANGSEO: "강서구",
         GWANAK: "관악구", GWANGJIN: "광진구", GURO: "구로구", GEUMCHEON: "금천구",
@@ -35,6 +46,7 @@ export default function RequestForm() {
         YONGSAN: "용산구", EUNPYEONG: "은평구", JONGNO: "종로구"
     };
 
+<<<<<<< HEAD
     const [formValues, setFormValues] = useState({
         year: '',
         month: '',
@@ -42,6 +54,14 @@ export default function RequestForm() {
         time: '',
     });
 
+=======
+    // 날짜 선택용 값 상태
+    const [formValues, setFormValues] = useState({
+        year: '', month: '', day: '', time: '',
+    });
+
+    // 날짜가 모두 선택되었을 때 date 포맷 생성하여 formData에 설정
+>>>>>>> main
     useEffect(() => {
         if (formValues.year && formValues.month && formValues.day) {
             const formattedMonth = String(formValues.month).padStart(2, '0');
@@ -51,28 +71,42 @@ export default function RequestForm() {
         }
     }, [formValues.year, formValues.month, formValues.day]);
 
+<<<<<<< HEAD
     // 입력 핸들러
+=======
+>>>>>>> main
     const handleFormValuesChange = (e) => {
         const { name, value } = e.target;
         setFormValues(prev => ({ ...prev, [name]: value }));
     };
 
+<<<<<<< HEAD
 
     useEffect(() => {
         const updateDateTime = () => {
             const now = new Date();
 
             // 날짜 형식: YYYY년 MM월 DD일
+=======
+    // 현재 시간 실시간 표시
+    useEffect(() => {
+        const updateDateTime = () => {
+            const now = new Date();
+>>>>>>> main
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
             setCurrentDate(`${year}년 ${month}월 ${day}일`);
+<<<<<<< HEAD
 
             // 시간 형식: HH:MM
+=======
+>>>>>>> main
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             setCurrentTime(`${hours}:${minutes}`);
         };
+<<<<<<< HEAD
 
         // 초기 실행
         updateDateTime();
@@ -111,11 +145,34 @@ export default function RequestForm() {
      * - 첫 단계에서는 카테고리 선택 필수
      * - 마지막 단계에서는 이동하지 않음
      */
+=======
+        updateDateTime();
+        const interval = setInterval(updateDateTime, 60000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // 단계 및 form 상태
+    const [step, setStep] = useState(1);
+    const [formData, setFormData] = useState({
+        category: "",
+        date: "",
+        time: "",
+        pet: ["없음"],
+        requestText: "",
+    });
+
+    const handleBack = () => {
+        if (step > 1) setStep(step - 1);
+        else navigate(-1);
+    };
+
+>>>>>>> main
     const handleNext = () => {
         if (step === 1 && !formData.category) {
             alert("신청 유형을 선택해주세요.");
             return;
         }
+<<<<<<< HEAD
         if (step === 4) return;
 
         setStep(step + 1);
@@ -132,11 +189,31 @@ export default function RequestForm() {
                 ...prev,
                 pet: [value] // 다중 선택 대신 선택한 값만 배열로 유지
             }));
+=======
+        if (step === 2) {
+            if (!formValues.year || !formValues.month || !formValues.day || !formData.time) {
+                alert("날짜와 시간을 모두 선택해주세요.");
+                return;
+            }
+            const selectedDateTime = new Date(`${formValues.year}-${String(formValues.month).padStart(2, '0')}-${String(formValues.day).padStart(2, '0')}T${formData.time}:00`);
+            if (selectedDateTime <= new Date()) {
+                alert("현재 시각 이후의 시간만 선택할 수 있습니다.");
+                return;
+            }
+        }
+        if (step < 4) setStep(step + 1);
+    };
+
+    const handleChange = (key, value) => {
+        if (key === "pet") {
+            setFormData(prev => ({ ...prev, pet: [value] }));
+>>>>>>> main
         } else {
             setFormData(prev => ({ ...prev, [key]: value }));
         }
     };
 
+<<<<<<< HEAD
     /**
      * 폼 제출 핸들러
      * - 최종 데이터를 콘솔에 출력
@@ -158,11 +235,27 @@ export default function RequestForm() {
                 : formData.pet.includes("고양이") ? "cat"
                     : formData.pet.includes("기타") ? "etc"
                         : "none",
+=======
+    const handleSubmit = async () => {
+        const requestBody = {
+            volunteerType:
+                formData.category === "의료" ? "HEALTH" :
+                    formData.category === "주거" ? "HOUSING" :
+                        formData.category === "문화" ? "CULTURE" :
+                            formData.category === "교육" ? "EDUCATION" : "",
+            addDescription: formData.requestText || "추가 요청사항 없음",
+            startTime: formData.date && formData.time ? `${formData.date}T${formData.time}:00` : "",
+            animalType:
+                formData.pet.includes("개") ? "dog" :
+                    formData.pet.includes("고양이") ? "cat" :
+                        formData.pet.includes("기타") ? "etc" : "none",
+>>>>>>> main
             address: {
                 district: userAddress.district || "구역 없음",
                 detail: userAddress.detail || "상세 주소 없음"
             }
         };
+<<<<<<< HEAD
         // 시간 유효성 검사
         if (requestBody.startTime) {
             const now = new Date();
@@ -194,6 +287,25 @@ export default function RequestForm() {
             setIsLoading(false); // 로딩 종료
         }
 
+=======
+
+        if (requestBody.startTime && new Date(requestBody.startTime) <= new Date()) {
+            alert("현재 시각 이후의 시간만 선택할 수 있습니다.");
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            const recommendedVolunteers = await fetchRecommendedVolunteers(requestBody);
+            alert("신청서가 제출되었습니다.");
+            navigate("/volunteerRecommend", { state: { volunteersData: recommendedVolunteers } });
+        } catch (error) {
+            console.error("신청 에러 상세:", error);
+            alert(error.message || "신청 중 문제가 발생했습니다.");
+        } finally {
+            setIsLoading(false);
+        }
+>>>>>>> main
     };
 
     return (

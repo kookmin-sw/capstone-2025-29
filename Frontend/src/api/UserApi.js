@@ -72,3 +72,27 @@ export const recommendVolunteerMatching = async ({ volunteerId, matchingId }) =>
     const response = await axios.post(`/api/elderly/recommend/matching`, { volunteerId, matchingId }, { headers: getAuthHeaders() });
     return response.data;
 };
+<<<<<<< HEAD
+=======
+
+
+// ✅ keepalive용 매칭 취소 API (fetch 사용)
+export const cancelMatchingKeepalive = async (matchingId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/elderly/matching/${matchingId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            },
+            keepalive: true,
+        });
+        if (!response.ok) {
+            throw new Error('keepalive 매칭 취소 실패');
+        }
+        console.log("✅ 매칭 취소 성공 (keepalive)");
+    } catch (err) {
+        console.error("❌ 매칭 취소 실패 (keepalive):", err);
+    }
+};
+>>>>>>> main

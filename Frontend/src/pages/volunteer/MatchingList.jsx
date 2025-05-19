@@ -55,7 +55,11 @@ export default function MatchingList() {
     return (
         <div className={styles.container}>
             <Topbar title="매칭내역" />
+<<<<<<< HEAD
             {matchData.length === 0 ?
+=======
+            {loading ? null : matchData.length === 0 ?
+>>>>>>> main
                 (<p className={styles.message}>매칭 내역이 없습니다</p>)
                 :
                 (matchData.map((match) => (
@@ -66,6 +70,10 @@ export default function MatchingList() {
                     />
                 )))
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
         </div>
     );
 }

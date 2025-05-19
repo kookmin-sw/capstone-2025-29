@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+.body{
+    min-height: 100vh;
+}
+
+>>>>>>> main
 .overlay {
     position: fixed;
     top: 0;
