@@ -48,7 +48,7 @@ function AppRoutes({ isNewNotification, setIsNewNotification }) {
   const onNewNotification = () => {
     // 화면이 알림 허용 경로이고, 앱이 포그라운드 상태일 때만 alert 띄우기
     if (allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
-      alert("🔔 새로운 알림이 도착했습니다.");
+
     }
 
     // 빨간 종 상태는 무조건 true로 바꿈
