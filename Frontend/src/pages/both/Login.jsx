@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> main
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import ongi_login from '../../assets/ongi_login.svg';
@@ -32,18 +28,9 @@ export default function Login() {
         try {
             const requestData = await login(formValues.username, formValues.password, userType);
 
-<<<<<<< HEAD
-            console.log('로그인 성공:', requestData);
-
             localStorage.setItem('userName', requestData.name);
             localStorage.setItem('userAddress', JSON.stringify(requestData.address));
 
-            // 사용자 타입에 따라 이동
-=======
-            localStorage.setItem('userName', requestData.name);
-            localStorage.setItem('userAddress', JSON.stringify(requestData.address));
-
->>>>>>> main
             if (userType === 'volunteer') {
                 navigate('/volunteermain');
             } else {
@@ -57,18 +44,6 @@ export default function Login() {
 
     // ✅ 카카오 로그인 리다이렉트 핸들러
     const handleKakaoLogin = () => {
-<<<<<<< HEAD
-        const kakaoAuthUrl = 'https://coffeesupliers.shop/oauth2/authorization/kakao';
-    
-        // ✅ iOS PWA 대응 (window.open 사용)
-        const newWindow = window.open(kakaoAuthUrl, '_blank', 'noopener,noreferrer');
-    
-        if (!newWindow) {
-            alert('팝업 차단 해제 후 다시 시도해주세요.');
-        }
-    };
-    
-=======
         const kakaoAuthUrl = import.meta.env.VITE_KAKAO_AUTH_URL;
         window.open(kakaoAuthUrl);
     };
@@ -88,7 +63,6 @@ export default function Login() {
             window.removeEventListener("touchstart", handleTouchStart);
         };
     }, []);
->>>>>>> main
 
     return (
         <div className={styles.container}>
@@ -150,11 +124,7 @@ export default function Login() {
                     </button>
                 </div>
 
-<<<<<<< HEAD
-                {/* ✅ 카카오 로그인 버튼 */}
-=======
                 {/* 카카오 로그인 버튼 */}
->>>>>>> main
                 <button className={styles.kakaoBtn} onClick={handleKakaoLogin}>
                     <img src="/login_kakko.svg" alt="카카오 아이콘" className={styles.icon} />
                     카카오로 시작하기

@@ -108,19 +108,11 @@
 .analysisDate {
     font-size: 1rem;
     font-weight: bold;
-<<<<<<< HEAD
-    margin: 0 0 1vh 0 ;
-=======
     margin: 0 0 1vh 0;
->>>>>>> main
 }
 
 /* 차트 크기 조절 */
 .chartWrapper {
-<<<<<<< HEAD
-    width: 120px;
-    height: 120px;
-=======
     width: 90px;
     height: 90px;
 }
@@ -129,7 +121,6 @@
 .feedbackBox {
     font-size: 0.8rem;
     text-align: center;
->>>>>>> main
 }
 
 /* 오른쪽 감정 목록 */
@@ -188,8 +179,6 @@
 
 .color4 {
     background-color: #CFFF47;
-<<<<<<< HEAD
-=======
 }
 
 .analysisCard {
@@ -274,5 +263,4 @@
     margin: 0;
     color: #333;
     line-height: 1.5;
->>>>>>> main
 }

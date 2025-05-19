@@ -2,11 +2,8 @@ import { messaging, getToken, onMessage } from '../firebase';
 import { useEffect } from 'react';
 
 const NotificationSetup = () => {
-<<<<<<< HEAD
-=======
     const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 
->>>>>>> main
     useEffect(() => {
         // Request notification permission
         Notification.requestPermission()
@@ -14,11 +11,7 @@ const NotificationSetup = () => {
                 if (permission === 'granted') {
                     // Get FCM token
                     getToken(messaging, {
-<<<<<<< HEAD
-                        vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY
-=======
                         vapidKey: vapidKey
->>>>>>> main
                     })
                         .then((currentToken) => {
                             if (currentToken) {

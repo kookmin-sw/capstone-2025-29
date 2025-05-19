@@ -1,18 +1,6 @@
 // src/fcm.js
 import { messaging, getToken } from './firebase';
 
-<<<<<<< HEAD
-export const requestFCMToken = async () => {
-    try {
-        const currentToken = await getToken(messaging, {
-            vapidKey: "BPmZvGshmU9engJbGw4Ny05svrAhclGNLlgUXfsjw9_EJp0jX80M0wzra6bcN9fXD0WVG2WMale74xxbQGQL3tw"
-        });
-
-        localStorage.setItem('fcmToken', currentToken); // 토큰을 로컬 스토리지에 저장
-
-    } catch (err) {
-        console.error('An error occurred while retrieving token. ', err);
-=======
 
 export const requestFCMToken = async () => {
     const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
@@ -31,6 +19,5 @@ export const requestFCMToken = async () => {
     } catch (err) {
         console.error('❌ FCM 토큰 발급 실패:', err);
         throw err;
->>>>>>> main
     }
 };

@@ -63,16 +63,6 @@ export default function ApplyingList() {
         loadApplyingList();
     }, []);
 
-<<<<<<< HEAD
-    console.log("matchData", matchData);
-    return (
-        <div className={styles.container}>
-            <Topbar title="나의 매칭내역" />
-            {loading ? (
-                <p className={styles.message}>내역이 없습니다.</p>
-            ) : matchData.length === 0 ? (
-                <p className={styles.message}>매칭 내역이 없습니다</p>
-=======
     return (
     <div className={styles.container}>
         <Topbar title="신청내역" />
@@ -80,22 +70,11 @@ export default function ApplyingList() {
         {(
             matchData.length === 0 ? (
                 <p className={styles.message}>신청 내역이 없습니다</p>
->>>>>>> main
             ) : (
                 matchData.map((match) => (
                     <MatchCard
                         key={match.id}
                         {...match}
-<<<<<<< HEAD
-                        onClick={() => navigate("/applyingdetail", { state: { matchId: match.id } })} // match.id를 state로 전달
-                    />
-                ))
-            )}
-
-            <LoadingModal isLoading={isLoading} message="" />
-        </div>
-    );
-=======
                         onClick={() => navigate("/applyingdetail", { state: { matchId: match.id } })}
                     />
                 ))
@@ -106,5 +85,4 @@ export default function ApplyingList() {
     </div>
 );
 
->>>>>>> main
 }

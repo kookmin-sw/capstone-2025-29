@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import React, { useEffect } from "react";
-import styles from "./UserMain.module.css";
-import ongi from "../../assets/ongi.svg";
-import { useNavigate } from "react-router-dom";
-import { fetchChatBotName } from "../../api/ChatApi"; // 챗봇 이름 불러오기 API
-import { fetchUserInfo } from "../../api/both";
-
-export default function UserMain() {
-    const navigate = useNavigate();
-=======
 import React, { useEffect, useState } from "react";
 import styles from "./UserMain.module.css";
 import ongi from "../../assets/ongi.svg";
@@ -25,7 +14,6 @@ export default function UserMain({ isNewNotification, setIsNewNotification }) {
         const stored = localStorage.getItem("isNewNotification");
         setHasNewNotification(stored === "true");
     }, []);
->>>>>>> main
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -35,12 +23,7 @@ export default function UserMain({ isNewNotification, setIsNewNotification }) {
             console.log("userInfo", data);
             localStorage.setItem('username', data.name);
             localStorage.setItem('useraddress', JSON.stringify(data.address));
-<<<<<<< HEAD
-            console.log("userInfo", data);
-        }
-=======
         };
->>>>>>> main
 
         getuserinfo();
     }, []);
@@ -49,15 +32,8 @@ export default function UserMain({ isNewNotification, setIsNewNotification }) {
         try {
             const chatbotData = await fetchChatBotName();
             if (chatbotData) {
-<<<<<<< HEAD
-                // 데이터가 있으면 /ChatCenter로 이동
                 navigate('/ChatCenter', { state: { chatBotName: chatbotData.chatBotName } });
             } else {
-                // 데이터가 없으면 /SetName으로 이동
-=======
-                navigate('/ChatCenter', { state: { chatBotName: chatbotData.chatBotName } });
-            } else {
->>>>>>> main
                 navigate('/SetName');
             }
         } catch (error) {
@@ -77,14 +53,10 @@ export default function UserMain({ isNewNotification, setIsNewNotification }) {
                         <img src="/profileedit.svg" alt="프로필 편집" />
                     </button>
                     <button className={styles.iconBtn} onClick={() => navigate('/notification')}>
-<<<<<<< HEAD
-                        <img src="/alarm.svg" alt="알람" />
-=======
                         <img
                             src={hasNewNotification ? "/alarm-red.svg" : "/alarm.svg"}
                             alt="알람"
                         />
->>>>>>> main
                     </button>
                 </div>
             </div>

@@ -66,11 +66,7 @@ export const fetchChatBotName = async () => {
         // 로컬스토리지에 저장
         localStorage.setItem('chatBotName', data.name);
         localStorage.setItem('chatBotProfileImage', data.profileImage);
-<<<<<<< HEAD
 
-        console.log("챗봇 이름 불러오기 응답:", response.data);
-=======
->>>>>>> main
         return response.data;
     } catch (error) {
         console.error("❌ 챗봇 이름 저장 실패:", error);
@@ -101,11 +97,6 @@ export const saveChatBotName = async (name, profileImage) => {
                 }
             }
         );
-<<<<<<< HEAD
-
-        console.log("✅ 챗봇 이름 저장 성공:", response.data);
-=======
->>>>>>> main
         return response.data;
     } catch (error) {
         console.error("❌ 챗봇 이름 저장 실패:", error.response?.data || error.message);
@@ -133,11 +124,6 @@ export const fetchSentimentAnalysis = async () => {
                 'Content-Type': 'application/json'
             }
         });
-<<<<<<< HEAD
-
-        console.log("✅ 감정 분석 데이터 성공:", response.data);
-=======
->>>>>>> main
         return response.data;
     } catch (error) {
         const status = error.response?.status || 0;

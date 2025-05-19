@@ -72,8 +72,6 @@ export const recommendVolunteerMatching = async ({ volunteerId, matchingId }) =>
     const response = await axios.post(`/api/elderly/recommend/matching`, { volunteerId, matchingId }, { headers: getAuthHeaders() });
     return response.data;
 };
-<<<<<<< HEAD
-=======
 
 
 // ✅ keepalive용 매칭 취소 API (fetch 사용)
@@ -95,4 +93,3 @@ export const cancelMatchingKeepalive = async (matchingId) => {
         console.error("❌ 매칭 취소 실패 (keepalive):", err);
     }
 };
->>>>>>> main

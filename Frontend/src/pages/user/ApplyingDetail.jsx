@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Topbar from "../../components/Topbar";
-import MatchCard from "../../components/MatchCard";
-import styles from "./ApplyingDetail.module.css";
-=======
 // ✅ React 및 라우팅 훅 import
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,21 +8,11 @@ import MatchCard from "../../components/MatchCard";
 import styles from "./ApplyingDetail.module.css";
 
 // ✅ API 함수 import
->>>>>>> main
 import { fetchApplyingDetail, cancelMatching } from "../../api/UserApi";
 
 export default function ApplyingDetail() {
     const location = useLocation();
     const navigate = useNavigate();
-<<<<<<< HEAD
-    const { matchId } = location.state || {};
-    const [activityDetail, setActivityDetail] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const userAddress = JSON.parse(localStorage.getItem('userAddress')) || { district: "", detail: "" };
-
-=======
     const { matchId } = location.state || {}; // 전달받은 matchId
 
     const [activityDetail, setActivityDetail] = useState(null); // 상세 정보
@@ -40,7 +23,6 @@ export default function ApplyingDetail() {
     const userAddress = JSON.parse(localStorage.getItem('useraddress')) || { district: "", detail: "" };
 
     // ✅ 지역 코드 → 한글 변환 맵
->>>>>>> main
     const districtMap = {
         GANGNAM: "강남구", GANGDONG: "강동구", GANGBUK: "강북구", GANGSEO: "강서구",
         GWANAK: "관악구", GWANGJIN: "광진구", GURO: "구로구", GEUMCHEON: "금천구",
@@ -50,15 +32,6 @@ export default function ApplyingDetail() {
         YONGSAN: "용산구", EUNPYEONG: "은평구", JONGNO: "종로구"
     };
 
-<<<<<<< HEAD
-    const animalTypeMap = {
-        dog: "개",
-        cat: "고양이",
-        etc: "기타",
-        null: null
-    };
-
-=======
     // ✅ 반려동물 코드 → 한글 변환 맵
     const animalTypeMap = {
         dog: "개",
@@ -76,27 +49,20 @@ export default function ApplyingDetail() {
     };
 
     // ✅ 날짜 포맷 함수 (yyyy년 mm월 dd일)
->>>>>>> main
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return "----년 --월 --일";
         return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, "0")}월 ${String(date.getDate()).padStart(2, "0")}일`;
     };
 
-<<<<<<< HEAD
-=======
     // ✅ 시간 포맷 함수 (HH:MM)
->>>>>>> main
     const formatTime = (dateString) => {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return "--:--";
         return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     };
 
-<<<<<<< HEAD
-=======
     // ✅ 상세 데이터 로딩
->>>>>>> main
     useEffect(() => {
         const loadActivityDetail = async () => {
             try {
@@ -114,23 +80,10 @@ export default function ApplyingDetail() {
         loadActivityDetail();
     }, [matchId]);
 
-<<<<<<< HEAD
-    const handleCancelRequest = async () => {
-        if (!matchId) {
-            alert("유효한 matchId가 없습니다.");
-            return;
-        }
-
-        const confirmed = window.confirm("신청 취소하시겠습니까?");
-        if (!confirmed) {
-            return; // 취소 누르면 아무것도 안함
-        }
-=======
     // ✅ 취소 요청 핸들러
     const handleCancelRequest = async () => {
         if (!matchId) return alert("유효한 matchId가 없습니다.");
         if (!window.confirm("신청 취소하시겠습니까?")) return;
->>>>>>> main
 
         try {
             await cancelMatching(matchId);
@@ -141,17 +94,6 @@ export default function ApplyingDetail() {
             alert("취소 요청에 실패했습니다. 다시 시도해주세요.");
         }
     };
-<<<<<<< HEAD
-    if (loading || error || !activityDetail) return null;
-
-    const koreanDistrict = districtMap[userAddress.district] || userAddress.district;
-    const koreanAnimalType = animalTypeMap[activityDetail.animalType] || null;
-
-    const isMatched = !!activityDetail.matchedUserInfo?.volunteerName;
-
-    console.log("상세 매칭 데이터:", activityDetail);
-
-=======
 
     // ✅ 로딩 중 또는 에러 발생 시 렌더링 안함
     if (loading || error || !activityDetail) return null;
@@ -163,15 +105,11 @@ export default function ApplyingDetail() {
 
 
     console.log(activityDetail)
->>>>>>> main
     return (
         <div className={styles.container}>
             <Topbar title="신청 상세 내역" />
 
-<<<<<<< HEAD
-=======
             {/* ✅ 매칭 카드 */}
->>>>>>> main
             <MatchCard
                 id={activityDetail.id}
                 name={isMatched ? activityDetail.matchedUserInfo.volunteerName : null}
@@ -188,10 +126,7 @@ export default function ApplyingDetail() {
                 }
             />
 
-<<<<<<< HEAD
-=======
             {/* ✅ 매칭된 경우에만 상세 내용 표시 */}
->>>>>>> main
             {isMatched && (
                 <>
                     <div className={styles.address}>
@@ -201,22 +136,13 @@ export default function ApplyingDetail() {
 
                     <div className={styles.section}>
                         <h3 className={styles.label}>반려동물 여부</h3>
-<<<<<<< HEAD
-                        <p>{koreanAnimalType || "없음"}</p>
-=======
                         <p>{koreanAnimalType}</p>
->>>>>>> main
                     </div>
 
                     <div className={styles.section}>
                         <h3 className={styles.label}>추가 요청사항</h3>
                         <p className={styles.requestText}>{activityDetail.addDescription || "요청사항 없음"}</p>
                     </div>
-<<<<<<< HEAD
-                </>
-            )}
-
-=======
 
                     <div className={styles.volunteerCard}>
                         <img
@@ -240,7 +166,6 @@ export default function ApplyingDetail() {
             )}
 
             {/* ✅ 취소 버튼 */}
->>>>>>> main
             <button className={styles.cancelBtn} onClick={handleCancelRequest}>
                 취소요청
             </button>

@@ -15,9 +15,6 @@ function HelpCenter() {
     const [matchTime, setMatchTime] = useState("");
     const [matchingId, setMatchingId] = useState(null); // 매칭 ID 저장
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태
-<<<<<<< HEAD
-
-=======
     const [hasNewNotification, setHasNewNotification] = useState(false);
 
     // 앱 진입 시 로컬 스토리지 기준 알림 상태 복원
@@ -25,17 +22,12 @@ function HelpCenter() {
         const stored = localStorage.getItem("isNewNotification");
         setHasNewNotification(stored === "true");
     }, []);
->>>>>>> main
     // 컴포넌트가 마운트될 때 API 호출
     useEffect(() => {
         const loadMatchingData = async () => {
             try {
                 const data = await fetchElderlyMatching(); // API 호출
 
-<<<<<<< HEAD
-                console.log("매칭 데이터:", data); // API 응답 데이터 확인
-=======
->>>>>>> main
                 if (data.currentMatching) {
                     setVolunteerStatus(data.currentMatching.status); // 상태 설정
                     setMatchName(data.currentMatching.otherName);
@@ -61,11 +53,6 @@ function HelpCenter() {
                 }
             } catch (error) {
                 console.error("Failed to load matching data:", error);
-<<<<<<< HEAD
-            }finally {
-                setIsLoading(false); // 로딩 상태 종료
-            }   
-=======
             } finally {
                 setIsLoading(false); // 로딩 상태 종료
             }
@@ -77,7 +64,6 @@ function HelpCenter() {
             } else {
                 loadMatchingData(); // 최초 진입 시에도 호출
             }
->>>>>>> main
         };
 
         loadMatchingData();
@@ -196,11 +182,6 @@ function HelpCenter() {
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <LoadingModal isOpen={isLoading} message="" />
-=======
-
->>>>>>> main
         </div>
     );
 }

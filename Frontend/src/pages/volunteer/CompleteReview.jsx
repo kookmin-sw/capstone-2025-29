@@ -1,27 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CompleteReview.module.css";
-<<<<<<< HEAD
-import Topbar from "../../components/Topbar";
-import MatchCard from "../../components/MatchCard";
-import { useNavigate } from "react-router-dom";
-import { getCompletedReviews } from "../../api/VolunteerApi";
-
-export default function CompleteReview() {
-    const navigate = useNavigate();
-    const [completeMatchData, setCompleteMatchData] = useState([]);
-
-    useEffect(() => {
-        const fetchCompletedReviews = async () => {
-            try {
-                const data = await getCompletedReviews();
-                console.log("완료된 후기 데이터:", data);
-
-                const sortedData = data.sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
-
-                setCompleteMatchData(sortedData);
-            } catch (err) {
-                console.error("fetchCompletedReviews 에러:", err);
-=======
 
 import Topbar from "../../components/Topbar";              // 상단바 컴포넌트
 import MatchCard from "../../components/MatchCard";        // 봉사 매칭 카드 컴포넌트
@@ -49,25 +27,18 @@ export default function CompleteReview() {
                 console.error("fetchCompletedReviews 에러:", err);
             } finally {
                 setIsLoading(false); // 로딩 완료
->>>>>>> main
             }
         };
 
         fetchCompletedReviews();
     }, []);
 
-<<<<<<< HEAD
-=======
     // ✅ 카드 클릭 시 리뷰 상세 페이지로 이동
->>>>>>> main
     const handleCardClick = (reviewId) => {
         navigate("/reviewdetail", { state: { reviewId } });
     };
 
-<<<<<<< HEAD
-=======
     // ✅ 매칭 유형에 따라 아이콘 경로 반환
->>>>>>> main
     const getIconByType = (type) => {
         switch (type) {
             case "HEALTH": return "/medical.svg";
@@ -80,31 +51,6 @@ export default function CompleteReview() {
 
     return (
         <div className={styles.container}>
-<<<<<<< HEAD
-            <Topbar title="완료 및 후기" />
-            {completeMatchData.length === 0 ? (
-                <div className={styles.noData}>후기가 없습니다</div>
-            ) : (
-                completeMatchData.map((match) => (
-                    <MatchCard
-                        key={match.reviewId}
-                        id={match.reviewId}
-                        name={match.elderlyName}
-                        date={new Date(match.startTime).toLocaleDateString("ko-KR", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })}
-                        time={new Date(match.startTime).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })}
-                        tags={[match.type, match.districtType]}
-                        icon={getIconByType(match.type)}
-                        onClick={() => handleCardClick(match.reviewId)}
-                    />
-                ))
-=======
             {/* ✅ 상단바 */}
             <Topbar title="완료 및 후기" />
 
@@ -134,7 +80,6 @@ export default function CompleteReview() {
                         />
                     ))
                 )
->>>>>>> main
             )}
         </div>
     );

@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import { React,useEffect } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query';
-import styles from "./VolunteerMain.module.css";
-import Topbar from "../../components/Topbar";
-import { getUserInfo } from '../../api/VolunteerApi';
-import ongi from '../../assets/ongi.svg';
-
-// 포맷 함수들
-=======
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
@@ -16,7 +5,6 @@ import styles from "./VolunteerMain.module.css";
 import { getUserInfo } from '../../api/VolunteerApi';
 import ongi from '../../assets/ongi.svg';
 
->>>>>>> main
 const formatPhoneNumber = (phoneNumber) => {
     if (!phoneNumber) return '전화번호 없음';
     const cleaned = phoneNumber.replace(/\D/g, '');
@@ -35,20 +23,6 @@ const formatTime = (timeString) => {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 };
 
-<<<<<<< HEAD
-export default function VolunteerMain() {
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const { data: userInfo, isLoading, isError } = useQuery({
-        queryKey: ['userInfo'],
-        queryFn: getUserInfo,
-        staleTime: 1000 * 60 * 5, // 5분 동안 fresh
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-    });
-
-=======
 export default function VolunteerMain({ isNewNotification, setIsNewNotification }) {
 
 
@@ -118,7 +92,6 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
         handleUpdate();
     }, [isNewNotification, refetch, setIsNewNotification]);
 
->>>>>>> main
 
     const volunteerStatus = userInfo?.currentMatching?.status || null;
 
@@ -132,21 +105,8 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
         }
     };
 
-<<<<<<< HEAD
-    if (isLoading) return null;
-    if (isError || !userInfo) return <div>데이터를 불러오지 못했습니다.</div>;
-
-    const profileImageUrl = userInfo?.volunteerInfo?.profileImage
-        ? `${userInfo.volunteerInfo.profileImage}${location.state?.from === 'edit' ? `?v=${new Date().getTime()}` : ''}`
-        : "/profile.svg";
-
     return (
         <div className={styles.container}>
-
-=======
-    return (
-        <div className={styles.container}>
->>>>>>> main
             <div className={styles.topbar}>
                 <button className={styles.logo}><img src={ongi} alt="Logo" /></button>
                 <div className={styles.topRightButtons}>
@@ -154,9 +114,6 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                         <img src="/profileedit.svg" alt="Edit" />
                     </button>
                     <button className={styles.iconBtn} onClick={() => navigate('/notification')}>
-<<<<<<< HEAD
-                        <img src="/alarm.svg" alt="Alarm" />
-=======
                         <img
                             src={
                                 hasNewNotification
@@ -166,7 +123,6 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                             alt="Alarm"
                         />
 
->>>>>>> main
                     </button>
                 </div>
             </div>
@@ -184,11 +140,7 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                 <p className={styles.sectionTitle}>나의 봉사 가능한 시간</p>
                 <div className={styles.divider} />
                 <div className={styles.dayTimeBox}>
-<<<<<<< HEAD
-                    {['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'].map(day => {
-=======
                     {["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"].map(day => {
->>>>>>> main
                         const availableTime = userInfo?.availableTimes?.find(t => t.dayOfWeek === day);
                         return (
                             <div key={day} className={styles.dayItem}>
@@ -211,10 +163,6 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                         <p className={styles.reviewInfo}>오늘의 일정! 한번 더 확인하고 방문해요!</p>
                     </>
                 )}
-<<<<<<< HEAD
-=======
-
->>>>>>> main
                 {volunteerStatus === "REVIEWING" && (
                     <>
                         <p className={styles.matchName}><strong>{userInfo.currentMatching.otherName}</strong> 님과의 매칭</p>
@@ -225,10 +173,6 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                         <p className={styles.reviewInfo}>후기를 남겨주세요!</p>
                     </>
                 )}
-<<<<<<< HEAD
-=======
-
->>>>>>> main
                 {volunteerStatus === "COMPLETED" && (
                     <>
                         <p className={styles.matchName}>오늘 봉사가 완료됐습니다.</p>
@@ -236,10 +180,6 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                         <p className={styles.reviewInfo}>오늘의 일정은 더이상 없습니다.</p>
                     </>
                 )}
-<<<<<<< HEAD
-=======
-
->>>>>>> main
                 {volunteerStatus === "NOT_MATCHING" && (
                     <>
                         <p className={styles.matchName}>매칭 진행중입니다</p>
@@ -247,10 +187,6 @@ export default function VolunteerMain({ isNewNotification, setIsNewNotification 
                         <p className={styles.reviewInfo}>{formatDate(userInfo.currentMatching.startTime)} 봉사 신청</p>
                     </>
                 )}
-<<<<<<< HEAD
-=======
-
->>>>>>> main
                 {volunteerStatus === null && (
                     <>
                         <p className={styles.matchName}>오늘의 일정이 없습니다.</p>
