@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./UserMain.module.css";
 import ongi from "../../assets/ongi.svg";
 import { useNavigate } from "react-router-dom";
@@ -7,16 +7,12 @@ import { fetchUserInfo } from "../../api/both";
 
 export default function UserMain({ isNewNotification, setIsNewNotification }) {
     const navigate = useNavigate();
-
-    
-
     const [hasNewNotification, setHasNewNotification] = useState(false);
+
     // 앱 진입 시 localStorage에서 상태 복구
     useEffect(() => {
         const stored = localStorage.getItem("isNewNotification");
-        if (stored === "true") {
-            setHasNewNotification(true);
-        }
+        setHasNewNotification(stored === "true");
     }, []);
 
     useEffect(() => {
@@ -58,7 +54,7 @@ export default function UserMain({ isNewNotification, setIsNewNotification }) {
                     </button>
                     <button className={styles.iconBtn} onClick={() => navigate('/notification')}>
                         <img
-                            src={isNewNotification ? "/alarm-red.svg" : "/alarm.svg"}
+                            src={hasNewNotification ? "/alarm-red.svg" : "/alarm.svg"}
                             alt="알람"
                         />
                     </button>

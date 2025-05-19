@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route ,useLocation} from "react-router-dom";
 import { requestFCMToken } from './fcm';
 import { messaging, onMessage } from './firebase';
 import './App.css';
@@ -39,6 +39,67 @@ import NotificationWatcher from './components/NotificationWatcher';
 
 // let isOnMessageRegistered = false;
 
+function AppRoutes({ isNewNotification, setIsNewNotification }) {
+  const location = useLocation();
+
+  // 알림이 왔을 때 alert 띄울 화면 경로 목록
+  const allowedPaths = ['/volunteermain', '/usermain', '/helpcenter'];
+
+  const onNewNotification = () => {
+    // 화면이 알림 허용 경로이고, 앱이 포그라운드 상태일 때만 alert 띄우기
+    if (allowedPaths.includes(location.pathname) && document.visibilityState === 'visible') {
+      alert("🔔 새로운 알림이 도착했습니다.");
+    }
+
+    // 빨간 종 상태는 무조건 true로 바꿈
+    setIsNewNotification(true);
+    localStorage.setItem('isNewNotification', 'true');
+  };
+
+  return (
+    <>
+      <NotificationWatcher onNewNotification={onNewNotification} />
+      <Routes>
+        {/* 공통 */}
+        <Route path="/" element={<Splash />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/roleselect" element={<RoleSelect />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/edit" element={<Edit />} />
+        <Route path="/notification" element={<NotificationPage setIsNewNotification={setIsNewNotification} />} />
+
+        {/* 봉사자 */}
+        <Route path="/volunteermain" element={<VolunteerMain isNewNotification={isNewNotification} setIsNewNotification={setIsNewNotification} />} />
+        <Route path="/writereview" element={<WriteReview />} />
+        <Route path="/availabletime" element={<AvailableTime />} />
+        <Route path="/matchinglist" element={<MatchingList />} />
+        <Route path="/completereview" element={<CompleteReview />} />
+        <Route path="/matchingdetail" element={<MatchingDetail />} />
+        <Route path="/reviewdetail" element={<ReviewDetail />} />
+
+        {/* 사용자 */}
+        <Route path="/usermain" element={<UserMain isNewNotification={isNewNotification} setIsNewNotification={setIsNewNotification} />} />
+        <Route path="/helpcenter" element={<HelpCenter isNewNotification={isNewNotification} setIsNewNotification={setIsNewNotification} />} />
+        <Route path="/requestform" element={<RequestForm />} />
+        <Route path="/applyinglist" element={<ApplyingList />} />
+        <Route path="/applyingdetail" element={<ApplyingDetail />} />
+        <Route path="/setname" element={<SetName />} />
+        <Route path="/chatcenter" element={<ChatCenter />} />
+        <Route path="/chatpage" element={<ChatPage />} />
+        <Route path="/VolunteerRecommend" element={<VolunteerRecommend />} />
+
+        {/* 기타 */}
+        <Route path="/redirect" element={<RedirectHandler />} />
+        <Route path="/loadingmodaltest" element={<LoadingModalTest />} />
+        <Route path="*" element={<div>not found</div>} />
+
+      </Routes>
+    </>
+  );
+}
+
+
+
 function App() {
   const [isNewNotification, setIsNewNotification] = useState(false);
 
@@ -73,48 +134,18 @@ function App() {
   //   }
   // }, []);
 
+  // 앱 시작 시 localStorage의 알림 상태 읽어서 복원
+  useEffect(() => {
+    const stored = localStorage.getItem('isNewNotification');
+    if (stored === 'true') {
+      setIsNewNotification(true);
+    }
+  }, []);
   return (
     <Router>
-      <NotificationWatcher onNewNotification={() => setIsNewNotification(true)} />
-      <Routes>
-        {/* 공통 */}
-        <Route path="/" element={<Splash />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/roleselect" element={<RoleSelect />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/edit" element={<Edit />} />
-        <Route path="/notification" element={<NotificationPage setIsNewNotification={setIsNewNotification} />} />
-
-        {/* 봉사자 */}
-        <Route path="/volunteermain" element={<VolunteerMain isNewNotification={isNewNotification} setIsNewNotification={setIsNewNotification} />} />
-        <Route path="/writereview" element={<WriteReview />} />
-        <Route path="/availabletime" element={<AvailableTime />} />
-        <Route path="/matchinglist" element={<MatchingList />} />
-        <Route path="/completereview" element={<CompleteReview />} />
-        <Route path="/matchingdetail" element={<MatchingDetail />} />
-        <Route path="/reviewdetail" element={<ReviewDetail />} />
-
-        {/* 사용자 */}
-        <Route path="/usermain" element={<UserMain
-          isNewNotification={isNewNotification}
-          setIsNewNotification={setIsNewNotification}
-        />} />
-        <Route path="/helpcenter" element={<HelpCenter />} />
-        <Route path="/requestform" element={<RequestForm />} />
-        <Route path="/applyinglist" element={<ApplyingList />} />
-        <Route path="/applyingdetail" element={<ApplyingDetail />} />
-        <Route path="/setname" element={<SetName />} />
-        <Route path="/chatcenter" element={<ChatCenter />} />
-        <Route path="/chatpage" element={<ChatPage />} />
-        <Route path="/VolunteerRecommend" element={<VolunteerRecommend />} />
-
-        {/* 기타 */}
-        <Route path="/redirect" element={<RedirectHandler />} />
-        <Route path="/loadingmodaltest" element={<LoadingModalTest />} />
-        <Route path="*" element={<div>not found</div>} />
-      </Routes>
+      <AppRoutes isNewNotification={isNewNotification} setIsNewNotification={setIsNewNotification} />
     </Router>
-  );
+  )
 }
 
 export default App;

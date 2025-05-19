@@ -42,7 +42,7 @@ export default function NotificationWatcher({ onNewNotification }) {
         };
 
         checkNewNotifications();
-        const interval = setInterval(checkNewNotifications, 30000);
+        const interval = setInterval(checkNewNotifications, 5000);
         return () => clearInterval(interval);
     }, [onNewNotification]);
 
