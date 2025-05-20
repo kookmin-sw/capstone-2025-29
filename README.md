@@ -325,15 +325,15 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
 └── 📜 각종 세팅 파일
 
 └── 📕 Readme.md
-```
+
 
 <br/>
 
 ## 📝 소개 자료
-### [중간 발표 자료]()
-### [중간 보고서]()
+### [중간 발표 자료]([온기(캡스톤디자인29팀).pdf](https://github.com/user-attachments/files/20339862/29.pdf))
+### [중간 보고서]([캡스톤29팀_수행계획서.pdf](https://github.com/user-attachments/files/20339878/29._.pdf))
 ### [시연 동영상](https://youtu.be/tJuJ5t_oEMY)
-### [포스터]()
-### [최종 발표 자료]()
-### [결과 보고서]()
+### [포스터]([온기포스터최종.pdf](https://github.com/user-attachments/files/20339490/default.pdf))
+### [최종 발표 자료]([온기(캡스톤디자인29팀)발표자료.pdf](https://github.com/user-attachments/files/20339785/29.pdf))
+### [결과 보고서]([온기(캡스톤디자인29팀)수행결과보고서.pdf](https://github.com/user-attachments/files/20339743/29.pdf))
 ### [회의록]()
