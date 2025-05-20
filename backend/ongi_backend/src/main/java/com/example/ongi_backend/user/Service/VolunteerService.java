@@ -179,7 +179,7 @@ public class VolunteerService {
 				);
 				return RecommendVolunteer.of(
 					volunteer.getName(),
-					volunteer.getVolunteerActivities().size() * 3,
+					VolunteerActivityService.calculateVolunteerHours(volunteer.getVolunteerActivities()),
 					volunteer.getId(),
 					volunteer.getProfileImage(),
 					volunteer.getBio()
@@ -228,7 +228,7 @@ public class VolunteerService {
 					volunteer.getName(),
 					volunteer.getPhone(),
 					volunteer.getProfileImage(),
-					volunteer.getVolunteerActivities().size() * 3
+					VolunteerActivityService.calculateVolunteerHours(volunteer.getVolunteerActivities())
 				);
 			})
 			.orElseGet(() -> {
@@ -279,7 +279,7 @@ public class VolunteerService {
 			volunteer.getName(),
 			volunteer.getPhone(),
 			volunteer.getProfileImage(),
-			volunteer.getVolunteerActivities().size() * 3
+			VolunteerActivityService.calculateVolunteerHours(volunteer.getVolunteerActivities())
 		);
 	}
 
@@ -306,7 +306,7 @@ public class VolunteerService {
 			volunteer.getPhone(),
 			volunteer.getProfileImage(),
 			volunteer.getBio(),
-			volunteer.getVolunteerActivities().size() * 3
+			VolunteerActivityService.calculateVolunteerHours(volunteer.getVolunteerActivities())
 		);
 	}
 }
