@@ -74,7 +74,7 @@ public class VolunteerActivityService {
 					va.getVolunteer() != null ?
 						ResponseMatchedUserInfo.of(va.getVolunteer().getName(), va.getVolunteer().getPhone(),
 							va.getVolunteer().getProfileImage(),
-							va.getVolunteer().getVolunteerActivities().size() * 3) : null
+							VolunteerActivityService.calculateVolunteerHours(va.getVolunteer().getVolunteerActivities())) : null
 				)
 				.build())
 			.orElseThrow(() -> new CustomException(NOT_FOUND_VOLUNTEER_ACTIVITY_ERROR));
@@ -185,5 +185,11 @@ public class VolunteerActivityService {
 	}
 	public VolunteerActivity existVolunteerActivity(Elderly elderly, LocalDate startDate) {
 		return volunteerActivityRepository.findVaByElderlyAndDate(elderly, startDate).orElse(null);
+	}
+	public static Integer calculateVolunteerHours(List<VolunteerActivity> volunteerActivities) {
+		return volunteerActivities.stream()
+			.filter(va -> va.getStatus() == COMPLETED)
+			.mapToInt(va -> 3)
+			.sum();
 	}
 }

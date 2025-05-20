@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.ongi_backend.user.entity.Volunteer;
 import com.example.ongi_backend.volunteerActivity.entity.VolunteerActivity;
+import com.example.ongi_backend.volunteerActivity.service.VolunteerActivityService;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -24,14 +25,11 @@ public class VolunteerInfo{
 	@Schema(description = "봉사자 봉사 시간", example = "123")
 	private Integer volunteerHours;
 	public static VolunteerInfo of(Volunteer volunteer){
-		List<VolunteerActivity> completeVa = volunteer.getVolunteerActivities().stream().filter(
-			va -> va.getStatus() == COMPLETED
-		).toList();
 		return VolunteerInfo.builder()
 			.name(volunteer.getName())
 			.phone(volunteer.getPhone())
 			.profileImage(volunteer.getProfileImage())
-			.volunteerHours(completeVa.size() * 3)
+			.volunteerHours(VolunteerActivityService.calculateVolunteerHours(volunteer.getVolunteerActivities()))
 			.build();
 	}
 }
