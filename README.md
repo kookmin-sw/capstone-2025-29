@@ -48,7 +48,6 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
 
 <br/>
 
-
 <br/>
 
 ## 🦾 주요 기능
@@ -111,6 +110,7 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
               20203068
         </td>
         <td style="min-width: 150px;">
+             <img style="width: 200px;" src="https://github.com/user-attachments/assets/fd613bb0-48d9-4f7a-b8c2-dfa764f457e4" />
             <a href="https://github.com/glory-yun">
               <br />
               <b>윤영광</b>
