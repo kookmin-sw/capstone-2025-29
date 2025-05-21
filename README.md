@@ -102,6 +102,7 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
 <table>
     <tr align="center">
         <td style="min-width: 150px;">
+            <img style="width: 200px;" src="https://github.com/user-attachments/assets/167a3fe4-ab64-49f5-bab2-c6f6b2dbef3f" />
             <a href="https://github.com/Sung-young">
               <br />
               <b>박성영</b>
