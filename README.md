@@ -119,6 +119,7 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
               20203109
         </td>
         <td style="min-width: 150px;">
+            <img style="width: 200px;" src="https://github.com/user-attachments/assets/747253dd-d1cd-4d2b-abce-08bab7a78c23"/>
             <a href="https://github.com/SUNMI-KIM">
               <br />
               <b>김선미</b>
@@ -127,6 +128,7 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
               20212976
         </td>
         <td style="min-width: 150px;">
+            <img style="width: 200px;" src="https://github.com/user-attachments/assets/54254392-1e22-45c9-bf90-646d54a7bb92" />
             <a href="https://github.com/chaews0327">
               <br />
               <b>이예원</b>
