@@ -137,7 +137,7 @@ const ChatPage = () => {
             await audio.play();
         } catch (error) {
             console.error("❌ AI 응답 오류", error);
-            const errorMessage = {
+            const errorMessage = {  
                 id: ++lastMessageId.current,
                 sender: "ai",
                 content: "죄송합니다. 현재 요청을 처리할 수 없습니다.",
