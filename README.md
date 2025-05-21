@@ -134,7 +134,8 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
                        <br/>
               20213047
         </td>
-                <td style="min-width: 150px;">
+        <td style="min-width: 150px;">
+            <img style="width: 200px;" src="https://github.com/user-attachments/assets/68593179-6f07-4ea7-a8f4-8e3c153c9f70" />
             <a href="https://github.com/KimYooBin1">
               <br />
               <b>김유빈</b>
