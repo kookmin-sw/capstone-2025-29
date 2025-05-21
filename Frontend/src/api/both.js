@@ -167,6 +167,8 @@ export const updatePassword = async (password, userType) => {
 export const fetchUserNotifications = async (userType) => {
     const accessToken = localStorage.getItem("accessToken");
 
+    console.log('12312')
+
     try {
         const response = await axios.get(`/api/user/notification`, {
             params: { userType },
@@ -206,17 +208,13 @@ export const kakaoLogin = async () => {
 
 // ✅ FCM 토큰 등록 API
 export const updateFcmToken = async (userType, accessToken) => {
-
     const fcmToken = localStorage.getItem("fcmToken");
-    
     if (!accessToken) {
         throw new Error("AccessToken이 없습니다.");
     }
-
     if (!fcmToken) {
         throw new Error("fcmToken이 없습니다.");
     }
-
     try {
         const response = await axios.patch(
             `/api/user/fcmToken`,

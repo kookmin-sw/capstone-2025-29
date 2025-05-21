@@ -66,6 +66,7 @@ export const fetchChatBotName = async () => {
         // 로컬스토리지에 저장
         localStorage.setItem('chatBotName', data.name);
         localStorage.setItem('chatBotProfileImage', data.profileImage);
+
         return response.data;
     } catch (error) {
         console.error("❌ 챗봇 이름 저장 실패:", error);

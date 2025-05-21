@@ -2,63 +2,64 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Topbar from "../../components/Topbar";
 import VolunteerModal from "../../components/VolunteerModal";
-import { cancelMatching, requestElderlyMatching, recommendVolunteerMatching } from "../../api/UserApi";
+import {
+    cancelMatching,
+    requestElderlyMatching,
+    recommendVolunteerMatching,
+    cancelMatchingKeepalive
+} from "../../api/UserApi";
 import styles from "./VolunteerRecommend.module.css";
 
+// ✅ 추천된 봉사자 선택 페이지
 export default function VolunteerRecommend() {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const volunteersData = location.state;
+    const location = useLocation(); // 이전 페이지에서 전달된 데이터 접근
+    const navigate = useNavigate(); // 페이지 이동을 위한 함수
 
+    // ✅ 추천 봉사자 및 매칭 ID 추출
+    const volunteersData = location.state;
     const matchingId = volunteersData?.volunteersData?.matchingId;
     const volunteers = volunteersData?.volunteersData?.recommendVolunteers || [];
 
-    const [selectedVolunteer, setSelectedVolunteer] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeVolunteerId, setActiveVolunteerId] = useState(null);
+    // ✅ 선택된 봉사자 모달 상태 및 선택 상태 관리
+    const [selectedVolunteer, setSelectedVolunteer] = useState(null); // 상세 모달에 표시할 봉사자 정보
+    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 여부
+    const [activeVolunteerId, setActiveVolunteerId] = useState(null); // 현재 선택된 카드
 
-    const isConfirmed = useRef(false);
+    const isConfirmed = useRef(false); // 매칭 확정 여부 (keepalive 취소 방지용)
 
+    // ✅ 페이지 이탈 또는 탭 비활성화 시 매칭 자동 취소 처리
     useEffect(() => {
-        const cancelMatchingKeepalive = () => {
-            if (volunteers.length > 0 && matchingId && !isConfirmed.current) {
-                console.log("🚨 매칭 취소 요청 (keepalive)");
-
-                fetch(`${import.meta.env.VITE_API_URL}/api/elderly/matching/${matchingId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json',
-                    },
-                    keepalive: true,
-                }).then(() => {
-                    console.log("✅ 매칭 취소 성공 (keepalive)");
-                }).catch(err => {
-                    console.error("❌ 매칭 취소 실패 (keepalive):", err);
-                });
-            }
-        };
-
+        // 브라우저 닫기/새로고침 시
         const handleBeforeUnload = () => {
-            cancelMatchingKeepalive();
-        };
-
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === 'hidden') {
-                cancelMatchingKeepalive();
+            if (volunteers.length > 0 && matchingId && !isConfirmed.current) {
+                cancelMatchingKeepalive(matchingId);
             }
         };
 
+        // 탭 전환 또는 최소화 시
+        const handleVisibilityChange = () => {
+            if (
+                document.visibilityState === 'hidden' &&
+                volunteers.length > 0 &&
+                matchingId &&
+                !isConfirmed.current
+            ) {
+                cancelMatchingKeepalive(matchingId);
+            }
+        };
+
+        // 이벤트 등록
         window.addEventListener('beforeunload', handleBeforeUnload);
         document.addEventListener('visibilitychange', handleVisibilityChange);
 
+        // 이벤트 해제 (메모리 누수 방지)
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
     }, [volunteers.length, matchingId]);
 
-    // 카드 클릭 → 상세 모달
+    // ✅ 카드 클릭 → 모달 열기
     const handleCardClick = (id) => {
         const volunteer = volunteers.find((v) => v.volunteerId === id);
         if (volunteer) {
@@ -66,36 +67,39 @@ export default function VolunteerRecommend() {
                 ...volunteer,
                 profileImageUrl: volunteer.profileImageUrl && volunteer.profileImageUrl.trim() !== ""
                     ? volunteer.profileImageUrl
-                    : "/profile.svg"
+                    : "/profile.svg" // 기본 이미지
             });
             setIsModalOpen(true);
         }
     };
 
+    // ✅ 선택 버튼 클릭 → 봉사자 확정
     const handleSelectButtonClick = async (id) => {
         if (activeVolunteerId === id) {
             const confirmSelect = window.confirm('해당 봉사자를 선택하시겠습니까?');
             if (confirmSelect) {
                 try {
                     await recommendVolunteerMatching({ volunteerId: id, matchingId });
-                    isConfirmed.current = true;
+                    isConfirmed.current = true; // 확정 상태 기록
 
                     alert("봉사자 선택이 완료되었습니다.");
-                    navigate("/helpcenter");
+                    navigate("/helpcenter"); // 센터로 이동
                 } catch (error) {
                     console.error("추천 봉사자 선택 실패:", error);
                     alert(error.message || "추천 봉사자 선택에 실패했습니다.");
                 }
             }
         } else {
-            setActiveVolunteerId(id);
+            setActiveVolunteerId(id); // 버튼 시각적 선택
         }
     };
 
+    // ✅ 모달 닫기
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
 
+    // ✅ 뒤로가기 → 매칭 취소 확인 및 실행
     const handleBack = async () => {
         const confirmCancel = window.confirm("매칭을 취소하시겠습니까?");
         if (confirmCancel && matchingId) {
@@ -110,12 +114,15 @@ export default function VolunteerRecommend() {
         }
     };
 
+    // ✅ 하단 버튼 클릭 → "괜찮습니다" 또는 "매칭 기다리기"
     const handleBottomButtonClick = async () => {
         if (volunteers.length === 0) {
+            // 추천된 봉사자 없을 경우 → 매칭 대기 화면으로
+            alert("매칭 진행을 계속 진행합니다.")
             navigate("/helpcenter");
         } else {
             try {
-                await requestElderlyMatching({ matchingId });
+                await requestElderlyMatching({ matchingId }); // 매칭 요청
                 isConfirmed.current = true;
 
                 alert("매칭 신청이 완료되었습니다.");
@@ -129,8 +136,10 @@ export default function VolunteerRecommend() {
 
     return (
         <div className={styles.container}>
+            {/* 상단 바 */}
             <Topbar title="" handleBack={handleBack} />
 
+            {/* 봉사자 추천 결과 */}
             {volunteers.length > 0 ? (
                 <>
                     <div className={styles.titleBox}>
@@ -142,7 +151,7 @@ export default function VolunteerRecommend() {
                         {volunteers.map((volunteer, index) => {
                             const profileImage = volunteer.profileImageUrl && volunteer.profileImageUrl.trim() !== ""
                                 ? volunteer.profileImageUrl
-                                : "/profile.svg";
+                                : "/profile.svg"; // 기본 프로필 이미지
 
                             return (
                                 <div
@@ -160,7 +169,7 @@ export default function VolunteerRecommend() {
                                     <button
                                         className={`${styles.selectButton} ${activeVolunteerId === volunteer.volunteerId ? styles.selected : ""}`}
                                         onClick={(e) => {
-                                            e.stopPropagation();
+                                            e.stopPropagation(); // 카드 클릭 이벤트 중단
                                             handleSelectButtonClick(volunteer.volunteerId);
                                         }}
                                     >
@@ -177,8 +186,10 @@ export default function VolunteerRecommend() {
                 </div>
             )}
 
+            {/* 봉사자 상세 모달 */}
             <VolunteerModal isOpen={isModalOpen} onClose={handleCloseModal} volunteer={selectedVolunteer} />
 
+            {/* 하단 버튼 */}
             <button
                 className={styles.bottomButton}
                 onClick={handleBottomButtonClick}

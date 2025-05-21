@@ -21,6 +21,10 @@
     "chart.js": "^4.4.8",
     "date-fns": "^4.1.0",
     "firebase": "^11.7.1",
+<<<<<<< HEAD
+=======
+    "framer-motion": "^12.12.1",
+>>>>>>> main
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-datepicker": "^8.3.0",

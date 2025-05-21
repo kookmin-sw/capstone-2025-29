@@ -21,7 +21,6 @@ export default function SetName() {
 
             // ✅ 성공 시 로컬스토리지에 저장
             localStorage.setItem('chatBotName', name);
-            localStorage.setItem('chatBotProfileImage', previewImg);
 
             // ✅ ChatCenter로 이동
             navigate('/ChatCenter');

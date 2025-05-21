@@ -15,7 +15,13 @@ function HelpCenter() {
     const [matchTime, setMatchTime] = useState("");
     const [matchingId, setMatchingId] = useState(null); // 매칭 ID 저장
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+    const [hasNewNotification, setHasNewNotification] = useState(false);
 
+    // 앱 진입 시 로컬 스토리지 기준 알림 상태 복원
+    useEffect(() => {
+        const stored = localStorage.getItem("isNewNotification");
+        setHasNewNotification(stored === "true");
+    }, []);
     // 컴포넌트가 마운트될 때 API 호출
     useEffect(() => {
         const loadMatchingData = async () => {
@@ -176,7 +182,6 @@ function HelpCenter() {
                 </div>
             </div>
 
-            <LoadingModal isOpen={isLoading} message="" />
         </div>
     );
 }

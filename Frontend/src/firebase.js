@@ -7,13 +7,14 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyACl_ax4pP-L974aZaxEQUMVI69rymj8O0",
-    authDomain: "ongi-83270.firebaseapp.com",
-    projectId: "ongi-83270",
-    storageBucket: "ongi-83270.firebasestorage.app",
-    messagingSenderId: "967073688567",
-    appId: "1:967073688567:web:d98b3696b4bd3fec17dcf2",
-    measurementId: "G-4KKTBFCCS9"
+    apiKey: `${import.meta.env.VITE_FIREBASE_API_KEY}`,
+    authDomain: `${import.meta.env.VITE_FIREBASE_AUTH_DOMAIN}`,
+    projectId: `${import.meta.env.VITE_FIREBASE_PROJECT_ID=ongi-83270
+}`,
+    storageBucket: `${import.meta.env.VITE_FIREBASE_STORAGE_BUCKET}`,
+    messagingSenderId: `${import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID}`,
+    appId: `${import.meta.env.VITE_FIREBASE_APP_ID}`,
+    measurementId: `${import.meta.env.VITE_FIREBASE_MEASUREMENT_ID}`
 };
 
 // Initialize Firebase

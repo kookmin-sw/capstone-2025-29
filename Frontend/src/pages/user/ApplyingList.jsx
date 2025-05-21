@@ -65,11 +65,11 @@ export default function ApplyingList() {
 
     return (
     <div className={styles.container}>
-        <Topbar title="나의 신청내역" />
+        <Topbar title="신청내역" />
 
-        {isLoading ? null : (
+        {(
             matchData.length === 0 ? (
-                <p className={styles.message}>매칭 내역이 없습니다</p>
+                <p className={styles.message}>신청 내역이 없습니다</p>
             ) : (
                 matchData.map((match) => (
                     <MatchCard

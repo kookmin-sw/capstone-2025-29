@@ -4,16 +4,21 @@ import NotificationCard from "../../components/NotificationCard";
 import styles from "./NotificationPage.module.css";
 import { fetchUserNotifications } from "../../api/both"; // API 호출 함수 가져오기 
 
-export default function NotificationPage() {
+export default function NotificationPage({ setIsNewNotification }) {
     const [notifications, setNotifications] = useState([]);
 
+    useEffect(() => {
+        // 알림 페이지 들어오면 알림 확인한 것으로 처리
+        setIsNewNotification(false);
+        localStorage.setItem("isNewNotification", "false");
+    }, [setIsNewNotification]);
+
+    
     useEffect(() => {
         const loadNotifications = async () => {
             try {
                 const userType = localStorage.getItem('userType') || 'elderly';
                 const data = await fetchUserNotifications(userType);
-
-                console.log("알림 데이터:", data); // 응답 데이터 로그
 
                 // ✅ data가 배열이므로 바로 map 처리
                 const formattedNotifications = data.map((item, index) => ({
@@ -60,7 +65,7 @@ export default function NotificationPage() {
                 ) : (
                     notifications.map((notification) => (
                         <NotificationCard
-                            key={`${notification.id}-${notification.date}`}
+                            key={`${notification.id}-${notification.createdAt}`}
                             {...notification}
                         />
                     ))

@@ -166,7 +166,8 @@
     border: none;
     background-color: #fff;
     border-radius: 8px;
-
+    
+    text-align: center;
     font-size: clamp(0.8rem, 2.5vw, 1rem);
     appearance: none;
     -webkit-appearance: none;

@@ -28,8 +28,6 @@ export default function Login() {
         try {
             const requestData = await login(formValues.username, formValues.password, userType);
 
-            console.log('로그인 성공:', requestData);
-
             localStorage.setItem('userName', requestData.name);
             localStorage.setItem('userAddress', JSON.stringify(requestData.address));
 
@@ -46,7 +44,7 @@ export default function Login() {
 
     // ✅ 카카오 로그인 리다이렉트 핸들러
     const handleKakaoLogin = () => {
-        const kakaoAuthUrl = 'https://coffeesupliers.shop/oauth2/authorization/kakao';
+        const kakaoAuthUrl = import.meta.env.VITE_KAKAO_AUTH_URL;
         window.open(kakaoAuthUrl);
     };
 
