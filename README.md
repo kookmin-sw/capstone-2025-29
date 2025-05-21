@@ -92,8 +92,8 @@ AI 챗봇과의 대화를 통해 외로움과 우울감을 완화하고, 감정 
 
 <br/>
 
-## 🎬 소개 영상
-[![Video Label](
+## 🎬 시연 영상
+[![Video Label](https://github.com/user-attachments/assets/5d4c51fd-17db-4ec2-83d5-fec84c7012c6)](https://youtu.be/tJuJ5t_oEMY)
 
 <br/>
 
