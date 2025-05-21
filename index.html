@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온기 - 봉사자/독거노인 매칭 플랫폼</title>
+    <style>
+        /* 기본 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #2563eb;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 헤더 */
+        header {
+            background-color: #fff;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        /* 메인 콘텐츠 */
+        main {
+            flex-grow: 1;
+            padding: 1.5rem;
+            max-width: 1024px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                padding: 2.5rem;
+            }
+        }
+
+        /* 타이틀 스타일 */
+        h1 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.25rem;
+            }
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 섹션 스타일 */
+        section {
+            margin: 3rem 0;
+        }
+
+        /* 카드 스타일 */
+        .card {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        /* 이미지 스타일 */
+        .hero-image {
+            width: 100%;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+
+        /* 목차 스타일 */
+        .toc {
+            margin: 2.5rem 0;
+        }
+
+        .toc ol {
+            list-style-position: inside;
+            margin-left: 1rem;
+        }
+
+        .toc li {
+            margin: 0.5rem 0;
+        }
+
+        /* 체크리스트 스타일 */
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .check-icon {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        /* 기능 리스트 스타일 */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .feature-card ul {
+            margin-left: 1.5rem;
+        }
+
+        .feature-card li {
+            margin: 0.5rem 0;
+        }
+
+        /* 팀원 그리드 */
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .team-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .team-card {
+            text-align: center;
+        }
+
+        .team-image {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 9999px;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+        }
+
+        .team-placeholder {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 9999px;
+            background-color: #e5e7eb;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .team-placeholder:hover {
+            background-color: #d1d5db;
+            transition: background-color 0.3s;
+        }
+
+        .team-image:hover {
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        /* 테이블 스타일 */
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            min-width: 100%;
+            background-color: #fff;
+            border-collapse: collapse;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 0.5rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background-color: #f9fafb;
+        }
+
+        /* 코드 블록 스타일 */
+        pre {
+            background-color: #1f2937;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: monospace;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1024px;
+            margin: 0 auto;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        /* 유틸리티 클래스 */
+        .text-purple {
+            color: #8b5cf6;
+        }
+
+        .text-blue {
+            color: #3b82f6;
+        }
+
+        .text-gray {
+            color: #6b7280;
+        }
+
+        .text-red {
+            color: #ef4444;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .aspect-video {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 비율 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            background-color: #f3f4f6;
+        }
+
+        .aspect-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* 이미지 로딩 실패 시 스타일 */
+        .img-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <header>
+            <div></div>
+        </header>
+
+        <!-- 메인 콘텐츠 -->
+        <main>
+            <!-- 타이틀 섹션 -->
+            <h1><span class="text-gray">📝</span> 봉사자/독거노인 매칭 플랫폼, <span class="text-purple">온기</span></h1>
+
+            <!-- 히어로 이미지 -->
+            <div class="hero-image-container">
+                <!-- 대체 이미지 사용 -->
+                <img src="https://i.ibb.co/Jj9VKBW/ongi-hero.jpg" alt="온기 소개 이미지" class="hero-image"
+                    onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'>온기 소개 이미지를 불러올 수 없습니다.</div>';">
+            </div>
+
+            <!-- 목차 -->
+            <div class="toc">
+                <h2><span class="text-gray">🔗</span> 목차</h2>
+                <ol>
+                    <li>
+                        <a href="#project-intro">💡 프로젝트 소개</a>
+                    </li>
+                    <li>
+                        <a href="#features">🦾 주요 기능</a>
+                    </li>
+                    <li>
+                        <a href="#demo-video">🎬 소개 영상</a>
+                    </li>
+                    <li>
+                        <a href="#team">👋 팀원 소개</a>
+                    </li>
+                    <li>
+                        <a href="#system-architecture">🌐 시스템 구조</a>
+                    </li>
+                    <li>
+                        <a href="#tech-stack">🛠 기술 스택</a>
+                    </li>
+                    <li>
+                        <a href="#folder-structure">📂 폴더 구조</a>
+                    </li>
+                    <li>
+                        <a href="#resources">📝 소개 자료</a>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- 프로젝트 소개 -->
+            <section id="project-intro">
+                <h2><span class="text-gray">💡</span> 프로젝트 소개</h2>
+                <div class="card">
+                    <h3 class="mb-4">| 실시간 봉사 매칭 플랫폼</h3>
+                    <ul class="checklist">
+                        <li>
+                            <span class="check-icon">✅</span>
+                            <p>
+                                <strong>온기</strong>는 독거노인과 봉사자를 실시간으로 연결해주는 AI 기반 봉사 매칭 플랫폼입니다.
+                                봉사자가 등록한 시간과 지역 정보를 기반으로, 봉사가 필요한 독거노인과 즉시 연결됩니다.
+                            </p>
+                        </li>
+                        <li>
+                            <span class="check-icon">✅</span>
+                            <p>
+                                <strong>온기</strong>는 봉사자 추천 시스템을 통해 사용자 선호도를 반영한 매칭을 지원합니다. 이용자는
+                                이전 대화 경험을 바탕으로 추천된 봉사자 중 선호하는 봉사자를 직접 선택할 수 있습니다.
+                            </p>
+                        </li>
+                        <li>
+                            <span class="check-icon">✅</span>
+                            <p>
+                                <strong>온기</strong>는 AI 음성 대화를 통해 정서적 케어를 제공합니다. AI 챗봇과의 대화를 통해
+                                외로움과 우울감을 완화하고, 감정 분석을 통해 우울감·불안 신호를 사전에 탐지하여 보호자나
+                                사회복지사가 필요한 대응을 할 수 있도록 지원합니다.
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 주요 기능 -->
+            <section id="features">
+                <h2><span class="text-gray">🦾</span> 주요 기능</h2>
+                <div class="feature-list">
+                    <div class="card feature-card">
+                        <h3><span class="text-blue">📌</span> 실시간 봉사자 자동 매칭</h3>
+                        <ul>
+                            <li>• 봉사자가 등록한 시간과 지역 정보 기반으로 독거노인과 자동 매칭</li>
+                            <li>• 대기 없이 봉사 연결이 가능하며 신청하지 못한 독거노인도 연결 가능</li>
+                        </ul>
+                    </div>
+
+                    <div class="card feature-card">
+                        <h3><span class="text-blue">🧑‍🤝‍🧑</span> 봉사자 추천 시스템</h3>
+                        <ul>
+                            <li>
+                                • 사용자의 정보(자기소개, 성별)와 이용자의 선호도를 기반으로 컨텐츠 기반 필터링(코사인 유사도)을
+                                통해 봉사자 4명을 추천
+                            </li>
+                            <li>• 이용자가 원하는 봉사자를 직접 선택 가능</li>
+                        </ul>
+                    </div>
+
+                    <div class="card feature-card">
+                        <h3><span class="text-blue">🗣️</span> AI 음성 대화 시스템</h3>
+                        <ul>
+                            <li>• Whisper 기반 STT로 음성을 텍스트로 변환</li>
+                            <li>• GPT 기반 TTR로 자연스러운 대화 응답 생성</li>
+                            <li>• MeloTTS 기반 TTS로 다시 음성으로 응답하여 음성 대화가 가능</li>
+                        </ul>
+                    </div>
+
+                    <div class="card feature-card">
+                        <h3><span class="text-blue">🧠</span> AI 감정 분석 및 정서 케어</h3>
+                        <ul>
+                            <li>• 대화를 바탕으로 하루동안의 감정 기록 및 분석</li>
+                            <li>• 우울함,심리적 불안 신호 등을 사전 탐지</li>
+                        </ul>
+                    </div>
+
+                    <div class="card feature-card">
+                        <h3><span class="text-blue">📈</span> 상업적 확장 가능성</h3>
+                        <ul>
+                            <li>• QR코드 기반 봉사 이력 자동 등록 및 인증 시스템</li>
+                            <li>• 블록체인을 활용한 봉사 진위 여부 검증 기능 추가 예정</li>
+                            <li>• 지자체, 복지기관, 외부 단체와의 연계를 통해통합 봉사 관리 플랫폼으로 확장 가능</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 시연 영상 -->
+            <section id="demo-video">
+                <h2><span class="text-gray">🎬</span> 시연 영상</h2>
+                <div class="aspect-video">
+                    <iframe src="https://www.youtube.com/embed/tJuJ5t_oEMY" title="온기 시연 영상"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+            </section>
+
+            <!-- 팀원 소개 -->
+            <section id="team">
+                <h2><span class="text-gray">👋</span> 팀원 소개</h2>
+                <div class="team-grid">
+                    <div class="card team-card">
+                        <a href="https://github.com/Sung-young" target="_blank" rel="noopener noreferrer">
+                            <!-- 대체 이미지 사용 -->
+                            <img src="https://i.ibb.co/Jj9VKBW/team-member1.jpg" alt="박성영" class="team-image"
+                                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'team-placeholder\'><span>박성영</span></div>';">
+                            <h3 style="justify-content: center;">박성영</h3>
+                        </a>
+                        <p class="text-sm text-gray">20203068</p>
+                        <p class="text-sm mt-2">팀장, AI</p>
+                        <p class="text-xs text-gray mt-1">pou876@kookmin.ac.kr</p>
+                    </div>
+
+                    <div class="card team-card">
+                        <a href="https://github.com/glory-yun" target="_blank" rel="noopener noreferrer">
+                            <div class="team-placeholder">
+                                <span class="text-gray">윤영광</span>
+                            </div>
+                            <h3 style="justify-content: center;">윤영광</h3>
+                        </a>
+                        <p class="text-sm text-gray">20203109</p>
+                        <p class="text-sm mt-2">Frontend</p>
+                        <p class="text-xs text-gray mt-1">yyk1797@gmail.com</p>
+                    </div>
+
+                    <div class="card team-card">
+                        <a href="https://github.com/SUNMI-KIM" target="_blank" rel="noopener noreferrer">
+                            <div class="team-placeholder">
+                                <span class="text-gray">김선미</span>
+                            </div>
+                            <h3 style="justify-content: center;">김선미</h3>
+                        </a>
+                        <p class="text-sm text-gray">20212976</p>
+                        <p class="text-sm mt-2">Backend</p>
+                        <p class="text-xs text-gray mt-1">hariaus@kookmin.ac.kr</p>
+                    </div>
+
+                    <div class="card team-card">
+                        <a href="https://github.com/chaews0327" target="_blank" rel="noopener noreferrer">
+                            <div class="team-placeholder">
+                                <span class="text-gray">이예원</span>
+                            </div>
+                            <h3 style="justify-content: center;">이예원</h3>
+                        </a>
+                        <p class="text-sm text-gray">20213047</p>
+                        <p class="text-sm mt-2">디자인, 기획</p>
+                        <p class="text-xs text-gray mt-1">kwn09032@kookmin.ac.kr</p>
+                    </div>
+
+                    <div class="card team-card">
+                        <a href="https://github.com/KimYooBin1" target="_blank" rel="noopener noreferrer">
+                            <!-- 대체 이미지 사용 -->
+                            <img src="https://i.ibb.co/Jj9VKBW/team-member5.jpg" alt="김유빈" class="team-image"
+                                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'team-placeholder\'><span>김유빈</span></div>';">
+                            <h3 style="justify-content: center;">김유빈</h3>
+                        </a>
+                        <p class="text-sm text-gray">20191566</p>
+                        <p class="text-sm mt-2">Backend</p>
+                        <p class="text-xs text-gray mt-1">kyb1208tg@gmail.com</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 시스템 구조 -->
+            <section id="system-architecture">
+                <h2><span class="text-gray">🌐</span> 시스템 구조</h2>
+                <div class="card">
+                    <!-- 대체 이미지 사용 -->
+                    <img src="https://i.ibb.co/Jj9VKBW/system-architecture.jpg" alt="시스템 구조"
+                        style="width: 100%; border-radius: 0.5rem;"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'>시스템 구조 이미지를 불러올 수 없습니다.</div>';">
+                </div>
+            </section>
+
+            <!-- 기술 스택 -->
+            <section id="tech-stack">
+                <h2><span class="text-gray">🛠</span> 기술 스택</h2>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">🖥️ Frontend</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Technology</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">Programming Language</td>
+                                <td>JavaScript</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Routing</td>
+                                <td>React Router</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Styling</td>
+                                <td>CSS, styled-components</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Package Manager</td>
+                                <td>npm</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Build Tool</td>
+                                <td>Vite</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Version Control</td>
+                                <td>Git</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">PWA Support</td>
+                                <td>Vite-PWA</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Push Notification</td>
+                                <td>Firebase Cloud Messaging</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Social Login</td>
+                                <td>Kakao Login, OAuth 2.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">🖥️ Backend</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>역할</th>
+                                <th>종류</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">Programming Language</td>
+                                <td>JAVA, Python</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Framework</td>
+                                <td>Spring Boot, FastAPI</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Build Tool</td>
+                                <td>Gradle</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">API</td>
+                                <td>REST API, gRPC</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Database</td>
+                                <td>MySQL, Redis</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Database Service</td>
+                                <td>Amazon RDS, Amazon ElastiCache</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Storage Service</td>
+                                <td>Amazon S3</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Application Service</td>
+                                <td>AWS EC2, AWS Lambda, ECR</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Container</td>
+                                <td>Docker</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Message Queue</td>
+                                <td>AWS SQS, AWS SNS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">🖥️ AI Server</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>역할</th>
+                                <th>종류</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">Operating System</td>
+                                <td>Ubuntu 22.04</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Programming Language</td>
+                                <td>Python 3.10, PyTorch</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Framework</td>
+                                <td>FastAPI</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Application Service</td>
+                                <td>AWS EC2</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Storage Service</td>
+                                <td>Amazon S3</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Container</td>
+                                <td>Docker</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">🖥️ AI</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>역할</th>
+                                <th>종류</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">STT</td>
+                                <td>OpenAI, Whisper</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">TTR</td>
+                                <td>OpenAI, ChatGPT</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">TTS</td>
+                                <td>MeloTTS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">🖥️ Deployment</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>역할</th>
+                                <th>종류</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">Web Service</td>
+                                <td>Amazon ALB, Amazon Route53, Amazon EC2</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">CI/CD</td>
+                                <td>Docker, Docker Compose, GitHub Actions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">🖥️ Common</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>역할</th>
+                                <th>종류</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">Communication</td>
+                                <td>Notion, Discord</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Design</td>
+                                <td>Figma</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Version Control</td>
+                                <td>Git, GitHub</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 폴더 구조 -->
+            <section id="folder-structure">
+                <h2><span class="text-gray">📂</span> 폴더 구조</h2>
+                <div class="card">
+                    <pre><code>├── 📂.github 🗂 템플릿, 워크플로우 관리
+
+├── 📂Frontend 🗂 프론트엔드 레포지토리(React)
+
+├── 📂AI       🗂 ai 레포지토리(FastAPI)
+
+├── 📂backend   🗂 백엔드 레포지토리(Spring Boot)
+
+├── 📂recommend   🗂 추천 서버 레포지토리(python)
+
+├── 📂notification_server   🗂 백엔드 레포지토리(python)
+
+└── 📜 각종 세팅 파일
+
+└── 📕 Readme.md</code></pre>
+                </div>
+            </section>
+
+            <!-- 소개 자료 -->
+            <section id="resources">
+                <h2><span class="text-gray">📝</span> 소개 자료</h2>
+                <div class="card">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="https://github.com/user-attachments/files/20339862/29.pdf"
+                                style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="text-red">📊</span> 중간 발표 자료
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="https://github.com/user-attachments/files/20339878/29._.pdf"
+                                style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="text-red">📝</span> 중간 보고서
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="https://youtu.be/tJuJ5t_oEMY"
+                                style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="text-red">🎬</span> 시연 동영상
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="https://github.com/user-attachments/files/20339490/default.pdf"
+                                style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="text-red">🖼️</span> 포스터
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="https://github.com/user-attachments/files/20339785/29.pdf"
+                                style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="text-red">📊</span> 최종 발표 자료
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="https://github.com/user-attachments/files/20339743/29.pdf"
+                                style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="text-red">📝</span> 결과 보고서
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <!-- 푸터 -->
+        <footer>
+            <div class="footer-content">
+                <p>© 2025 온기 - 봉사자/독거노인 매칭 플랫폼</p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="https://github.com/kookmin-sw/capstone-2025-09">GitHub Repository</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 이미지 로딩 실패 시 대체 이미지 표시를 위한 스크립트
+        document.addEventListener('DOMContentLoaded', function () {
+            // 이미지 로딩 실패 시 대체 텍스트 표시
+            const handleImageError = (img, placeholderText) => {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'img-fallback';
+                placeholder.textContent = placeholderText || '이미지를 불러올 수 없습니다.';
+                img.parentNode.replaceChild(placeholder, img);
+            };
+
+            // 모든 이미지에 오류 처리 추가
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('error', function () {
+                    if (!this.getAttribute('data-error-handled')) {
+                        this.setAttribute('data-error-handled', 'true');
+                        handleImageError(this, this.alt + ' 이미지를 불러올 수 없습니다.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
